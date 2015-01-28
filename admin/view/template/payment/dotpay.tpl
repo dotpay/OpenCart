@@ -58,6 +58,13 @@
                 <form action="<?=$action; ?>" method="post" enctype="multipart/form-data" id="form">
                     <div style="margin: 17px 18px 27px 47px; font-size: 15px; " class="form-horizontal">
                         <div class="form-group">
+                            <label class="col-sm-2 control-label"><?=$text_active_status; ?></label>
+                            <div class="col-sm-10"><select class="form-control" name="dotpay_status">
+                                    <option value="1"><?=$text_enabled; ?></option>
+                                    <option value="0"<?=(!$dotpay_status ? ' selected="selected"' : '' ); ?>><?=$text_disabled; ?></option>
+                                </select></div>
+                        </div>
+                        <div class="form-group">
                             <label class="col-sm-2 control-label"><?=$text_sort_order; ?></label>
                             <div class="col-sm-10"><input class="form-control" type="number" name="dotpay_sort_order" value="<?=$dotpay_sort_order; ?>"/></div>
                         </div>

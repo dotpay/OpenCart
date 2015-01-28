@@ -13,9 +13,8 @@ $_['text_dotpay_ip'] = 'Adres IP serwera Dotpay';
 $_['text_dotpay_currency']= 'Waluta';
 $_['text_sort_order']= 'Pozycja na liście płatności';
 
-//$_['entry_transferuj_status'] = 'Płatności aktywne';
-//$_['entry_transferuj_status_yes']= 'TAK';
-//$_['entry_transferuj_status_no'] = 'nie';
+$_['text_active_status'] = 'Status płatności';
+
 //
 //$_['entry_transferuj_seller_id'] = 'ID sprzedawcy';
 //$_['entry_transferuj_conf_code'] = 'Kod potwierdzający sprzedawcy';

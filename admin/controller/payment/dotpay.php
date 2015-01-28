@@ -40,21 +40,22 @@ class ControllerPaymentDotpay extends Controller
             'separator' => ' :: '
         );
 
-        $data['heading_title'] = $this->language->get('heading_title');
-        
+        $data['heading_title'] = $this->language->get('heading_title');        
         $data['text_edit'] = $this->language->get('text_edit');       
         
+        $data['text_active_status'] = $this->language->get('text_active_status');
+        $data['text_enabled'] = $this->language->get('text_enabled');
+        $data['text_disabled'] = $this->language->get('text_disabled');
         $data['text_sort_order'] = $this->language->get('text_sort_order');
+        
         $data['text_dotpay_id'] = $this->language->get('text_dotpay_id');
         $data['text_dotpay_ip'] = $this->language->get('text_dotpay_ip');
-        $data['text_dotpay_currency'] = $this->language->get('text_dotpay_currency');
+        $data['text_dotpay_currency'] = $this->language->get('text_dotpay_currency');    
       
 
 //        $data['entry_transferuj_status'] = $this->language->get('entry_transferuj_status');
 //        $data['entry_transferuj_status_yes'] = $this->language->get('entry_transferuj_status_yes');
 //        $data['entry_transferuj_status_no'] = $this->language->get('entry_transferuj_status_no');
-//        $data['entry_sort_order'] = $this->language->get('entry_sort_order');
-//        $data['entry_transferuj_ip'] = $this->language->get('entry_transferuj_ip');
 
 //        $data['entry_transferuj_conf_code'] = $this->language->get('entry_transferuj_conf_code');
 //        $data['entry_transferuj_conf_code_hint'] = $this->language->get('entry_transferuj_conf_code_hint');
@@ -79,14 +80,15 @@ class ControllerPaymentDotpay extends Controller
 //        $data['entry_transferuj_payment_view_1'] = $this->language->get('entry_transferuj_payment_view_1');
 
 //        $data['transferuj_status'] = (isset($this->request->post['transferuj_status']) ? $this->request->post['transferuj_status'] : $this->config->get('transferuj_status'));
-//        $data['transferuj_sort_order'] = (isset($this->request->post['transferuj_sort_order']) ? $this->request->post['transferuj_sort_order'] : $this->config->get('transferuj_sort_order'));
+
 //        $data['transferuj_conf_code'] = (isset($this->request->post['transferuj_conf_code']) ? $this->request->post['transferuj_conf_code'] : $this->config->get('transferuj_conf_code'));
 //        $data['transferuj_payment_place'] = (isset($this->request->post['transferuj_payment_place']) ? $this->request->post['transferuj_payment_place'] : $this->config->get('transferuj_payment_place'));
 //        $data['transferuj_payment_view'] = (isset($this->request->post['transferuj_payment_view']) ? $this->request->post['transferuj_payment_view'] : $this->config->get('transferuj_payment_view'));
 
         
-
-        $data['dotpay_sort_order'] = (isset($this->request->post['dotpay_sort_order']) ? $this->request->post['dotpay_sort_order'] : $this->config->get('dotpay_sort_order'));
+        $data['dotpay_status'] = (isset($this->request->post['dotpay_status']) ? $this->request->post['dotpay_status'] : $this->config->get('dotpay_status'));
+        $data['dotpay_sort_order'] = (isset($this->request->post['dotpay_sort_order']) ? $this->request->post['dotpay_sort_order'] : $this->config->get('dotpay_sort_order'));        
+        
         $data['dotpay_id'] = (isset($this->request->post['dotpay_id']) ? $this->request->post['dotpay_id'] : $this->config->get('dotpay_id'));
         $data['dotpay_ip'] = (isset($this->request->post['dotpay_ip']) ? $this->request->post['dotpay_ip'] : (!empty($this->config->get('dotpay_ip')) ? $this->config->get('dotpay_ip') : '195.15.09.37'));
         
