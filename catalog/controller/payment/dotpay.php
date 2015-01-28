@@ -2,6 +2,7 @@
 
 class ControllerPaymentDotpay extends Controller {
 
+    
     public function index() {
         $this->language->load('payment/dotpay');
 
@@ -33,15 +34,16 @@ class ControllerPaymentDotpay extends Controller {
     }
 
     public function pay() {
-        echo 'pay';
-        return;
+       
         $this->load->library('encryption');
         $this->load->model('checkout/order');
-        $this->load->language('payment/transferuj');
+        $this->load->language('payment/dotpay');
         $order_data = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $this->id = 'payment';
         
-        $transferuj_currency = $this->config->get('transferuj_currency');
+        $param[];
+        
+        $transferuj_currency = $this->config->get('dotpay_currency');
         $transferuj_currency = 'PLN';
 
         $transferuj_seller_id = $this->config->get('transferuj_seller_id');
