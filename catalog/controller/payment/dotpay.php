@@ -2,6 +2,8 @@
 
 class ControllerPaymentDotpay extends Controller {
 
+    const URL = 'https://ssl.dotpay.pl/test_payment/';
+    const METHOD = 'POST';
     
     public function index() {
         
@@ -22,8 +24,8 @@ class ControllerPaymentDotpay extends Controller {
         
         $data['dotpay'] = $this->geParams($order);
         
-        $data['action'] = 'https://ssl.dotpay.pl/test_payment/';
-        $data['method'] = 'GET';
+        $data['action'] = self::URL;
+        $data['method'] = self::METHOD;
        
         
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/dotpay.tpl')) {
@@ -45,7 +47,7 @@ class ControllerPaymentDotpay extends Controller {
         $data['p_info'] = $this->config->get('config_name');
         $data['p_email'] = $this->config->get('config_email');       
         $data['control'] = base64_encode($order['order_id']);
-        $data['api_version'] = 'dev';
+        $data['api_version'] = $this->config->get('dotpay_api_version');     
         
         //optional
         $data['URL'] = HTTPS_SERVER . 'index.php?route=payment/dotpay/confirm'; 

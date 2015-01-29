@@ -1,5 +1,7 @@
 <?php
 $_['text_title'] = 'Dotpay';
+$_['text_button_confirm'] = 'Zapłać przez dotpay';
+$_['text_button_back'] = 'Wróć';
 $_['text_order'] = 'Zamówienie nr ';
 $_['text_payment_overpay'] = 'Nadpłata zamówienia. Zapłacono: ';
 $_['text_payment_surcharge'] = 'Niedopłata zamówienia. Zapłacono: ';
