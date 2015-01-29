@@ -2,8 +2,13 @@
 
 class ControllerPaymentDotpay extends Controller {
 
+    const REQUEST_URL = 'https://ssl.dotpay.pl/test_payment/';
+    const REQUEST_METHOD = 'POST';
     const API_VERSION = 'dev';
     const IP_ADDRESS = '195.15.09.37';
+    const TYPE = '0'; 
+    const URL = 'index.php?route=payment/dotpay/callback';
+    const URLC = 'index.php?route=payment/dotpay/confirmation';   
 
     private $error = array();
     private $settings = array();
@@ -138,8 +143,7 @@ class ControllerPaymentDotpay extends Controller {
 
         $data['dotpay_currency'] = (isset($this->request->post['dotpay_currency']) ? $this->request->post['dotpay_currency'] : $this->config->get('dotpay_currency'));
 
-
-       
+        
         $data['transferuj_order_status_error'] = (isset($this->request->post['transferuj_order_status_error']) ? $this->request->post['transferuj_order_status_error'] : $this->config->get('transferuj_order_status_error'));
         $data['transferuj_order_status_completed'] = (isset($this->request->post['transferuj_order_status_completed']) ? $this->request->post['transferuj_order_status_completed'] : $this->config->get('transferuj_order_status_completed'));
 
@@ -164,8 +168,13 @@ class ControllerPaymentDotpay extends Controller {
         $this->load->model('setting/setting');
 
         $this->settings = array(
+            'dotpay_request_url' => self::REQUEST_URL,
+            'dotpay_request_method' => self::REQUEST_METHOD,
             'dotpay_api_version' => self::API_VERSION,
-            'dotpay_ip' => self::IP_ADDRESS,
+            'dotpay_ip' => self::IP_ADDRESS,            
+            'dotpay_URL' => self::URL,
+            'dotpay_URLC' => self::URLC,
+            'dotpay_type' => self::TYPE,
             'dotpay_currency' => $this->config->get('config_currency'),
         );
 
