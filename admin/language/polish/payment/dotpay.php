@@ -8,12 +8,15 @@ $_['text_disabled'] = 'Wyłączony';
 $_['text_payment'] = 'Płatność';
 $_['text_success'] = 'Zmiany zostały zapisane!';
 
+$_['text_sort_order']= 'Pozycja na liście płatności';
+$_['text_active_status'] = 'Status płatności';
+
 $_['text_dotpay_id'] = 'ID sklepu';
 $_['text_dotpay_ip'] = 'Adres IP serwera Dotpay';
+$_['text_dotpay_pin'] = 'PIN';
+$_['text_dotpay_pin_help'] = 'Kod PIN znajduje się w Panelu Odbiorcy Płatności';
 $_['text_dotpay_currency']= 'Waluta';
-$_['text_sort_order']= 'Pozycja na liście płatności';
 
-$_['text_active_status'] = 'Status płatności';
 
 //
 //$_['entry_transferuj_seller_id'] = 'ID sprzedawcy';
@@ -34,7 +37,8 @@ $_['text_active_status'] = 'Status płatności';
 //$_['entry_transferuj_payment_view_0'] = 'Kafelki';
 //$_['entry_transferuj_payment_view_1'] = 'Lista';
 
-$_['error_permission'] = 'Brak uprawnień do zmiany ustawień płatności Transferuj.pl!';
-$_['error_merchant'] = 'Podaj ID sprzedawcy!';
+$_['error_permission'] = 'Brak uprawnień do zmiany ustawień płatności dotpay!';
+$_['error_dotpay_id'] = 'Podaj ID sprzedawcy!';
+$_['error_dotpay_pin'] = 'Podaj PIN!';
 
 ?>

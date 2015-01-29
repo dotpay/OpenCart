@@ -46,8 +46,8 @@
             </div>
         </div>
         <div class="content">
-            <?php if ($error_warning) { ?>
-            <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_warning; ?>
+            <?php if ($error_permission) { ?>
+            <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_permission; ?>
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
             </div>
             <?php } ?>
@@ -59,21 +59,24 @@
                     <div style="margin: 17px 18px 27px 47px; font-size: 15px; " class="form-horizontal">
                         <div class="form-group">
                             <label class="col-sm-2 control-label"><?=$text_active_status; ?></label>
-                            <div class="col-sm-10"><select class="form-control" name="dotpay_status">
+                            <div class="col-sm-10">
+                                <select class="form-control" name="dotpay_status">
                                     <option value="1"><?=$text_enabled; ?></option>
                                     <option value="0"<?=(!$dotpay_status ? ' selected="selected"' : '' ); ?>><?=$text_disabled; ?></option>
-                                </select></div>
+                                </select>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label"><?=$text_sort_order; ?></label>
                             <div class="col-sm-10"><input class="form-control" type="number" name="dotpay_sort_order" value="<?=$dotpay_sort_order; ?>"/></div>
                         </div>
+                        
                         <div class="form-group">
                             <label class="col-sm-2 control-label"><?=$text_dotpay_id; ?></label>                           
                             <div class="col-sm-10">
                                 <input class="form-control" type="number" name="dotpay_id" value="<?=$dotpay_id; ?>" />
-                                <?php if ($error_merchant) { ?>
-                                    <small class="text-danger"><?=$error_merchant; ?></small>
+                                <?php if ($error_id) { ?>
+                                    <small class="text-danger"><?=$error_id; ?></small>
                                 <?php } ?>
                             </div>                          
                         </div>
@@ -90,32 +93,28 @@
                                     <?php foreach ($curr as $name) { ?>
                                     <option value="<?=$name; ?>"<?=($dotpay_currency == $name ? ' selected="selected"' : ''); ?>><?=$name; ?></option>
                                     <?php } ?>
-                                </select></div>		
-                        </div>                       
-<!--                        <div class="form-group">
-                            <label class="col-sm-2 control-label"><?=$entry_transferuj_status; ?></label>
-                            <div class="col-sm-10"><select class="form-control" name="transferuj_status">
-                                    <option value="1"><?=$entry_transferuj_status_yes; ?></option>
-                                    <option value="0"<?=(!$transferuj_status ? ' selected="selected"' : '' ); ?>><?=$entry_transferuj_status_no; ?></option>
-                                </select></div>
+                                </select>
+                            </div>		
+                        </div>  
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" ><span class="required" data-toggle="tooltip" title="<?=$text_dotpay_pin_help; ?>"></span> <?=$text_dotpay_pin; ?></label>
+                            <div class="col-sm-10" >
+                                <input  class="form-control" size="32" maxlength="32" name="dotpay_pin" value="<?=$dotpay_pin; ?>" /> 
+                                <?php if ($error_pin) { ?>
+                                    <small class="text-danger"><?=$error_pin; ?></small>
+                                <?php } ?>
+                            </div>
+                            
                         </div>
+<!--                      
 
                  
                        
 
 
 
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label"> <?=$entry_transferuj_seller_id; ?></label>
-                            <div class="col-sm-10"><input class="form-control" type="text" size="16" maxlength="16" name="transferuj_seller_id" value="<?=$transferuj_seller_id; ?>" />
-                                <?php if ($error_merchant) { ?>
-                                <span class="error"><?=$error_merchant; ?></span>
-                                <?php } ?></div>
-                        </div>  
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" ><span class="required" data-toggle="tooltip" title="Kod bezpieczeństwa znajduje się w Panelu Odbiorcy Płatności "></span> <?=$entry_transferuj_conf_code; ?></label>
-                            <div class="col-sm-10" ><input  class="form-control" size="32" maxlength="32" name="transferuj_conf_code" value="<?=$transferuj_conf_code; ?>" /> </div>
-                        </div>
+                        
+                        
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label"><strong><?=$entry_settings_orders; ?></strong></label>

@@ -1,29 +1,29 @@
 <?php
 
-class ControllerPaymentDotpay extends Controller
-{
+class ControllerPaymentDotpay extends Controller {
+
     const API_VERSION = 'dev';
-    const ADRESS_IP = '195.15.09.37';
+    const IP_ADDRESS = '195.15.09.37';
 
     private $error = array();
-    
     private $settings = array();
 
-    public function index()
-    {
-        $this->load->language('payment/dotpay');
-        $this->document->setTitle($this->language->get('heading_title'));
+    public function index() {
+        
+        $this->load->language('payment/dotpay');        
         $this->load->model('setting/setting');
+        $this->load->model('localisation/currency');
+        $this->load->model('localisation/order_status');
+        $this->document->setTitle($this->language->get('heading_title'));
 
-        if ($this->request->server['REQUEST_METHOD'] == 'POST' && $this->validate())
-        {
+        if ($this->request->server['REQUEST_METHOD'] == 'POST' && $this->validate()) {
             $this->load->model('setting/setting');
             $this->model_setting_setting->editSetting('dotpay', $this->request->post);
             $this->session->data['success'] = $this->language->get('text_success');
 
             $this->response->redirect($this->url->link('extension/payment', 'token=' . $this->session->data['token'], 'SSL'));
         }
-        
+
         $data['breadcrumbs'] = array();
 
         $data['breadcrumbs'][] = array(
@@ -44,35 +44,33 @@ class ControllerPaymentDotpay extends Controller
             'separator' => ' :: '
         );
 
-        $data['heading_title'] = $this->language->get('heading_title');        
-        $data['text_edit'] = $this->language->get('text_edit');       
-        
+        $data['heading_title'] = $this->language->get('heading_title');
+        $data['text_edit'] = $this->language->get('text_edit');
+
         $data['text_active_status'] = $this->language->get('text_active_status');
         $data['text_enabled'] = $this->language->get('text_enabled');
         $data['text_disabled'] = $this->language->get('text_disabled');
         $data['text_sort_order'] = $this->language->get('text_sort_order');
-        
+
         $data['text_dotpay_id'] = $this->language->get('text_dotpay_id');
         $data['text_dotpay_ip'] = $this->language->get('text_dotpay_ip');
-        $data['text_dotpay_currency'] = $this->language->get('text_dotpay_currency');    
-      
+        $data['text_dotpay_pin'] = $this->language->get('text_dotpay_pin');
+        $data['text_dotpay_currency'] = $this->language->get('text_dotpay_currency');
+
 
 //        $data['entry_transferuj_status'] = $this->language->get('entry_transferuj_status');
 //        $data['entry_transferuj_status_yes'] = $this->language->get('entry_transferuj_status_yes');
 //        $data['entry_transferuj_status_no'] = $this->language->get('entry_transferuj_status_no');
-
 //        $data['entry_transferuj_conf_code'] = $this->language->get('entry_transferuj_conf_code');
 //        $data['entry_transferuj_conf_code_hint'] = $this->language->get('entry_transferuj_conf_code_hint');
 //
 //        $data['entry_settings_orders'] = $this->language->get('entry_settings_orders');
 //        $data['entry_transferuj_order_status_error'] = $this->language->get('entry_transferuj_order_status_error');
 //        $data['entry_transferuj_order_status_completed'] = $this->language->get('entry_transferuj_order_status_completed');
-
 //        $data['button_save'] = $this->language->get('button_save');
 //        $data['button_cancel'] = $this->language->get('button_cancel');
 //        $data['tab_general'] = $this->language->get('tab_general');
 //
-       
 //
 //        $data['entry_view_settings'] = $this->language->get('entry_view_settings');
 //        $data['entry_transferuj_payment_place'] = $this->language->get('entry_transferuj_payment_place');
@@ -82,123 +80,112 @@ class ControllerPaymentDotpay extends Controller
 //        $data['entry_transferuj_payment_view'] = $this->language->get('entry_transferuj_payment_view');
 //        $data['entry_transferuj_payment_view_0'] = $this->language->get('entry_transferuj_payment_view_0');
 //        $data['entry_transferuj_payment_view_1'] = $this->language->get('entry_transferuj_payment_view_1');
-
 //        $data['transferuj_status'] = (isset($this->request->post['transferuj_status']) ? $this->request->post['transferuj_status'] : $this->config->get('transferuj_status'));
-
 //        $data['transferuj_conf_code'] = (isset($this->request->post['transferuj_conf_code']) ? $this->request->post['transferuj_conf_code'] : $this->config->get('transferuj_conf_code'));
 //        $data['transferuj_payment_place'] = (isset($this->request->post['transferuj_payment_place']) ? $this->request->post['transferuj_payment_place'] : $this->config->get('transferuj_payment_place'));
 //        $data['transferuj_payment_view'] = (isset($this->request->post['transferuj_payment_view']) ? $this->request->post['transferuj_payment_view'] : $this->config->get('transferuj_payment_view'));
 
-        
+
         $data['dotpay_status'] = (isset($this->request->post['dotpay_status']) ? $this->request->post['dotpay_status'] : $this->config->get('dotpay_status'));
-        $data['dotpay_sort_order'] = (isset($this->request->post['dotpay_sort_order']) ? $this->request->post['dotpay_sort_order'] : $this->config->get('dotpay_sort_order'));        
-        
+        $data['dotpay_sort_order'] = (isset($this->request->post['dotpay_sort_order']) ? $this->request->post['dotpay_sort_order'] : $this->config->get('dotpay_sort_order'));
+
         $data['dotpay_id'] = (isset($this->request->post['dotpay_id']) ? $this->request->post['dotpay_id'] : $this->config->get('dotpay_id'));
         $data['dotpay_ip'] = (isset($this->request->post['dotpay_ip']) ? $this->request->post['dotpay_ip'] : $this->config->get('dotpay_ip'));
-        
-        
-        
-        
-        
-        
-        $this->load->model('localisation/currency');
+        $data['dotpay_pin'] = (isset($this->request->post['dotpay_pin']) ? $this->request->post['dotpay_pin'] : $this->config->get('dotpay_pin'));
 
-        if (!empty($currency_info))
-        {
+
+
+
+
+
+        
+
+        if (!empty($currency_info)) {
             $data['curr'][] = $currency_info['code'];
         }
         $currency_info = $this->model_localisation_currency->getCurrency('0');
-        if (!empty($currency_info))
-        {
+        if (!empty($currency_info)) {
             $data['curr'][] = $currency_info['code'];
         }
         $currency_info = $this->model_localisation_currency->getCurrency('1');
-        if (!empty($currency_info))
-        {
+        if (!empty($currency_info)) {
             $data['curr'][] = $currency_info['code'];
         }
         $currency_info = $this->model_localisation_currency->getCurrency('2');
-        if (!empty($currency_info))
-        {
+        if (!empty($currency_info)) {
             $data['curr'][] = $currency_info['code'];
         }
         $currency_info = $this->model_localisation_currency->getCurrency('3');
-        if (!empty($currency_info))
-        {
+        if (!empty($currency_info)) {
             $data['curr'][] = $currency_info['code'];
         }
         $currency_info = $this->model_localisation_currency->getCurrency('4');
-        if (!empty($currency_info))
-        {
+        if (!empty($currency_info)) {
             $data['curr'][] = $currency_info['code'];
         }
         $currency_info = $this->model_localisation_currency->getCurrency('5');
-        if (!empty($currency_info))
-        {
+        if (!empty($currency_info)) {
             $data['curr'][] = $currency_info['code'];
         }
         $currency_info = $this->model_localisation_currency->getCurrency('6');
-        if (!empty($currency_info))
-        {
+        if (!empty($currency_info)) {
             $data['curr'][] = $currency_info['code'];
         }
         $currency_info = $this->model_localisation_currency->getCurrency('7');
-        if (!empty($currency_info))
-        {
+        if (!empty($currency_info)) {
             $data['curr'][] = $currency_info['code'];
         }
 
         $data['dotpay_currency'] = (isset($this->request->post['dotpay_currency']) ? $this->request->post['dotpay_currency'] : $this->config->get('dotpay_currency'));
 
-        
-        
-        $this->load->model('localisation/order_status');
-        $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+
+       
         $data['transferuj_order_status_error'] = (isset($this->request->post['transferuj_order_status_error']) ? $this->request->post['transferuj_order_status_error'] : $this->config->get('transferuj_order_status_error'));
         $data['transferuj_order_status_completed'] = (isset($this->request->post['transferuj_order_status_completed']) ? $this->request->post['transferuj_order_status_completed'] : $this->config->get('transferuj_order_status_completed'));
 
-                
-        $data['error_warning'] = (isset($this->error['warning']) ? $this->error['warning'] : '');
-        $data['error_merchant'] = (isset($this->error['merchant']) ? $this->error['merchant'] : '');
-        $data['error_password'] = (isset($this->error['password']) ? $this->error['password'] : '');
-        
+
+        $data['error_permission'] = (isset($this->error['permission']) ? $this->error['permission'] : '');
+        $data['error_id'] = (isset($this->error['dotpay_id']) ? $this->error['dotpay_id'] : '');
+        $data['error_pin'] = (isset($this->error['dotpay_pin']) ? $this->error['dotpay_pin'] : '');
+
         $data['action'] = HTTPS_SERVER . 'index.php?route=payment/dotpay&token=' . $this->session->data['token'];
         $data['cancel'] = HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token'];
-        
-        
+
+
         $this->template = 'payment/transferuj.tpl';
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
         $this->response->setOutput($this->load->view('payment/dotpay.tpl', $data));
     }
-    
-    public function install() {		
 
-		$this->load->model('setting/setting');
-        
-        $this->settings = array(
-            'dotpay_api_version' => self::API_VERSION,
-            'dotpay_ip' => self::ADRESS_IP,
-            'dotpay_currency' => $this->config->get('config_currency'),
-        );
-        
-		$this->model_setting_setting->editSetting('dotpay', $this->settings);		
-	}
+    public function install() {
 
-	public function uninstall() {
-        
         $this->load->model('setting/setting');
 
-		$this->model_setting_setting->deleteSetting('dotpay');
-	}
+        $this->settings = array(
+            'dotpay_api_version' => self::API_VERSION,
+            'dotpay_ip' => self::IP_ADDRESS,
+            'dotpay_currency' => $this->config->get('config_currency'),
+        );
 
-    private function validate()
-    {
+        $this->model_setting_setting->editSetting('dotpay', $this->settings);
+    }
+
+    public function uninstall() {
+
+        $this->load->model('setting/setting');
+
+        $this->model_setting_setting->deleteSetting('dotpay');
+    }
+
+    private function validate() {
         if (!$this->user->hasPermission('modify', 'payment/dotpay'))
-            $this->error['warning'] = $this->language->get('error_permission');
+            $this->error['permission'] = $this->language->get('error_permission');
         if (!$this->request->post['dotpay_id'])
-            $this->error['merchant'] = $this->language->get('error_merchant');
+            $this->error['dotpay_id'] = $this->language->get('error_dotpay_id');
+        if (!$this->request->post['dotpay_pin'])
+            $this->error['dotpay_pin'] = $this->language->get('error_dotpay_pin');
         return (!$this->error ? true : false);
     }
 
