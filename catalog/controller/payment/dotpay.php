@@ -4,44 +4,70 @@ class ControllerPaymentDotpay extends Controller {
 
     
     public function index() {
-        $this->language->load('payment/dotpay');
-
-        $data['button_confirm'] = $this->language->get('button_confirm');
-        $data['button_back'] = $this->language->get('button_back');
-        $data['text_lang'] = $this->language->get('text_lang');
-        $data['text_bank_choice'] = $this->language->get('text_bank_choice');
-        $data['text_accept_terms'] = $this->language->get('text_accept_terms');
-         
+        
+//        $this->id = 'payment';       
+    
+        
         $this->load->model('checkout/order');
         $this->load->library('encryption');
         $this->load->language('payment/dotpay');
         
-        $order_data = $this->model_checkout_order->getOrder($this->session->data['order_id']);
-
-        $data['action'] = HTTPS_SERVER . 'index.php?route=payment/dotpay/pay';
-        $data['back'] = HTTPS_SERVER . 'index.php?route=checkout/payment';
-        $data['order_id'] = $order_data['order_id'];
-        $this->id = 'payment';
+        $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);       
+        $data['order_id'] = $order['order_id'];        
         
-        $data['dotpay_payment_place'] = $this->config->get('dotpay_payment_place');
-        $data['dotpay_payment_view'] = $this->config->get('dotpay_payment_view');
-        $data['seller_id']=$this->config->get('dotpay_id');
+        $data['text_button_confirm'] = $this->language->get('text_button_confirm');        
+//        $data['text_lang'] = $this->language->get('text_lang');
+//        $data['text_bank_choice'] = $this->language->get('text_bank_choice');
+//        $data['text_accept_terms'] = $this->language->get('text_accept_terms');
+        
+        $data['dotpay'] = $this->geParams($order);
+        
+        $data['action'] = 'https://ssl.dotpay.pl/test_payment/';
+        $data['method'] = 'GET';
+       
+        
         if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/dotpay.tpl')) {
             return $this->load->view($this->config->get('config_template') . '/template/payment/dotpay.tpl', $data);
         } else {
             return $this->load->view('default/template/payment/dotpay.tpl', $data);
         }
     }
+    
+    private function geParams($order){
+        
+        $data = array();        
+        //requried
+        $data['id']=$this->config->get('dotpay_id');        
+        $data['amount']=number_format($this->currency->format($order['total'],$data['currency'], $order['currency_value'], FALSE), 2, '.', '');
+        $data['currency']=$this->config->get('dotpay_currency');
+        $data['lang'] = $this->session->data['language'];
+        $data['description'] = $order['comment'];               
+        $data['p_info'] = $this->config->get('config_name');
+        $data['p_email'] = $this->config->get('config_email');       
+        $data['control'] = base64_encode($order['order_id']);
+        $data['api_version'] = 'dev';
+        
+        //optional
+        $data['URL'] = HTTPS_SERVER . 'index.php?route=payment/dotpay/confirm'; 
+        $data['URLC'] = HTTPS_SERVER . 'index.php?route=payment/dotpay/validate'; 
+        $data['type'] = 0;
+        
+        
+        return $data;
+    }
 
     public function pay() {
-       
+       echo 'aqweqwesdassssd';
+        return;
+        $this->response->redirect('https://ssl.dotpay.pl/test_payment/');
+        return;
         $this->load->library('encryption');
         $this->load->model('checkout/order');
         $this->load->language('payment/dotpay');
         $order_data = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $this->id = 'payment';
         
-        $param[];
+//        $param[];
         
         $transferuj_currency = $this->config->get('dotpay_currency');
         $transferuj_currency = 'PLN';
@@ -91,9 +117,19 @@ class ControllerPaymentDotpay extends Controller {
             return $this->load->view('default/template/payment/transferuj_redirect.tpl', $data);
         }
     }
+    
+    public function confirm(){
+        error_log("DOTPAY-POST: " );
+        echo 'Potwierdzenie:' . $this->request->get['status'];        
+       
+    }
 
     public function validate() {
-        echo 'validate';
+        error_log("DOTPAY-POST: " );
+         foreach ($_POST as $key=>$value){
+            error_log("DOTPAY-POST: ".$key . ":" . $value );
+        }
+        echo 'OK';
         return false;
         if ($_SERVER["REMOTE_ADDR"] != $this->config->get('transferuj_ip'))
             return false;
