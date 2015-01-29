@@ -2,8 +2,12 @@
 
 class ControllerPaymentDotpay extends Controller
 {
+    const API_VERSION = 'dev';
+    const ADRESS_IP = '195.15.09.37';
 
     private $error = array();
+    
+    private $settings = array();
 
     public function index()
     {
@@ -90,7 +94,7 @@ class ControllerPaymentDotpay extends Controller
         $data['dotpay_sort_order'] = (isset($this->request->post['dotpay_sort_order']) ? $this->request->post['dotpay_sort_order'] : $this->config->get('dotpay_sort_order'));        
         
         $data['dotpay_id'] = (isset($this->request->post['dotpay_id']) ? $this->request->post['dotpay_id'] : $this->config->get('dotpay_id'));
-        $data['dotpay_ip'] = (isset($this->request->post['dotpay_ip']) ? $this->request->post['dotpay_ip'] : (!empty($this->config->get('dotpay_ip')) ? $this->config->get('dotpay_ip') : '195.15.09.37'));
+        $data['dotpay_ip'] = (isset($this->request->post['dotpay_ip']) ? $this->request->post['dotpay_ip'] : $this->config->get('dotpay_ip'));
         
         
         
@@ -169,20 +173,24 @@ class ControllerPaymentDotpay extends Controller
         $this->response->setOutput($this->load->view('payment/dotpay.tpl', $data));
     }
     
-    public function install() {
-//		$this->load->model('payment/dotpay');
-//
-//		$this->load->model('setting/setting');
-//
-//		$this->model_payment_amazon_checkout->install();
-//		
-//		$this->model_setting_setting->editSetting('amazon_checkout', $this->settings);
+    public function install() {		
+
+		$this->load->model('setting/setting');
+        
+        $this->settings = array(
+            'dotpay_api_version' => self::API_VERSION,
+            'dotpay_ip' => self::ADRESS_IP,
+            'dotpay_currency' => $this->config->get('config_currency'),
+        );
+        
+		$this->model_setting_setting->editSetting('dotpay', $this->settings);		
 	}
 
 	public function uninstall() {
-//		$this->load->model('payment/amazon_checkout');
-//
-//		$this->model_payment_amazon_checkout->uninstall();
+        
+        $this->load->model('setting/setting');
+
+		$this->model_setting_setting->deleteSetting('dotpay');
 	}
 
     private function validate()
