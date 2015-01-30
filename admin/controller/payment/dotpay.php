@@ -95,12 +95,11 @@ class ControllerPaymentDotpay extends Controller {
         
         $data['button_save'] = $this->language->get('button_save');
 		$data['button_cancel'] = $this->language->get('button_cancel');
-
-
-        $this->template = 'payment/transferuj.tpl';
+       
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
+        
         $this->response->setOutput($this->load->view('payment/dotpay.tpl', $data));
     }
 
