@@ -7,8 +7,10 @@ class ControllerPaymentDotpay extends Controller {
     public function index() {
         
         $this->load->model('checkout/order');
+        $this->load->model('setting/setting');
         $this->load->library('encryption');
         $this->load->language('payment/dotpay');
+        
         
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);  
                 
@@ -31,9 +33,10 @@ class ControllerPaymentDotpay extends Controller {
         
         $data = array();        
         //requried
-        $data['id']=$this->config->get('dotpay_id');        
-        $data['amount']=number_format($this->currency->format($order['total'],$data['currency'], $order['currency_value'], FALSE), 2, '.', '');
+        $this->load->model('setting/setting');
+        $data['id']=$this->config->get('dotpay_id');               
         $data['currency']=$this->config->get('dotpay_currency');
+        $data['amount']=number_format($this->currency->format($order['total'],$data['currency'], $order['currency_value'], FALSE), 2, '.', '');
         $data['lang'] = $this->session->data['language'];
         $data['description'] = $order['comment'];               
         $data['p_info'] = $this->config->get('config_name');

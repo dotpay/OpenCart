@@ -65,9 +65,6 @@ class ControllerPaymentDotpay extends Controller {
         $data['text_dotpay_status_rejected'] = $this->language->get('text_dotpay_status_rejected');
         $data['text_dotpay_status_completed'] = $this->language->get('text_dotpay_status_completed');
 
-      
-
-
 
         $data['dotpay_status'] = (isset($this->request->post['dotpay_status']) ? $this->request->post['dotpay_status'] : $this->config->get('dotpay_status'));
         $data['dotpay_sort_order'] = (isset($this->request->post['dotpay_sort_order']) ? $this->request->post['dotpay_sort_order'] : $this->config->get('dotpay_sort_order'));
@@ -78,14 +75,19 @@ class ControllerPaymentDotpay extends Controller {
         $data['dotpay_currency'] = (isset($this->request->post['dotpay_currency']) ? $this->request->post['dotpay_currency'] : $this->config->get('dotpay_currency'));
         $data['dotpay_status_completed'] = (isset($this->request->post['dotpay_status_completed']) ? $this->request->post['dotpay_status_completed'] : $this->config->get('dotpay_status_completed'));
         $data['dotpay_status_rejected'] = (isset($this->request->post['dotpay_status_rejected']) ? $this->request->post['dotpay_status_rejected'] : $this->config->get('dotpay_status_rejected'));
-
-
-               
         
+        
+        $data['dotpay_request_url'] = $this->config->get('dotpay_request_url');
+        $data['dotpay_request_method'] = $this->config->get('dotpay_request_method');
+        $data['dotpay_api_version'] = $this->config->get('dotpay_api_version');        
+        $data['dotpay_URL'] = $this->config->get('dotpay_URL');
+        $data['dotpay_URLC'] = $this->config->get('dotpay_URLC');
+        $data['dotpay_type'] = $this->config->get('dotpay_type');        
+
       
         $data['currencies'] =  $this->model_localisation_currency->getCurrencies();
         $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
-
+        
       
         $data['error'] = (!empty($this->error) ? $this->error : null);
         $data['action'] = HTTPS_SERVER . 'index.php?route=payment/dotpay&token=' . $this->session->data['token'];

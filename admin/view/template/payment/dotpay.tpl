@@ -122,60 +122,15 @@
                                 </select>
                             </div>
                         </div>
-<!--                      
-
-                 
-                       
-
-
-
-                        
-                        
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label"><strong><?=$entry_settings_orders; ?></strong></label>
-
-                        </div>
-
-                        
-                        
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label"><strong><?=$entry_view_settings; ?></strong></label>
-
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label"> <?=$entry_transferuj_payment_place; ?></label>
-
-                            <div class="col-sm-10"><select id="miejsce" class="form-control" name="transferuj_payment_place">
-                                    <option value="0"><?=$entry_transferuj_payment_place_0; ?></option>
-                                    <option value="1"<?=($transferuj_payment_place ? ' selected="selected"' : '' ); ?>><?=$entry_transferuj_payment_place_1; ?></option>
-                                </select></div>	
-
-                        </div>
-
-                        <div class="form-group" id="wyglad" <?=($transferuj_payment_place ? ' style="visibility: hidden"' : '' ); ?>>
-                            <label class="col-sm-2 control-label"> <?=$entry_transferuj_payment_view; ?></label>
-
-                            <div class="col-sm-10"><select  class="form-control" name="transferuj_payment_view">
-                                    <option value="0"><?=$entry_transferuj_payment_view_0; ?></option>
-                                    <option value="1"<?=($transferuj_payment_view ? ' selected="selected"' : '' ); ?>><?=$entry_transferuj_payment_view_1; ?></option>
-                                </select></div>	
-
-                        </div>-->
-
-
                     </div>
-
-
-            </div>
-
-
-
-
-
-            </form>
+                    <input type="hidden" name="dotpay_request_url" value="<?=$dotpay_request_url; ?>" />
+                    <input type="hidden" name="dotpay_request_method" value="<?=$dotpay_request_method; ?>" />
+                    <input type="hidden" name="dotpay_api_version" value="<?=$dotpay_api_version; ?>" />
+                    <input type="hidden" name="dotpay_URL" value="<?=$dotpay_URL; ?>" />
+                    <input type="hidden" name="dotpay_URLC" value="<?=$dotpay_URLC; ?>" />
+                    <input type="hidden" name="dotpay_type" value="<?=$dotpay_type; ?>" />
+                </form>
+            </div>            
         </div>
     </div>
 </div>
