@@ -26,10 +26,6 @@
 <?php echo $column_left; ?>
 
 <div id="content">
-    <?php if ($error_warning) { ?>
-    <div class="warning"><?=$error_warning; ?></div>
-    <?php } ?>
-
     <div class="container-fluid">
 
         <div class="page-header">
@@ -46,8 +42,8 @@
             </div>
         </div>
         <div class="content">
-            <?php if ($error_permission) { ?>
-            <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error_permission; ?>
+            <?php if ($error['permision']) { ?>
+            <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> <?php echo $error['permision']; ?>
                 <button type="button" class="close" data-dismiss="alert">&times;</button>
             </div>
             <?php } ?>
@@ -75,8 +71,8 @@
                             <label class="col-sm-2 control-label"><?=$text_dotpay_id; ?></label>                           
                             <div class="col-sm-10">
                                 <input class="form-control" type="number" name="dotpay_id" value="<?=$dotpay_id; ?>" />
-                                <?php if ($error_id) { ?>
-                                    <small class="text-danger"><?=$error_id; ?></small>
+                                <?php if ($error['dotpay_id']) { ?>
+                                    <small class="text-danger"><?=$error['dotpay_id']; ?></small>
                                 <?php } ?>
                             </div>                          
                         </div>
@@ -90,8 +86,8 @@
                             <label class="col-sm-2 control-label"> <?=$text_dotpay_currency; ?></label>
                             <div class="col-sm-10">
                                 <select name="dotpay_currency" class="form-control" id="dotpay_currency">
-                                    <?php foreach ($curr as $name) { ?>
-                                    <option value="<?=$name; ?>"<?=($dotpay_currency == $name ? ' selected="selected"' : ''); ?>><?=$name; ?></option>
+                                    <?php foreach ($currencies as $curr) { ?>
+                                    <option value="<?=$curr['code']; ?>"<?=($dotpay_currency == $curr['code'] ? ' selected="selected"' : ''); ?>><?=$curr['code']; ?></option>
                                     <?php } ?>
                                 </select>
                             </div>		
@@ -100,11 +96,31 @@
                             <label class="col-sm-2 control-label" ><span class="required" data-toggle="tooltip" title="<?=$text_dotpay_pin_help; ?>"></span> <?=$text_dotpay_pin; ?></label>
                             <div class="col-sm-10" >
                                 <input  class="form-control" size="32" maxlength="32" name="dotpay_pin" value="<?=$dotpay_pin; ?>" /> 
-                                <?php if ($error_pin) { ?>
-                                    <small class="text-danger"><?=$error_pin; ?></small>
+                                <?php if ($error['dotpay_pin']) { ?>
+                                    <small class="text-danger"><?=$error['dotpay_pin']; ?></small>
                                 <?php } ?>
+                            </div>                            
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><?=$text_dotpay_status_rejected; ?></label>
+                            <div class="col-sm-10">
+                                <select class="form-control" name="dotpay_status_rejected"><?php
+                                    foreach ($order_statuses as $status) {
+                                    echo'<option value="'.$status['order_status_id'].'"'.($status['order_status_id'] == $dotpay_status_rejected ? ' selected="selected"' : '').'>'.$status['name'].'</option>';
+                                    }?>
+                                </select>
                             </div>
-                            
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><?=$text_dotpay_status_completed; ?></label>
+                            <div class="col-sm-10">
+                                <select class="form-control" name="dotpay_status_completed"><?php
+                                    foreach ($order_statuses as $status) {
+                                    echo'<option value="'.$status['order_status_id'].'"'.($status['order_status_id'] == $dotpay_status_completed ? ' selected="selected"' : '').'>'.$status['name'].'</option>';
+                                    }?>
+                                </select>
+                            </div>
                         </div>
 <!--                      
 
@@ -122,21 +138,7 @@
                         </div>
 
                         
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label"><?=$entry_transferuj_order_status_error; ?></label>
-                            <div class="col-sm-10"><select class="form-control" name="transferuj_order_status_error"><?php
-                                    foreach ($order_statuses as $order_status) {
-                                    echo'<option value="'.$order_status['order_status_id'].'"'.($order_status['order_status_id'] == $transferuj_order_status_error ? ' selected="selected"' : '').'>'.$order_status['name'].'</option>';
-                                    }?></select></div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label"><?=$entry_transferuj_order_status_completed; ?></label>
-                            <div class="col-sm-10"><select class="form-control" name="transferuj_order_status_completed"><?php
-                                    foreach ($order_statuses as $order_status) {
-                                    echo'<option value="'.$order_status['order_status_id'].'"'.($order_status['order_status_id'] == $transferuj_order_status_completed ? ' selected="selected"' : '').'>'.$order_status['name'].'</option>';
-                                    }?></select></div>
-                        </div>
+                        
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label"><strong><?=$entry_view_settings; ?></strong></label>

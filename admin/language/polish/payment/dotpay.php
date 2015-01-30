@@ -16,26 +16,8 @@ $_['text_dotpay_ip'] = 'Adres IP serwera Dotpay';
 $_['text_dotpay_pin'] = 'PIN';
 $_['text_dotpay_pin_help'] = 'Kod PIN znajduje się w Panelu Odbiorcy Płatności';
 $_['text_dotpay_currency']= 'Waluta';
-
-
-//
-//$_['entry_transferuj_seller_id'] = 'ID sprzedawcy';
-//$_['entry_transferuj_conf_code'] = 'Kod potwierdzający sprzedawcy';
-//$_['entry_transferuj_conf_code_hint'] = 'Taki sam jak w Panelu sprzedawcy Transferuj.pl';
-//
-//$_['entry_settings_orders'] = 'Ustawienia zamówień:';
-//$_['entry_transferuj_currency']= 'Waluta';
-//$_['entry_transferuj_order_status_error'] = 'Status zamówień błędnych';
-//$_['entry_transferuj_order_status_completed'] = 'Status zamówień zrealizowanych';
-//
-//$_['entry_view_settings'] = 'Ustawienia widoku p�atno�ci';
-//$_['entry_transferuj_payment_place'] = 'Miejsce wyboru p�atno�ci';
-//$_['entry_transferuj_payment_place_0'] = 'Sklep';
-//$_['entry_transferuj_payment_place_1'] = 'Transferuj.pl';
-//
-//$_['entry_transferuj_payment_view'] = 'Widok p�atno�ci';
-//$_['entry_transferuj_payment_view_0'] = 'Kafelki';
-//$_['entry_transferuj_payment_view_1'] = 'Lista';
+$_['text_dotpay_status_rejected'] = 'Status zamówień błędnych';
+$_['text_dotpay_status_completed'] = 'Status zamówień zrealizowanych';
 
 $_['error_permission'] = 'Brak uprawnień do zmiany ustawień płatności dotpay!';
 $_['error_dotpay_id'] = 'Podaj ID sprzedawcy!';

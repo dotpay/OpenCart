@@ -3,12 +3,12 @@
 class ControllerPaymentDotpay extends Controller {
 
     const REQUEST_URL = 'https://ssl.dotpay.pl/test_payment/';
-    const REQUEST_METHOD = 'POST';
-    const API_VERSION = 'dev';
-    const IP_ADDRESS = '195.15.09.37';
-    const TYPE = '0'; 
     const URL = 'index.php?route=payment/dotpay/callback';
     const URLC = 'index.php?route=payment/dotpay/confirmation';   
+    const IP_ADDRESS = '195.15.09.37'; 
+    const REQUEST_METHOD = 'POST';
+    const API_VERSION = 'dev';         
+    const TYPE = '0'; 
 
     private $error = array();
     private $settings = array();
@@ -60,35 +60,13 @@ class ControllerPaymentDotpay extends Controller {
         $data['text_dotpay_id'] = $this->language->get('text_dotpay_id');
         $data['text_dotpay_ip'] = $this->language->get('text_dotpay_ip');
         $data['text_dotpay_pin'] = $this->language->get('text_dotpay_pin');
-        $data['text_dotpay_currency'] = $this->language->get('text_dotpay_currency');
+        $data['text_dotpay_pin_help'] = $this->language->get('text_dotpay_pin_help');
+        $data['text_dotpay_currency'] = $this->language->get('text_dotpay_currency');        
+        $data['text_dotpay_status_rejected'] = $this->language->get('text_dotpay_status_rejected');
+        $data['text_dotpay_status_completed'] = $this->language->get('text_dotpay_status_completed');
 
+      
 
-//        $data['entry_transferuj_status'] = $this->language->get('entry_transferuj_status');
-//        $data['entry_transferuj_status_yes'] = $this->language->get('entry_transferuj_status_yes');
-//        $data['entry_transferuj_status_no'] = $this->language->get('entry_transferuj_status_no');
-//        $data['entry_transferuj_conf_code'] = $this->language->get('entry_transferuj_conf_code');
-//        $data['entry_transferuj_conf_code_hint'] = $this->language->get('entry_transferuj_conf_code_hint');
-//
-//        $data['entry_settings_orders'] = $this->language->get('entry_settings_orders');
-//        $data['entry_transferuj_order_status_error'] = $this->language->get('entry_transferuj_order_status_error');
-//        $data['entry_transferuj_order_status_completed'] = $this->language->get('entry_transferuj_order_status_completed');
-//        $data['button_save'] = $this->language->get('button_save');
-//        $data['button_cancel'] = $this->language->get('button_cancel');
-//        $data['tab_general'] = $this->language->get('tab_general');
-//
-//
-//        $data['entry_view_settings'] = $this->language->get('entry_view_settings');
-//        $data['entry_transferuj_payment_place'] = $this->language->get('entry_transferuj_payment_place');
-//        $data['entry_transferuj_payment_place_0'] = $this->language->get('entry_transferuj_payment_place_0');
-//        $data['entry_transferuj_payment_place_1'] = $this->language->get('entry_transferuj_payment_place_1');
-//
-//        $data['entry_transferuj_payment_view'] = $this->language->get('entry_transferuj_payment_view');
-//        $data['entry_transferuj_payment_view_0'] = $this->language->get('entry_transferuj_payment_view_0');
-//        $data['entry_transferuj_payment_view_1'] = $this->language->get('entry_transferuj_payment_view_1');
-//        $data['transferuj_status'] = (isset($this->request->post['transferuj_status']) ? $this->request->post['transferuj_status'] : $this->config->get('transferuj_status'));
-//        $data['transferuj_conf_code'] = (isset($this->request->post['transferuj_conf_code']) ? $this->request->post['transferuj_conf_code'] : $this->config->get('transferuj_conf_code'));
-//        $data['transferuj_payment_place'] = (isset($this->request->post['transferuj_payment_place']) ? $this->request->post['transferuj_payment_place'] : $this->config->get('transferuj_payment_place'));
-//        $data['transferuj_payment_view'] = (isset($this->request->post['transferuj_payment_view']) ? $this->request->post['transferuj_payment_view'] : $this->config->get('transferuj_payment_view'));
 
 
         $data['dotpay_status'] = (isset($this->request->post['dotpay_status']) ? $this->request->post['dotpay_status'] : $this->config->get('dotpay_status'));
@@ -97,63 +75,24 @@ class ControllerPaymentDotpay extends Controller {
         $data['dotpay_id'] = (isset($this->request->post['dotpay_id']) ? $this->request->post['dotpay_id'] : $this->config->get('dotpay_id'));
         $data['dotpay_ip'] = (isset($this->request->post['dotpay_ip']) ? $this->request->post['dotpay_ip'] : $this->config->get('dotpay_ip'));
         $data['dotpay_pin'] = (isset($this->request->post['dotpay_pin']) ? $this->request->post['dotpay_pin'] : $this->config->get('dotpay_pin'));
-
-
-
-
-
-
-        
-
-        if (!empty($currency_info)) {
-            $data['curr'][] = $currency_info['code'];
-        }
-        $currency_info = $this->model_localisation_currency->getCurrency('0');
-        if (!empty($currency_info)) {
-            $data['curr'][] = $currency_info['code'];
-        }
-        $currency_info = $this->model_localisation_currency->getCurrency('1');
-        if (!empty($currency_info)) {
-            $data['curr'][] = $currency_info['code'];
-        }
-        $currency_info = $this->model_localisation_currency->getCurrency('2');
-        if (!empty($currency_info)) {
-            $data['curr'][] = $currency_info['code'];
-        }
-        $currency_info = $this->model_localisation_currency->getCurrency('3');
-        if (!empty($currency_info)) {
-            $data['curr'][] = $currency_info['code'];
-        }
-        $currency_info = $this->model_localisation_currency->getCurrency('4');
-        if (!empty($currency_info)) {
-            $data['curr'][] = $currency_info['code'];
-        }
-        $currency_info = $this->model_localisation_currency->getCurrency('5');
-        if (!empty($currency_info)) {
-            $data['curr'][] = $currency_info['code'];
-        }
-        $currency_info = $this->model_localisation_currency->getCurrency('6');
-        if (!empty($currency_info)) {
-            $data['curr'][] = $currency_info['code'];
-        }
-        $currency_info = $this->model_localisation_currency->getCurrency('7');
-        if (!empty($currency_info)) {
-            $data['curr'][] = $currency_info['code'];
-        }
-
         $data['dotpay_currency'] = (isset($this->request->post['dotpay_currency']) ? $this->request->post['dotpay_currency'] : $this->config->get('dotpay_currency'));
+        $data['dotpay_status_completed'] = (isset($this->request->post['dotpay_status_completed']) ? $this->request->post['dotpay_status_completed'] : $this->config->get('dotpay_status_completed'));
+        $data['dotpay_status_rejected'] = (isset($this->request->post['dotpay_status_rejected']) ? $this->request->post['dotpay_status_rejected'] : $this->config->get('dotpay_status_rejected'));
 
+
+               
         
-        $data['transferuj_order_status_error'] = (isset($this->request->post['transferuj_order_status_error']) ? $this->request->post['transferuj_order_status_error'] : $this->config->get('transferuj_order_status_error'));
-        $data['transferuj_order_status_completed'] = (isset($this->request->post['transferuj_order_status_completed']) ? $this->request->post['transferuj_order_status_completed'] : $this->config->get('transferuj_order_status_completed'));
+      
+        $data['currencies'] =  $this->model_localisation_currency->getCurrencies();
+        $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
 
-
-        $data['error_permission'] = (isset($this->error['permission']) ? $this->error['permission'] : '');
-        $data['error_id'] = (isset($this->error['dotpay_id']) ? $this->error['dotpay_id'] : '');
-        $data['error_pin'] = (isset($this->error['dotpay_pin']) ? $this->error['dotpay_pin'] : '');
-
+      
+        $data['error'] = (!empty($this->error) ? $this->error : null);
         $data['action'] = HTTPS_SERVER . 'index.php?route=payment/dotpay&token=' . $this->session->data['token'];
         $data['cancel'] = HTTPS_SERVER . 'index.php?route=extension/payment&token=' . $this->session->data['token'];
+        
+        $data['button_save'] = $this->language->get('button_save');
+		$data['button_cancel'] = $this->language->get('button_cancel');
 
 
         $this->template = 'payment/transferuj.tpl';
