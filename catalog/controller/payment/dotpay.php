@@ -10,8 +10,7 @@ class ControllerPaymentDotpay extends Controller {
     public function index() {
         
         $this->load->model('checkout/order');
-        $this->load->model('setting/setting');
-        $this->load->library('encryption');
+        $this->load->model('setting/setting');      
         $this->load->language('payment/dotpay');
         
         
@@ -58,33 +57,40 @@ class ControllerPaymentDotpay extends Controller {
         return $data;
     }
   
-    public function callback(){
-        error_log("DOTPAY-CALLBACK: " );
-        
-        $this->document->setTitle($this->language->get('heading_title'));
-
+    public function callback(){   
 		
         $this->language->load('payment/dotpay');
+        $this->document->setTitle($this->language->get('heading_title'));
         
-        $data['heading_title'] = $this->language->get('heading_title');       
-      
-        $data['text_response'] = $this->language->get('text_response');
+        $data['breadcrumbs'] = array();
 
+		$data['breadcrumbs'][] = array(
+			'text' => $this->language->get('text_home'),
+			'href' => $this->url->link('common/home')
+		);
+        
+        $data['breadcrumbs'][] = array(
+            'href' => HTTPS_SERVER . 'index.php?route=payment/dotpay&token=' . $this->session->data['token'],
+            'text' => $this->language->get('heading_title'),
+            'separator' => ' :: '
+        );
+        
+        $data['heading_title'] = $this->language->get('heading_title');      
+        $data['text_dotpay_response'] = $this->language->get('heading_title');      
+        $data['button_continue'] = $this->language->get('button_continue');      
+     
         if (isset($this->request->get['status']) || $this->request->post['status'] == 'OK')
         {
-//            $data['text_success'] = $this->language->get('text_success');
-//            $data['text_success_wait'] = sprintf($this->language->get('text_success_wait'), HTTPS_SERVER . 'index.php?route=checkout/success');
-            $data['button_continue'] = HTTPS_SERVER . 'index.php?route=checkout/success';
-            echo 'OK';
+            $data['text_dotpay_info'] = $this->language->get('text_dotpay_success');
+            $data['text_dotpay_wait'] = sprintf($this->language->get('text_dotpay_success_wait'), HTTPS_SERVER . 'index.php?route=checkout/success');
+            $data['action_continue'] = HTTPS_SERVER . 'index.php?route=checkout/success';           
             
         } else
         {
-            echo 'FAIL';
-//            $data['text_failure'] = $this->language->get('text_failure');
-//            $failureAction = $this->request->get['route'] != 'checkout/guest_step_3' ? 'payment' : 'guest_step_2';
-//            $data['text_failure_wait'] = sprintf($this->language->get('text_failure_wait'), HTTPS_SERVER . 'index.php?route=checkout/' . $failureAction);
-            $data['button_continue'] = HTTPS_SERVER . 'index.php?route=checkout/cart';
-
+            
+            $data['text_dotpay_info'] = $this->language->get('text_dotpay_failure');            
+            $data['text_dotpay_wait'] = sprintf($this->language->get('text_dotpay_failure_wait'), HTTPS_SERVER . 'index.php?route=checkout/cart');
+            $data['action_continue'] = HTTPS_SERVER . 'index.php?route=checkout/cart';
             
         }
         
@@ -101,17 +107,16 @@ class ControllerPaymentDotpay extends Controller {
 
     public function confirmation() {
         
-        
-        $this->request->post = $this->request->get;
-        
-        foreach ($_POST as $key=>$value){
-            error_log("DOTPAY-POST: ".$key . ":" . $value );
-        }
+//        if (isset($this->request->get['signature']))
+//            $this->request->post = $this->request->get;
+//        
+//        foreach ($_POST as $key=>$value){
+//            error_log("DOTPAY-POST: ".$key . ":" . $value );
+//        }
         
         $this->load->model('checkout/order');
         $this->load->language('payment/dotpay');
-        
-        
+                
         $orderID = $this->request->post['control'];             
         $order = $this->model_checkout_order->getOrder($orderID);
         $order_status = $order['order_status_id'];
@@ -120,13 +125,15 @@ class ControllerPaymentDotpay extends Controller {
         
         if (!$order)
             throw new Exception('Unknown order id.');
+           
+       
         
         if ($this->request->post['operation_type'] == self::OPERATION_TYPE_PAYMENT)
         {
             if ($this->isValid($this->request->post)){                         
                 if ($order_status != $order_status_completed)
                 {       
-                    $message = date('H:i:s ') . $this->language->get('info_dotpay_operation_number') . $this->request->post['operation_number'];                   
+                    $message = date('H:i:s ') . $this->language->get('text_dotpay_operation_number') . $this->request->post['operation_number'];                   
                     $this->model_checkout_order->addOrderHistory($orderID, $order_status_completed, $message, TRUE);                    
                 }
             }else {
