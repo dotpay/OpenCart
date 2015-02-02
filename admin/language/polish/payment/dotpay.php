@@ -1,7 +1,7 @@
 <?php
 $_['heading_title'] = 'Dotpay';
 
-$_['text_transferuj'] = '<a onclick="window.open(\'http://www.dotpay.pl/\');"><img src="view/image/payment/transferuj_logo.png" align="Transferuj.pl" title="Transferuj.pl" style="border: 1px solid #EEEEEE;" /></a>';
+$_['text_dotpay'] = '<a onclick="window.open(\'http://www.dotpay.pl/\');"><img src="view/image/payment/dotpay.png" align="Dotpay" title="Dotpay" style="border: 1px solid #EEEEEE;" /></a>';
 $_['text_edit'] = 'Konfiguracja';
 $_['text_enabled'] = 'Włączony';
 $_['text_disabled'] = 'Wyłączony';
