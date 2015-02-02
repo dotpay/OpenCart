@@ -80,7 +80,7 @@ class ControllerPaymentDotpay extends Controller {
 		);
         
         $data['breadcrumbs'][] = array(
-            'href' => HTTPS_SERVER . 'index.php?route=payment/dotpay&token=' . $this->session->data['token'],
+            'href' => HTTPS_SERVER . 'index.php?route=payment/dotpay&token=',
             'text' => $this->language->get('heading_title'),
             'separator' => ' :: '
         );
@@ -99,7 +99,7 @@ class ControllerPaymentDotpay extends Controller {
         {            
             $data['text_dotpay_info'] = $this->language->get('text_dotpay_failure');            
             $data['text_dotpay_wait'] = sprintf($this->language->get('text_dotpay_failure_wait'), HTTPS_SERVER . 'index.php?route=checkout/cart');
-            $data['action_continue'] = HTTPS_SERVER . 'index.php?route=checkout/cart';            
+            $data['action_continue'] = HTTPS_SERVER . 'index.php?route=checkout/checkout';            
         }
         
         $data['header'] = $this->load->controller('common/header');
@@ -114,10 +114,7 @@ class ControllerPaymentDotpay extends Controller {
     }
 
     public function confirmation() {
-        
-//        if (isset($this->request->get['signature']))
-//            $this->request->post = $this->request->get;
-//        
+                
         foreach ($_POST as $key=>$value){
             error_log("DOTPAY-POST: ".$key . ":" . $value );
         };        
@@ -164,28 +161,30 @@ class ControllerPaymentDotpay extends Controller {
             $result['order_status'] = $this->config->get('dotpay_status_rejected');
         }   
         
-        $this->model_checkout_order->addOrderHistory($orderID, $result['order_status'], $result['message'], TRUE);
+        if ($result['message'] != '')
+            $this->model_checkout_order->addOrderHistory($orderID, $result['order_status'], $result['message'], TRUE);
        
     }
     
     private function paymentOperation(&$result){        
         
         $message = '';
-        if ($result['order_status'] != $this->config->get('dotpay_status_completed'))
+        if (!in_array($result['order_status'], array($this->config->get('dotpay_status_completed'), $this->config->get('dotpay_status_rejected')) ) )
         {            
             if ($this->request->post['operation_status'] == self::OPERATION_STATUS_COMPLETED){
-                $message = $this->language->get('text_dotpay_success');
+                $message = $result['message'] . '. Info: ' .$this->language->get('text_dotpay_success');
                 $result['order_status'] = $this->config->get('dotpay_status_completed');
             }else if( $this->request->post['operation_status'] == self::OPERATION_STATUS_REJECTED ) {
-                $message = $this->language->get('text_dotpay_failure');
+                $message = $result['message'] . '. Info: ' .$this->language->get('text_dotpay_failure');
                 $result['order_status'] = $this->config->get('dotpay_status_rejected');                                  
             }else {
-                $message = $this->language->get('text_dotpay_failure');
+                $message = $result['message'] . '. Info: ' .$this->language->get('text_dotpay_processing');
                 $result['order_status'] = $this->config->get('dotpay_status_processing');
             }
+            
         }
         
-        $result['message'] = $result['message'] . '. Info: ' . $message;        
+        $result['message'] = $message;
         
     }
     
