@@ -89,7 +89,7 @@
                                     }?>
                                 </select>
                             </div>
-                        </div>
+                        </div>                        
 
                         <div class="form-group">
                             <label class="col-sm-2 control-label"><?=$text_dotpay_status_completed; ?></label>
@@ -108,6 +108,16 @@
                                 <select class="form-control" name="dotpay_status_processing"><?php
                                     foreach ($order_statuses as $status) {
                                     echo'<option value="'.$status['order_status_id'].'"'.($status['order_status_id'] == $dotpay_status_processing ? ' selected="selected"' : '').'>'.$status['name'].'</option>';
+                                    }?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><?=$text_dotpay_return_status_completed; ?></label>
+                            <div class="col-sm-10">
+                                <select class="form-control" name="dotpay_return_status_completed"><?php
+                                    foreach ($return_statuses as $status) {
+                                    echo'<option value="'.$status['return_status_id'].'"'.($status['return_status_id'] == $dotpay_return_status_completed ? ' selected="selected"' : '').'>'.$status['name'].'</option>';
                                     }?>
                                 </select>
                             </div>

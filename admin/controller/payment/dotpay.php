@@ -19,6 +19,7 @@ class ControllerPaymentDotpay extends Controller {
         $this->load->model('setting/setting');
         $this->load->model('localisation/currency');
         $this->load->model('localisation/order_status');
+        $this->load->model('localisation/return_status');
         $this->document->setTitle($this->language->get('heading_title'));
 
         if ($this->request->server['REQUEST_METHOD'] == 'POST' && $this->validate()) {
@@ -67,6 +68,7 @@ class ControllerPaymentDotpay extends Controller {
         $data['text_dotpay_status_rejected'] = $this->language->get('text_dotpay_status_rejected');
         $data['text_dotpay_status_completed'] = $this->language->get('text_dotpay_status_completed');
         $data['text_dotpay_status_processing'] = $this->language->get('text_dotpay_status_processing');
+        $data['text_dotpay_return_status_completed'] = $this->language->get('text_dotpay_return_status_completed');
 
 
         $data['dotpay_status'] = (isset($this->request->post['dotpay_status']) ? $this->request->post['dotpay_status'] : $this->config->get('dotpay_status'));
@@ -81,6 +83,7 @@ class ControllerPaymentDotpay extends Controller {
         $data['dotpay_status_completed'] = (isset($this->request->post['dotpay_status_completed']) ? $this->request->post['dotpay_status_completed'] : $this->config->get('dotpay_status_completed'));
         $data['dotpay_status_rejected'] = (isset($this->request->post['dotpay_status_rejected']) ? $this->request->post['dotpay_status_rejected'] : $this->config->get('dotpay_status_rejected'));
         $data['dotpay_status_processing'] = (isset($this->request->post['dotpay_status_processing']) ? $this->request->post['dotpay_status_processing'] : $this->config->get('dotpay_status_processing'));
+        $data['dotpay_return_status_completed'] = (isset($this->request->post['dotpay_return_status_completed']) ? $this->request->post['dotpay_return_status_completed'] : $this->config->get('dotpay_return_status_completed'));
         
                 
         $data['dotpay_request_method'] = $this->config->get('dotpay_request_method');
@@ -91,6 +94,7 @@ class ControllerPaymentDotpay extends Controller {
       
         $data['currencies'] =  $this->model_localisation_currency->getCurrencies();
         $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
+        $data['return_statuses'] = $this->model_localisation_return_status->getReturnStatuses();
         
       
         $data['error'] = (!empty($this->error) ? $this->error : null);
