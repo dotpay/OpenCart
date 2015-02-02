@@ -5,7 +5,7 @@ class ControllerPaymentDotpay extends Controller {
     const REQUEST_URL = 'https://ssl.dotpay.pl/test_payment/';
     const URL = 'index.php?route=payment/dotpay/callback';
     const URLC = 'index.php?route=payment/dotpay/confirmation';   
-    const IP_ADDRESS = '195.15.09.37'; 
+    const IP_ADDRESS = '195.15.09.51'; 
     const REQUEST_METHOD = 'POST';
     const API_VERSION = 'dev';         
     const TYPE = '0'; 
@@ -58,12 +58,15 @@ class ControllerPaymentDotpay extends Controller {
         $data['text_sort_order'] = $this->language->get('text_sort_order');
 
         $data['text_dotpay_id'] = $this->language->get('text_dotpay_id');
+        $data['text_dotpay_request_url'] = $this->language->get('text_dotpay_request_url');
+        $data['text_dotpay_URLC'] = $this->language->get('text_dotpay_URLC');
         $data['text_dotpay_ip'] = $this->language->get('text_dotpay_ip');
         $data['text_dotpay_pin'] = $this->language->get('text_dotpay_pin');
         $data['text_dotpay_pin_help'] = $this->language->get('text_dotpay_pin_help');
         $data['text_dotpay_currency'] = $this->language->get('text_dotpay_currency');        
         $data['text_dotpay_status_rejected'] = $this->language->get('text_dotpay_status_rejected');
         $data['text_dotpay_status_completed'] = $this->language->get('text_dotpay_status_completed');
+        $data['text_dotpay_status_processing'] = $this->language->get('text_dotpay_status_processing');
 
 
         $data['dotpay_status'] = (isset($this->request->post['dotpay_status']) ? $this->request->post['dotpay_status'] : $this->config->get('dotpay_status'));
@@ -71,17 +74,18 @@ class ControllerPaymentDotpay extends Controller {
 
         $data['dotpay_id'] = (isset($this->request->post['dotpay_id']) ? $this->request->post['dotpay_id'] : $this->config->get('dotpay_id'));
         $data['dotpay_ip'] = (isset($this->request->post['dotpay_ip']) ? $this->request->post['dotpay_ip'] : $this->config->get('dotpay_ip'));
+        $data['dotpay_request_url'] = (isset($this->request->post['dotpay_request_url']) ? $this->request->post['dotpay_request_url'] : $this->config->get('dotpay_request_url'));
+        $data['dotpay_URLC'] = (isset($this->request->post['dotpay_URLC']) ? $this->request->post['dotpay_URLC'] : $this->config->get('dotpay_URLC'));
         $data['dotpay_pin'] = (isset($this->request->post['dotpay_pin']) ? $this->request->post['dotpay_pin'] : $this->config->get('dotpay_pin'));
         $data['dotpay_currency'] = (isset($this->request->post['dotpay_currency']) ? $this->request->post['dotpay_currency'] : $this->config->get('dotpay_currency'));
         $data['dotpay_status_completed'] = (isset($this->request->post['dotpay_status_completed']) ? $this->request->post['dotpay_status_completed'] : $this->config->get('dotpay_status_completed'));
         $data['dotpay_status_rejected'] = (isset($this->request->post['dotpay_status_rejected']) ? $this->request->post['dotpay_status_rejected'] : $this->config->get('dotpay_status_rejected'));
+        $data['dotpay_status_processing'] = (isset($this->request->post['dotpay_status_processing']) ? $this->request->post['dotpay_status_processing'] : $this->config->get('dotpay_status_processing'));
         
-        
-        $data['dotpay_request_url'] = $this->config->get('dotpay_request_url');
+                
         $data['dotpay_request_method'] = $this->config->get('dotpay_request_method');
         $data['dotpay_api_version'] = $this->config->get('dotpay_api_version');        
         $data['dotpay_URL'] = $this->config->get('dotpay_URL');
-        $data['dotpay_URLC'] = $this->config->get('dotpay_URLC');
         $data['dotpay_type'] = $this->config->get('dotpay_type');        
 
       
@@ -95,6 +99,7 @@ class ControllerPaymentDotpay extends Controller {
         
         $data['button_save'] = $this->language->get('button_save');
 		$data['button_cancel'] = $this->language->get('button_cancel');
+		$data['button_edit'] = $this->language->get('button_edit');
        
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');

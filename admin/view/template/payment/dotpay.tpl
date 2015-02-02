@@ -1,25 +1,10 @@
 <?php echo $header; ?>
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        jQuery("#miejsce").change(function () {
-
-
-            if ($("#miejsce option:selected").val() == "1") {
-                
-                  $("#wyglad").attr("style", "visibility: hidden")
-
-            }
-            else {
-              
-                $("#wyglad").attr("style", "visibility: ")
-
-            }
-
-        });
-
-
-    });
+    function enabledEdit(selector){
+        input = selector.closest('.input-group').find('input');
+        input.prop("readonly", false);       
+    }
 </script>
 
 <head><meta http-equiv="content-type" content="text/html; charset=utf-8"></head>
@@ -75,13 +60,7 @@
                                     <small class="text-danger"><?=$error['dotpay_id']; ?></small>
                                 <?php } ?>
                             </div>                          
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label"><?=$text_dotpay_ip; ?></label>
-                            <div class="col-sm-10">
-                                <input class="form-control" type="text" name="dotpay_ip" value="<?=(empty($transferuj_ip) ? '195.149.229.109' : $transferuj_ip); ?>" size="16" maxlength="16" />
-                            </div>
-                        </div>
+                        </div>                        
                         <div class="form-group">
                             <label class="col-sm-2 control-label"> <?=$text_dotpay_currency; ?></label>
                             <div class="col-sm-10">
@@ -122,12 +101,56 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
-                    <input type="hidden" name="dotpay_request_url" value="<?=$dotpay_request_url; ?>" />
+                        
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><?=$text_dotpay_status_processing; ?></label>
+                            <div class="col-sm-10">
+                                <select class="form-control" name="dotpay_status_processing"><?php
+                                    foreach ($order_statuses as $status) {
+                                    echo'<option value="'.$status['order_status_id'].'"'.($status['order_status_id'] == $dotpay_status_processing ? ' selected="selected"' : '').'>'.$status['name'].'</option>';
+                                    }?>
+                                </select>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><?=$text_dotpay_ip; ?></label>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <input class="form-control" readonly type="text" name="dotpay_ip" value="<?=$dotpay_ip;?>" size="16" maxlength="16" />
+                                    <span class="input-group-btn">
+                                        <button onclick="enabledEdit($(this))" class="btn btn-primary" type="button"><?=$button_edit; ?></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><?=$text_dotpay_request_url; ?></label>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <input class="form-control" readonly type="text" name="dotpay_request_url" value="<?=$dotpay_request_url; ?>" />
+                                    <span class="input-group-btn">
+                                        <button onclick="enabledEdit($(this))" class="btn btn-primary" type="button"><?=$button_edit; ?></button>
+                                    </span>
+                                </div>
+                            </div>                            
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><?=$text_dotpay_URLC; ?></label>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1"><?=HTTPS_SERVER; ?></span>
+                                    <input class="form-control" readonly type="text" name="dotpay_URLC" value="<?=$dotpay_URLC; ?>"/>    
+                                    <span class="input-group-btn">
+                                        <button onclick="enabledEdit($(this))" class="btn btn-primary" type="button"><?=$button_edit; ?></button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>            
+                    </div>                            
                     <input type="hidden" name="dotpay_request_method" value="<?=$dotpay_request_method; ?>" />
                     <input type="hidden" name="dotpay_api_version" value="<?=$dotpay_api_version; ?>" />
-                    <input type="hidden" name="dotpay_URL" value="<?=$dotpay_URL; ?>" />
-                    <input type="hidden" name="dotpay_URLC" value="<?=$dotpay_URLC; ?>" />
+                    <input type="hidden" name="dotpay_URL" value="<?=$dotpay_URL; ?>" />                    
                     <input type="hidden" name="dotpay_type" value="<?=$dotpay_type; ?>" />
                 </form>
             </div>            
