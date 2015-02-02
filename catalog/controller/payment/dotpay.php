@@ -5,6 +5,13 @@ class ControllerPaymentDotpay extends Controller {
     const OPERATION_TYPE_PAYMENT = 'payment';
     const OPERATION_TYPE_REFUND = 'refund';
     
+    const OPERATION_STATUS_NEW = 'new';
+    const OPERATION_STATUS_PROCESSING = 'processing';
+    const OPERATION_STATUS_COMPLETED = 'completed';
+    const OPERATION_STATUS_REJECTED = 'rejected';
+    const OPERATION_STATUS_REALIZATION_WAIT = 'processing_realization_waiting';
+    const OPERATION_STATUS_REALIZATION = 'processing_realization';
+
     private $error = array();
     
     public function index() {
@@ -49,8 +56,8 @@ class ControllerPaymentDotpay extends Controller {
         //optional
 //        $data['URL'] = HTTPS_SERVER . $this->config->get('dotpay_URL'); 
 //        $data['URLC'] = HTTPS_SERVER . $this->config->get('dotpay_URLC'); 
-        $data['URL'] = 'http://3f430544.ngrok.com/' . $this->config->get('dotpay_URL'); 
-        $data['URLC'] = 'http://3f430544.ngrok.com/' . $this->config->get('dotpay_URLC'); 
+        $data['URL'] = 'http://56d30c4b.ngrok.com/' . $this->config->get('dotpay_URL'); 
+        $data['URLC'] = 'http://56d30c4b.ngrok.com/' . $this->config->get('dotpay_URLC'); 
         $data['type'] = $this->config->get('dotpay_type');
         
         
@@ -86,12 +93,10 @@ class ControllerPaymentDotpay extends Controller {
             $data['action_continue'] = HTTPS_SERVER . 'index.php?route=checkout/success';           
             
         } else
-        {
-            
+        {            
             $data['text_dotpay_info'] = $this->language->get('text_dotpay_failure');            
             $data['text_dotpay_wait'] = sprintf($this->language->get('text_dotpay_failure_wait'), HTTPS_SERVER . 'index.php?route=checkout/cart');
-            $data['action_continue'] = HTTPS_SERVER . 'index.php?route=checkout/cart';
-            
+            $data['action_continue'] = HTTPS_SERVER . 'index.php?route=checkout/cart';            
         }
         
         $data['header'] = $this->load->controller('common/header');
@@ -110,61 +115,82 @@ class ControllerPaymentDotpay extends Controller {
 //        if (isset($this->request->get['signature']))
 //            $this->request->post = $this->request->get;
 //        
-//        foreach ($_POST as $key=>$value){
-//            error_log("DOTPAY-POST: ".$key . ":" . $value );
-//        }
+        foreach ($_POST as $key=>$value){
+            error_log("DOTPAY-POST: ".$key . ":" . $value );
+        }
         
         $this->load->model('checkout/order');
         $this->load->language('payment/dotpay');
                 
-        $orderID = $this->request->post['control'];             
+        $orderID = $this->request->post['control'];  
         $order = $this->model_checkout_order->getOrder($orderID);
-        $order_status = $order['order_status_id'];
-        $order_status_completed =$this->config->get('dotpay_status_completed');
-        $order_status_rejected = $this->config->get('dotpay_status_rejected');
+        $order_status = $order['order_status_id'];        
         
         if (!$order)
             throw new Exception('Unknown order id.');
-           
-       
+                  
+        $message = date('H:i:s ') . $this->language->get('text_dotpay_operation_number') . $this->request->post['operation_number'];
+        $message .= '. Type: ' . $this->request->post['operation_type'] . '. Status: ' . $this->request->post['operation_status'];
+        
+        $result = array(
+            'message' => $message, 
+            'order_status' => $order_status
+        );
         
         if ($this->request->post['operation_type'] == self::OPERATION_TYPE_PAYMENT)
         {
             if ($this->isValid($this->request->post)){                         
-                if ($order_status != $order_status_completed)
-                {       
-                    $message = date('H:i:s ') . $this->language->get('text_dotpay_operation_number') . $this->request->post['operation_number'];                   
-                    $this->model_checkout_order->addOrderHistory($orderID, $order_status_completed, $message, TRUE);                    
-                }
-            }else {
-
-                if ($this->error['error_signature']) {   
-                    
-                    $message = date('H:i:s ') . $this->language->get('error_signature');
-                    $this->model_checkout_order->addOrderHistory($orderID, $order_status_rejected, $message, TRUE);                
-                }
-                
-                return;
-            }            
+                $this->paymentOperation($order_status, $result);                   
+                echo 'OK';
+            } 
             
         } else if ($this->request->post['operation_type'] == self::OPERATION_TYPE_REFUND)
         {
-            
-        }      
+            if ($this->isValid($this->request->post))
+            {
+                $this->paymentOperation($orderID);
+                echo 'OK';
+            }
+        }    
+        
+        if (!empty($this->error))
+        {           
+            $result['message'] .= '. Error: ';
+            foreach ($this->error as $key=>$lang){
+                $result['message'] .= $this->language->get($lang) . ', ';                
+            }  
+            $result['order_status'] = $this->config->get('dotpay_status_rejected');
+        }   
+        
+        $this->model_checkout_order->addOrderHistory($orderID, $result['order_status'], $result['message'], TRUE);
        
-        echo 'OK';
+    }
+    
+    private function paymentOperation($order_status, &$result){        
+        
+        if ($order_status != $order_status_completed)
+        {            
+            if ($this->request->post['operation_status'] == self::OPERATION_STATUS_COMPLETED){
+                $message = $this->language->get('text_dotpay_success');
+                $order_status = $this->config->get('dotpay_status_completed');
+            }else {
+                $message = $this->language->get('text_dotpay_failure');
+                $order_status = $this->config->get('dotpay_status_rejected');
+            }                       
+        }
+        $result['message'] = $result['message'] . '. Info: ' . $message;
+        $result['order_status'] = $order_status;
         
     }
     
     private function isValid($params){
                 
         if (!$this->calculateSign($params)){
-            $this->error['error_signature'] = 1;
-        }
-       
+            $this->error['error_signature'] = 'error_signature';
+        }       
        
         if ($_SERVER["REMOTE_ADDR"] != $this->config->get('dotpay_ip')){
-//            $this->error['error_address_ip'] = 1;
+            $this->error['error_address_ip'] = 'error_address_ip';
         }
             
         return (!$this->error ? true : false);
