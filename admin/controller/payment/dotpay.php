@@ -5,7 +5,7 @@ class ControllerPaymentDotpay extends Controller {
     const REQUEST_URL = 'https://ssl.dotpay.pl/test_payment/';
     const URL = 'index.php?route=payment/dotpay/callback';
     const URLC = 'index.php?route=payment/dotpay/confirmation';   
-    const IP_ADDRESS = '195.15.09.51'; 
+    const IP_ADDRESS = '195.150.9.37'; 
     const REQUEST_METHOD = 'POST';
     const API_VERSION = 'dev';         
     const TYPE = '0'; 
