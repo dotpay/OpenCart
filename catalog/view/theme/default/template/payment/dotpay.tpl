@@ -12,6 +12,10 @@
     <input type="hidden" name="URLC" value="<?=$dotpay['URLC'];?>">    
     <input type="hidden" name="type" value="<?=$dotpay['type'];?>">    
     <input type="hidden" name="api_version" value="<?=$dotpay['api_version'];?>">    
+    <input type="hidden" name="lastname" value="<?=$dotpay['lastname'];?>">    
+    <input type="hidden" name="firstname" value="<?=$dotpay['firstname'];?>">    
+    <input type="hidden" name="email" value="<?=$dotpay['email'];?>">    
+    
 </form>
 <div class="buttons pull-right">
     <table>

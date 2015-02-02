@@ -41,19 +41,22 @@ class ControllerPaymentDotpay extends Controller {
     private function geParams($order){
         
         $data = array();        
-        //requried
+       
         $this->load->model('setting/setting');
         $data['id']=$this->config->get('dotpay_id');               
-        $data['currency']=$this->config->get('dotpay_currency');
-        $data['amount']=number_format($this->currency->format($order['total'],$data['currency'], $order['currency_value'], FALSE), 2, '.', '');
-        $data['lang'] = $this->session->data['language'];
-        $data['description'] = $order['comment'];               
+        $data['currency']=$this->config->get('dotpay_currency');                
         $data['p_info'] = $this->config->get('config_name');
-        $data['p_email'] = $this->config->get('config_email');       
+        $data['p_email'] = $this->config->get('config_email');               
+        $data['api_version'] = $this->config->get('dotpay_api_version');
+        $data['lang'] = $this->session->data['language'];           
+        $data['email'] = $order['email'];
+        $data['lastname'] = $order['payment_lastname'];
+        $data['firstname'] = $order['payment_firstname'];
         $data['control'] = $order['order_id'];
-        $data['api_version'] = $this->config->get('dotpay_api_version');     
+        $data['description'] = $order['comment'];            
+        $data['amount']=number_format($this->currency->format($order['total'],$data['currency'], $order['currency_value'], FALSE), 2, '.', '');
         
-        //optional
+        
 //        $data['URL'] = HTTPS_SERVER . $this->config->get('dotpay_URL'); 
 //        $data['URLC'] = HTTPS_SERVER . $this->config->get('dotpay_URLC'); 
         $data['URL'] = 'http://56d30c4b.ngrok.com/' . $this->config->get('dotpay_URL'); 
@@ -86,7 +89,7 @@ class ControllerPaymentDotpay extends Controller {
         $data['text_dotpay_response'] = $this->language->get('heading_title');      
         $data['button_continue'] = $this->language->get('button_continue');      
      
-        if (isset($this->request->get['status']) || $this->request->post['status'] == 'OK')
+        if (isset($this->request->get['status']) && $this->request->post['status'] == 'OK')
         {
             $data['text_dotpay_info'] = $this->language->get('text_dotpay_success');
             $data['text_dotpay_wait'] = sprintf($this->language->get('text_dotpay_success_wait'), HTTPS_SERVER . 'index.php?route=checkout/success');
@@ -117,14 +120,13 @@ class ControllerPaymentDotpay extends Controller {
 //        
         foreach ($_POST as $key=>$value){
             error_log("DOTPAY-POST: ".$key . ":" . $value );
-        }
+        };        
         
         $this->load->model('checkout/order');
         $this->load->language('payment/dotpay');
                 
         $orderID = $this->request->post['control'];  
-        $order = $this->model_checkout_order->getOrder($orderID);
-        $order_status = $order['order_status_id'];        
+        $order = $this->model_checkout_order->getOrder($orderID);      
         
         if (!$order)
             throw new Exception('Unknown order id.');
@@ -134,13 +136,13 @@ class ControllerPaymentDotpay extends Controller {
         
         $result = array(
             'message' => $message, 
-            'order_status' => $order_status
+            'order_status' => $order['order_status_id']
         );
         
         if ($this->request->post['operation_type'] == self::OPERATION_TYPE_PAYMENT)
         {
             if ($this->isValid($this->request->post)){                         
-                $this->paymentOperation($order_status, $result);                   
+                $this->paymentOperation($result);                   
                 echo 'OK';
             } 
             
@@ -166,20 +168,24 @@ class ControllerPaymentDotpay extends Controller {
        
     }
     
-    private function paymentOperation($order_status, &$result){        
+    private function paymentOperation(&$result){        
         
-        if ($order_status != $order_status_completed)
+        $message = '';
+        if ($result['order_status'] != $this->config->get('dotpay_status_completed'))
         {            
             if ($this->request->post['operation_status'] == self::OPERATION_STATUS_COMPLETED){
                 $message = $this->language->get('text_dotpay_success');
-                $order_status = $this->config->get('dotpay_status_completed');
+                $result['order_status'] = $this->config->get('dotpay_status_completed');
+            }else if( $this->request->post['operation_status'] == self::OPERATION_STATUS_REJECTED ) {
+                $message = $this->language->get('text_dotpay_failure');
+                $result['order_status'] = $this->config->get('dotpay_status_rejected');                                  
             }else {
                 $message = $this->language->get('text_dotpay_failure');
-                $order_status = $this->config->get('dotpay_status_rejected');
-            }                       
+                $result['order_status'] = $this->config->get('dotpay_status_processing');
+            }
         }
-        $result['message'] = $result['message'] . '. Info: ' . $message;
-        $result['order_status'] = $order_status;
+        
+        $result['message'] = $result['message'] . '. Info: ' . $message;        
         
     }
     
@@ -189,8 +195,10 @@ class ControllerPaymentDotpay extends Controller {
             $this->error['error_signature'] = 'error_signature';
         }       
        
-        if ($_SERVER["REMOTE_ADDR"] != $this->config->get('dotpay_ip')){
-            $this->error['error_address_ip'] = 'error_address_ip';
+        if ($_SERVER["REMOTE_ADDR"] != $this->config->get('dotpay_ip') ){
+            if (!isset($_SERVER["HTTP_X_REAL_IP"]) || (isset($_SERVER["HTTP_X_REAL_IP"]) && $_SERVER["HTTP_X_REAL_IP"]!=$this->config->get('dotpay_ip'))){
+                $this->error['error_address_ip'] = 'error_address_ip';
+            }                
         }
             
         return (!$this->error ? true : false);
