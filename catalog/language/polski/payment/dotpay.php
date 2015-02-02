@@ -1,12 +1,23 @@
 <?php
-$_['text_title'] = 'Transferuj.pl';
-$_['text_order'] = 'Zamówienie nr ';
-$_['text_payment_overpay'] = 'Nadpłata zamówienia. Zapłacono: ';
-$_['text_payment_surcharge'] = 'Niedopłata zamówienia. Zapłacono: ';
-$_['text_payment_tr_id'] = 'Identyfikator transakcji: ';
-$_['text_incorrect_md5sum'] = 'Suma kontrolna niepoprawna!';
-$_['text_transferuj_redirect'] = '<br /><br />Za chwilę nastąpi przekierowanie na stronę płatności w systemie '.$_['text_title'].'<br /><br />Jeśli nie nastapi to automatycznie skorzystaj z poniższego przycisku:<br /><br />';
-$_['text_transferuj_redirect_btn'] = 'Zapłać poprzez system Transferuj.pl!';
-$_['text_bank_choice'] = 'Wybierz bank: ';
-$_['text_accept_terms'] = 'Akceptuję <a href="https://secure.transferuj.pl/regulamin.pdf">regulamin</a>: ';
+$_['heading_title'] = 'Status płatności';
+
+$_['text_title'] = 'Dotpay';
+$_['text_button_confirm'] = 'Zapłać przez dotpay';
+$_['text_button_back'] = 'Wróć';
+
+$_['text_dotpay_response']     = 'Odpowiedź z Dotpay:';
+$_['text_dotpay_success']      = 'Płatność została zaakceptowana.';
+$_['text_dotpay_success_wait'] = '<b><span style="color: #FF0000">Proszę czekać...</span></b> na zakończenie realizacji zamówienia.<br>Jeśli nie zostaniesz automatycznie przekierowany w ciągu 10 sekund, kliknij <a href="%s">tutaj</a>.';
+$_['text_dotpay_failure']      = 'Płatność została anulowana!';
+$_['text_dotpay_failure_wait'] = '<b><span style="color: #FF0000">Proszę czekać...</span></b><br>Jeśli nie zostaniesz automatycznie przekierowany w ciągu 10 sekund, kliknij <a href="%s">tutaj</a>.';
+$_['text_dotpay_processing']      = 'Płatność jest przetwarzana!';
+$_['text_dotpay_return_success']      = 'Zwrot został wysłany';
+
+$_['text_dotpay_operation_number'] = 'Identyfikator transakcji: ';
+
+$_['error_signature'] = 'Niepoprawna suma kontrolna';
+$_['error_address_ip'] = 'Niepoprawny adress IP serwisu dotpay';
+
+
+
 ?>

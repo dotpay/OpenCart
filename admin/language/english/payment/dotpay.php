@@ -1,38 +1,30 @@
 <?php
 $_['heading_title'] = 'Dotpay';
 
-$_['text_dotpay'] = '<a onclick="window.open(\'http://www.dotpay.pl/\');"><img src="view/image/payment/dotpay.png" align="Dotpay" title="Dotpay" style="border: 1px solid #EEEEEE;" /></a>';
-$_['text_edit'] = 'Edit Dotpay';
-$_['text_payment'] = 'Payment';
-$_['text_success'] = 'Changes saved!';
+$_['text_transferuj'] = '<a onclick="window.open(\'http://www.dotpay.pl/\');"><img src="view/image/payment/transferuj_logo.png" align="Transferuj.pl" title="Transferuj.pl" style="border: 1px solid #EEEEEE;" /></a>';
+$_['text_edit'] = 'Konfiguracja';
+$_['text_enabled'] = 'Włączony';
+$_['text_disabled'] = 'Wyłączony';
+$_['text_payment'] = 'Płatność';
+$_['text_success'] = 'Zmiany zostały zapisane!';
 
-$_['entry_transferuj_status'] = 'Active';
-$_['entry_transferuj_status_yes']= 'yes';
-$_['entry_transferuj_status_no'] = 'no';
-$_['entry_sort_order'] = 'Order';
-$_['entry_transferuj_ip'] = 'Transferuj.pl IP address';
+$_['text_sort_order']= 'Pozycja na liście płatności';
+$_['text_active_status'] = 'Status płatności';
 
-$_['entry_settings_seller'] = 'Seller settings:';
-$_['entry_transferuj_seller_id'] = 'Seller ID';
-$_['entry_transferuj_conf_code'] = 'Confirmation code';
-$_['entry_transferuj_conf_code_hint'] = 'The same as in Transferuj.pl Sellers panel';
+$_['text_dotpay_id'] = 'ID sklepu';
+$_['text_dotpay_ip'] = 'Adres IP serwera Dotpay';
+$_['text_dotpay_request_url'] = 'Adres URL serwisu dotpay';
+$_['text_dotpay_URLC'] = 'Adres powiadomien URLC';
+$_['text_dotpay_pin'] = 'PIN';
+$_['text_dotpay_pin_help'] = 'Kod PIN znajduje się w Panelu Odbiorcy Płatności';
+$_['text_dotpay_currency']= 'Waluta';
+$_['text_dotpay_status_rejected'] = 'Status zamówień błędnych';
+$_['text_dotpay_status_completed'] = 'Status zamówień zrealizowanych';
+$_['text_dotpay_status_processing'] = 'Status zamówień przetwarzanych';
+$_['text_dotpay_return_status_completed'] = 'Status zwrotów zrealizowanych';
 
-$_['entry_settings_orders'] = 'Orders settings:';
-$_['entry_transferuj_currency']= 'Currency';
-$_['entry_transferuj_order_status_error'] = 'Erroneous payments status';
-$_['entry_transferuj_order_status_completed'] = 'Completed payments status';
-
-$_['error_permission'] = 'You don\'t have permissions to edit Transferuj.pl settings!';
-$_['error_merchant'] = 'Please enter seller ID!';
-
-
-$_['entry_view_settings'] = 'View settings';
-$_['entry_transferuj_payment_place'] = 'Payment place';
-$_['entry_transferuj_payment_place_0'] = 'Shop';
-$_['entry_transferuj_payment_place_1'] = 'Transferuj.pl';
-
-$_['entry_transferuj_payment_view'] = 'Payment view';
-$_['entry_transferuj_payment_view_0'] = 'Tiles';
-$_['entry_transferuj_payment_view_1'] = 'Selection list';
+$_['error_permission'] = 'Brak uprawnień do zmiany ustawień płatności dotpay!';
+$_['error_dotpay_id'] = 'Podaj ID sprzedawcy!';
+$_['error_dotpay_pin'] = 'Podaj PIN!';
 
 ?>

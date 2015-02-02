@@ -114,17 +114,14 @@ class ControllerPaymentDotpay extends Controller {
     }
 
     public function confirmation() {
-                
-        foreach ($_POST as $key=>$value){
-            error_log("DOTPAY-POST: ".$key . ":" . $value );
-        };        
-        
+                    
         $this->load->model('checkout/order');
+        $this->load->model('payment/dotpay');
         $this->load->language('payment/dotpay');
                 
         $orderID = $this->request->post['control'];  
-        $order = $this->model_checkout_order->getOrder($orderID);      
-        
+        $order = $this->model_checkout_order->getOrder($orderID);    
+                
         if (!$order)
             throw new Exception('Unknown order id.');
                   
@@ -147,7 +144,7 @@ class ControllerPaymentDotpay extends Controller {
         {
             if ($this->isValid($this->request->post))
             {
-                $this->paymentOperation($orderID);
+                $this->returnOperation($orderID, $result);
                 echo 'OK';
             }
         }    
@@ -180,6 +177,31 @@ class ControllerPaymentDotpay extends Controller {
             }else {
                 $message = $result['message'] . '. Info: ' .$this->language->get('text_dotpay_processing');
                 $result['order_status'] = $this->config->get('dotpay_status_processing');
+            }
+            
+        }
+        
+        $result['message'] = $message;
+        
+    }
+    
+    private function returnOperation($orderID, &$result){        
+        
+        $return = $this->model_payment_dotpay->getReturnByOrderId($orderID);  
+       
+        $message = '';        
+        if ($return['return_status_id'] == $this->config->get('dotpay_return_status_completed') )
+        {        
+            if ($this->request->post['operation_status'] == self::OPERATION_STATUS_COMPLETED){                
+                $data = array(
+                    'return_status_id' => $this->config->get('dotpay_return_status_completed'),
+                    'comment' => date('H:i:s ') . $this->language->get('text_dotpay_return_success'),
+                    'notify' => 1
+                );                 
+                
+                $this->model_payment_dotpay->addReturnHistory($return['return_id'], $data);
+                
+                $message = $result['message'] . '. Info: ' .$this->language->get('text_dotpay_return_success');                
             }
             
         }
@@ -222,8 +244,8 @@ class ControllerPaymentDotpay extends Controller {
                 $params['description'] .
                 $params['email'] .
                 $params['p_info'] .
-                $params['p_email'] .
-                $params['channel'] .
+                $params['p_email'] .               
+                (isset($params['channel']) ? $params['channel'] : '' ) .  
                 (isset($params['channel_country']) ? $params['channel_country'] : '' ) .  
                 (isset($params['geoip_country']) ? $params['geoip_country'] : '' );
         

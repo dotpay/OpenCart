@@ -1,4 +1,3 @@
-<?php var_dump($dotpay) ?>
 <form action="<?=$action; ?>" method="<?=$method;?>" id="dotpay" style="display: none" target="_blank">  
     <input type="hidden" name="id" value="<?=$dotpay['id'];?>">    
     <input type="hidden" name="amount" value="<?=$dotpay['amount'];?>">    
