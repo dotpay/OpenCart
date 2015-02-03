@@ -19,7 +19,11 @@
 <div class="buttons pull-right">
     <table>
         <tr>              
-            <td align="right"><a onclick="$('form#dotpay').submit();" class="btn btn-primary"><?=$text_button_confirm; ?></a></td>
+            <td align="right">
+                <a onclick="$('form#dotpay').submit();" style="cursor: pointer;">
+                    <img title="<?=$text_button_confirm; ?>" src="catalog/view/theme/default/image/dotpay.jpeg">
+                </a>
+            </td>
         </tr>
     </table>
 </div>
