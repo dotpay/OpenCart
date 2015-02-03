@@ -57,10 +57,10 @@ class ControllerPaymentDotpay extends Controller {
         $data['amount']=number_format($this->currency->format($order['total'],$data['currency'], $order['currency_value'], FALSE), 2, '.', '');
         
         
-//        $data['URL'] = HTTPS_SERVER . $this->config->get('dotpay_URL'); 
-//        $data['URLC'] = HTTPS_SERVER . $this->config->get('dotpay_URLC'); 
-        $data['URL'] = 'http://3baec2a.ngrok.com/' . $this->config->get('dotpay_URL'); 
-        $data['URLC'] = 'http://3baec2a.ngrok.com/' . $this->config->get('dotpay_URLC'); 
+        $data['URL'] = HTTPS_SERVER . $this->config->get('dotpay_URL'); 
+        $data['URLC'] = HTTPS_SERVER . $this->config->get('dotpay_URLC'); 
+//        $data['URL'] = 'http://3baec2a.ngrok.com/' . $this->config->get('dotpay_URL'); 
+//        $data['URLC'] = 'http://3baec2a.ngrok.com/' . $this->config->get('dotpay_URLC'); 
         $data['type'] = $this->config->get('dotpay_type');
         
         
