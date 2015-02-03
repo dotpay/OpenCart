@@ -130,7 +130,7 @@ class ControllerPaymentDotpay extends Controller {
         
         $result = array(
             'message_order' => '', 
-            'message_transaction' => '',
+//            'message_transaction' => '',
             'order_status' => $order['order_status_id']
         );
         
@@ -169,8 +169,8 @@ class ControllerPaymentDotpay extends Controller {
         if ($result['message_order'] != '')
             $this->model_checkout_order->addOrderHistory($orderID, $result['order_status'], $log . $result['message_order'], TRUE);           
         
-        if ($result['message_transaction'] != '')            
-            $this->model_payment_dotpay->addTransaction($order['customer_id'], $result['message_transaction'], $this->request->post['operation_amount'], $orderID);
+//        if ($result['message_transaction'] != '')            
+//            $this->model_payment_dotpay->addTransaction($order['customer_id'], $result['message_transaction'], $this->request->post['operation_amount'], $orderID);
         
        
     }
@@ -181,7 +181,7 @@ class ControllerPaymentDotpay extends Controller {
         {            
             if ($this->request->post['operation_status'] == self::OPERATION_STATUS_COMPLETED){
                 $result['message_order'] = 'Info: ' .$this->language->get('text_dotpay_success');
-                $result['message_transaction'] = $this->language->get('text_dotpay_success');                        
+//                $result['message_transaction'] = $this->language->get('text_dotpay_success');                        
                 $result['order_status'] = $this->config->get('dotpay_status_completed');
             }else if( $this->request->post['operation_status'] == self::OPERATION_STATUS_REJECTED ) {
                 $result['message_order'] = 'Info: ' .$this->language->get('text_dotpay_failure');
@@ -209,7 +209,7 @@ class ControllerPaymentDotpay extends Controller {
                 $this->model_payment_dotpay->addReturnHistory($return['return_id'], $data);
                 
                 $result['message_order'] = 'Info: ' . $this->language->get('text_dotpay_return_success');     
-                $result['message_transaction'] ='Info: ' . $this->language->get('text_dotpay_return_success');
+//                $result['message_transaction'] ='Info: ' . $this->language->get('text_dotpay_return_success');
                        
             }            
         }
