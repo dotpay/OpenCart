@@ -1,22 +1,23 @@
 <?php
-$_['heading_title'] = 'Status płatności';
+$_['heading_title'] = 'Payment status';
 
 $_['text_title'] = 'Dotpay';
-$_['text_button_confirm'] = 'Zapłać przez dotpay';
-$_['text_button_back'] = 'Wróć';
+$_['text_button_confirm'] = 'Pay with dotpay';
+$_['text_button_back'] = 'Back';
 
-$_['text_dotpay_response']     = 'Odpowiedź z Dotpay:';
-$_['text_dotpay_success']      = 'Płatność została zaakceptowana.';
-$_['text_dotpay_success_wait'] = '<b><span style="color: #FF0000">Proszę czekać...</span></b> na zakończenie realizacji zamówienia.<br>Jeśli nie zostaniesz automatycznie przekierowany w ciągu 10 sekund, kliknij <a href="%s">tutaj</a>.';
-$_['text_dotpay_failure']      = 'Płatność została anulowana!';
-$_['text_dotpay_failure_wait'] = '<b><span style="color: #FF0000">Proszę czekać...</span></b><br>Jeśli nie zostaniesz automatycznie przekierowany w ciągu 10 sekund, kliknij <a href="%s">tutaj</a>.';
-$_['text_dotpay_processing']      = 'Płatność jest przetwarzana!';
-$_['text_dotpay_return_success']      = 'Zwrot został wysłany';
+$_['text_dotpay_response']     = 'Dotpay response:';
+$_['text_dotpay_success']      = 'Payment have been accepted!';
+$_['text_dotpay_failure']      = 'Payment have been canceled!';
+$_['text_dotpay_processing']      = 'Payment is processing!';
+$_['text_dotpay_return_success']      = 'Return have been sent';
 
-$_['text_dotpay_operation_number'] = 'Identyfikator transakcji: ';
 
-$_['error_signature'] = 'Niepoprawna suma kontrolna';
-$_['error_address_ip'] = 'Niepoprawny adress IP serwisu dotpay';
+$_['text_dotpay_operation_number'] = 'The transaction ID: ';
+
+$_['error_order'] = 'Order with specified ID does not exist';
+$_['error_return'] = 'Return with specified ID does not exist';
+$_['error_signature'] = 'Invalid signature';
+$_['error_address_ip'] = 'Invalid dotpay IP address';
 
 
 
