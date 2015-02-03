@@ -9,8 +9,7 @@
         <div id="content" class="col-lg-12">
             <h1><?php echo $heading_title; ?></h1>
             <hr>
-            <span><?=$text_dotpay_info?></span><br>
-            <!--<span><?=$text_dotpay_wait?></span>-->
+            <span><?=$text_dotpay_info?></span><br>            
             <div class="buttons">
                 <div class="pull-right"><a href="<?php echo $action_continue; ?>" class="btn btn-primary"><?php echo $button_continue; ?></a></div>
             </div>            
