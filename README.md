@@ -1,2 +1,3 @@
-# dotpay
-Moduły integrujące system płatności dotpay z popularnymi sklepami internetowymi.
+# Dotpay - OpenCart 
+Dotpay 2.0
+Opencart 2.0.1
