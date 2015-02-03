@@ -2,30 +2,29 @@
 $_['heading_title'] = 'Dotpay';
 
 $_['text_dotpay'] = '<a onclick="window.open(\'http://www.dotpay.pl/\');"><img src="view/image/payment/dotpay.png" align="Dotpay" title="Dotpay" style="border: 1px solid #EEEEEE;" /></a>';
+$_['text_edit'] = 'Settings';
+$_['text_enabled'] = 'Enabled';
+$_['text_disabled'] = 'Disabled';
+$_['text_payment'] = 'Payment';
+$_['text_success'] = 'Changes have been saved!';
 
-$_['text_edit'] = 'Konfiguracja';
-$_['text_enabled'] = 'Włączony';
-$_['text_disabled'] = 'Wyłączony';
-$_['text_payment'] = 'Płatność';
-$_['text_success'] = 'Zmiany zostały zapisane!';
+$_['text_sort_order']= 'Position on the payment list';
+$_['text_active_status'] = 'Payment status';
 
-$_['text_sort_order']= 'Pozycja na liście płatności';
-$_['text_active_status'] = 'Status płatności';
-
-$_['text_dotpay_id'] = 'ID sklepu';
-$_['text_dotpay_ip'] = 'Adres IP serwera Dotpay';
-$_['text_dotpay_request_url'] = 'Adres URL serwisu dotpay';
-$_['text_dotpay_URLC'] = 'Adres powiadomien URLC';
+$_['text_dotpay_id'] = 'Shop ID ';
+$_['text_dotpay_ip'] = 'Dotpay IP address';
+$_['text_dotpay_request_url'] = 'Dotpay URL address';
+$_['text_dotpay_URLC'] = 'Notification URLC address';
 $_['text_dotpay_pin'] = 'PIN';
-$_['text_dotpay_pin_help'] = 'Kod PIN znajduje się w Panelu Odbiorcy Płatności';
-$_['text_dotpay_currency']= 'Waluta';
-$_['text_dotpay_status_rejected'] = 'Status zamówień błędnych';
-$_['text_dotpay_status_completed'] = 'Status zamówień zrealizowanych';
-$_['text_dotpay_status_processing'] = 'Status zamówień przetwarzanych';
-$_['text_dotpay_return_status_completed'] = 'Status zwrotów zrealizowanych';
+$_['text_dotpay_pin_help'] = 'You can get the PIN code from your dotpay account';
+$_['text_dotpay_currency']= 'Currency';
+$_['text_dotpay_status_rejected'] = 'Order rejected status';
+$_['text_dotpay_status_completed'] = 'Order completed status';
+$_['text_dotpay_status_processing'] = 'Order processing status';
+$_['text_dotpay_return_status_completed'] = 'Return completed status';
 
-$_['error_permission'] = 'Brak uprawnień do zmiany ustawień płatności dotpay!';
-$_['error_dotpay_id'] = 'Podaj ID sprzedawcy!';
-$_['error_dotpay_pin'] = 'Podaj PIN!';
+$_['error_permission'] = 'Warning: You do not have permission to access the API!';
+$_['error_dotpay_id'] = 'Enter the ID of the seller!';
+$_['error_dotpay_pin'] = 'Enter the PIN!';
 
 ?>
