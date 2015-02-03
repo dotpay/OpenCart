@@ -21,7 +21,7 @@
         <tr>              
             <td align="right">
                 <a onclick="$('form#dotpay').submit();" style="cursor: pointer;">
-                    <img title="<?=$text_button_confirm; ?>" src="catalog/view/theme/default/image/dotpay.jpeg">
+                    <img title="<?=$text_button_confirm; ?>" src="image/dotpay/dotpay.jpeg">
                 </a>
             </td>
         </tr>
