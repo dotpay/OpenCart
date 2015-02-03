@@ -59,8 +59,8 @@ class ControllerPaymentDotpay extends Controller {
         
 //        $data['URL'] = HTTPS_SERVER . $this->config->get('dotpay_URL'); 
 //        $data['URLC'] = HTTPS_SERVER . $this->config->get('dotpay_URLC'); 
-        $data['URL'] = 'http://56d30c4b.ngrok.com/' . $this->config->get('dotpay_URL'); 
-        $data['URLC'] = 'http://56d30c4b.ngrok.com/' . $this->config->get('dotpay_URLC'); 
+        $data['URL'] = 'http://3baec2a.ngrok.com/' . $this->config->get('dotpay_URL'); 
+        $data['URLC'] = 'http://3baec2a.ngrok.com/' . $this->config->get('dotpay_URLC'); 
         $data['type'] = $this->config->get('dotpay_type');
         
         
@@ -114,17 +114,19 @@ class ControllerPaymentDotpay extends Controller {
     }
 
     public function confirmation() {
-                    
+           
         $this->load->model('checkout/order');
         $this->load->model('payment/dotpay');
         $this->load->language('payment/dotpay');
                 
         $orderID = $this->request->post['control'];  
         $order = $this->model_checkout_order->getOrder($orderID);    
-                
-        if (!$order)
-            throw new Exception('Unknown order id.');
-                  
+        
+        if (!$order) {
+            echo 'Error: ' . $this->language->get('error_order');
+            return;
+        }
+        
         $message = date('H:i:s ') . $this->language->get('text_dotpay_operation_number') . $this->request->post['operation_number'];
         $message .= '. Type: ' . $this->request->post['operation_type'] . '. Status: ' . $this->request->post['operation_status'];
         
@@ -144,7 +146,14 @@ class ControllerPaymentDotpay extends Controller {
         {
             if ($this->isValid($this->request->post))
             {
-                $this->returnOperation($orderID, $result);
+                $return = $this->model_payment_dotpay->getReturnByOrderId($orderID);  
+                
+                if (!$return) {
+                    echo 'Error: ' . $this->language->get('error_return');            
+                    return;
+                }
+        
+                $this->returnOperation($return, $result);
                 echo 'OK';
             }
         }    
@@ -185,14 +194,13 @@ class ControllerPaymentDotpay extends Controller {
         
     }
     
-    private function returnOperation($orderID, &$result){        
+    private function returnOperation($return, &$result){        
         
-        $return = $this->model_payment_dotpay->getReturnByOrderId($orderID);  
-       
-        $message = '';        
-        if ($return['return_status_id'] == $this->config->get('dotpay_return_status_completed') )
-        {        
-            if ($this->request->post['operation_status'] == self::OPERATION_STATUS_COMPLETED){                
+        $message = '';            
+        if (!empty($return) && $return['return_status_id'] != $this->config->get('dotpay_return_status_completed') )
+        {     
+            if ($this->request->post['operation_status'] == self::OPERATION_STATUS_COMPLETED)
+            {          
                 $data = array(
                     'return_status_id' => $this->config->get('dotpay_return_status_completed'),
                     'comment' => date('H:i:s ') . $this->language->get('text_dotpay_return_success'),

@@ -15,6 +15,8 @@ $_['text_dotpay_return_success']      = 'Zwrot został wysłany';
 
 $_['text_dotpay_operation_number'] = 'Identyfikator transakcji: ';
 
+$_['error_order'] = 'Zamównie o podanym ID nie istnieje';
+$_['error_return'] = 'Zwrot dla zamówienia o podanym ID nie istnieje';
 $_['error_signature'] = 'Niepoprawna suma kontrolna';
 $_['error_address_ip'] = 'Niepoprawny adress IP serwisu dotpay';
 
