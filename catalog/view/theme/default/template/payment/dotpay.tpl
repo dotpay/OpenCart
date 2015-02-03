@@ -1,4 +1,3 @@
-<?php var_dump($dotpay)?>
 <form action="<?=$action; ?>" method="<?=$method;?>" id="dotpay" style="display: none" target="_blank">  
     <input type="hidden" name="id" value="<?=$dotpay['id'];?>">    
     <input type="hidden" name="amount" value="<?=$dotpay['amount'];?>">    
@@ -19,8 +18,7 @@
 </form>
 <div class="buttons pull-right">
     <table>
-        <tr>  
-            <!--<td align="left"><a onclick="location = '<?=$back; ?>'" class="button btn"><span><i class="fa fa-arrow-left"></i> <?=$text_button_back; ?></span></a></td>-->
+        <tr>              
             <td align="right"><a onclick="$('form#dotpay').submit();" class="btn btn-primary"><?=$text_button_confirm; ?></a></td>
         </tr>
     </table>
