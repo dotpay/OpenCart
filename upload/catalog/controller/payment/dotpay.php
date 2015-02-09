@@ -53,7 +53,7 @@ class ControllerPaymentDotpay extends Controller {
         $data['lastname'] = $order['payment_lastname'];
         $data['firstname'] = $order['payment_firstname'];
         $data['control'] = $order['order_id'];
-        $data['description'] = $order['comment'];            
+        $data['description'] = 'Order ID: '.$order['order_id'];            
         $data['amount']=number_format($this->currency->format($order['total'],$data['currency'], $order['currency_value'], FALSE), 2, '.', '');
         
         
