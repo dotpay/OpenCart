@@ -126,7 +126,12 @@ class ControllerPaymentDotpay extends Controller {
             'dotpay_URL' => self::URL,
             'dotpay_URLC' => self::URLC,
             'dotpay_type' => self::TYPE,
-            'dotpay_currency' => $this->config->get('config_currency'),
+            'dotpay_status_completed' => 5,
+            'dotpay_status_rejected' => 10,
+            'dotpay_status_processing' => 2,
+            'dotpay_return_status_completed' => 3,
+            'dotpay_sort_order' => 1
+            
         );
 
         $this->model_setting_setting->editSetting('dotpay', $this->settings);

@@ -225,7 +225,7 @@ class ControllerPaymentDotpay extends Controller {
             if (!isset($_SERVER["HTTP_X_REAL_IP"]) || (isset($_SERVER["HTTP_X_REAL_IP"]) && $_SERVER["HTTP_X_REAL_IP"]!=$this->config->get('dotpay_ip')))
                 $this->error['error_address_ip'] = 'error_address_ip';                
 
-        if ($order != null and number_format($order['total'], 2, '.', '') != $this->request->post['operation_original_amount']) {
+        if ($order != null and number_format($this->currency->format($order['total'],$data['currency'], $order['currency_value'], FALSE), 2, '.', '') != $this->request->post['operation_original_amount']) {
             $this->error['error_signature'] = 'error_amount';   
             echo 'opencart - Wrong amount: ' . number_format($order['total'], 2, '.', '') . ' != ' . $this->request->post['operation_original_amount'];
         }
