@@ -60,8 +60,9 @@
                                     <small class="text-danger"><?=$error['dotpay_id']; ?></small>
                                 <?php } ?>
                             </div>                          
-                        </div>                        
-                        <div class="form-group">
+                        </div>         
+                        <?php /*
+                      <div class="form-group">
                             <label class="col-sm-2 control-label"> <?=$text_dotpay_currency; ?></label>
                             <div class="col-sm-10">
                                 <select name="dotpay_currency" class="form-control" id="dotpay_currency">
@@ -70,7 +71,7 @@
                                     <?php } ?>
                                 </select>
                             </div>		
-                        </div>  
+                        </div> */ ?>
                         <div class="form-group">
                             <label class="col-sm-2 control-label" ><span class="required" data-toggle="tooltip" title="<?=$text_dotpay_pin_help; ?>"></span> <?=$text_dotpay_pin; ?></label>
                             <div class="col-sm-10" >
@@ -146,24 +147,32 @@
                             </div>                            
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-2 control-label"><?=$text_dotpay_URLC; ?></label>
+                            <label class="col-sm-2 control-label"><?=$text_dotpay_URL; ?></label>
                             <div class="col-sm-10">
                                 <div class="input-group">
                                     <span class="input-group-addon" id="basic-addon1"><?=HTTPS_SERVER; ?></span>
-                                    <input class="form-control" readonly type="text" name="dotpay_URLC" value="<?=$dotpay_URLC; ?>"/>    
+                                    <input class="form-control" readonly type="text" name="dotpay_URL" value="<?=$dotpay_URL; ?>"/>    
                                     <span class="input-group-btn">
                                         <button onclick="enabledEdit($(this))" class="btn btn-primary" type="button"><?=$button_edit; ?></button>
                                     </span>
                                 </div>
                             </div>
-                        </div>            
-                    </div>                            
+                        </div>                          
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label"><?=$text_dotpay_URLC; ?></label>
+                            <div class="col-sm-10">
+                                <div class="input-group">
+                                    <span class="input-group-addon" id="basic-addon1"><?=HTTPS_SERVER; ?></span>
+                                    <input class="form-control" readonly type="text" name="dotpay_URLC" value="<?=$dotpay_URLC; ?>"/>    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <input type="hidden" name="dotpay_request_method" value="<?=$dotpay_request_method; ?>" />
                     <input type="hidden" name="dotpay_api_version" value="<?=$dotpay_api_version; ?>" />
-                    <input type="hidden" name="dotpay_URL" value="<?=$dotpay_URL; ?>" />                    
                     <input type="hidden" name="dotpay_type" value="<?=$dotpay_type; ?>" />
                 </form>
-            </div>            
+            </div>
         </div>
     </div>
 </div>

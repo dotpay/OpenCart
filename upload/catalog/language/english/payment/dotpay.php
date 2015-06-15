@@ -18,7 +18,7 @@ $_['error_order'] = 'Order with specified ID does not exist';
 $_['error_return'] = 'Return with specified ID does not exist';
 $_['error_signature'] = 'Invalid signature';
 $_['error_address_ip'] = 'Invalid dotpay IP address';
-
+$_['error_amount'] = 'Incorrect transaction amount'
 
 
 ?>

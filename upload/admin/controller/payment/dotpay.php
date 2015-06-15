@@ -60,6 +60,7 @@ class ControllerPaymentDotpay extends Controller {
 
         $data['text_dotpay_id'] = $this->language->get('text_dotpay_id');
         $data['text_dotpay_request_url'] = $this->language->get('text_dotpay_request_url');
+        $data['text_dotpay_URL'] = $this->language->get('text_dotpay_URL');
         $data['text_dotpay_URLC'] = $this->language->get('text_dotpay_URLC');
         $data['text_dotpay_ip'] = $this->language->get('text_dotpay_ip');
         $data['text_dotpay_pin'] = $this->language->get('text_dotpay_pin');
@@ -77,6 +78,7 @@ class ControllerPaymentDotpay extends Controller {
         $data['dotpay_id'] = (isset($this->request->post['dotpay_id']) ? $this->request->post['dotpay_id'] : $this->config->get('dotpay_id'));
         $data['dotpay_ip'] = (isset($this->request->post['dotpay_ip']) ? $this->request->post['dotpay_ip'] : $this->config->get('dotpay_ip'));
         $data['dotpay_request_url'] = (isset($this->request->post['dotpay_request_url']) ? $this->request->post['dotpay_request_url'] : $this->config->get('dotpay_request_url'));
+        $data['dotpay_URL'] = (isset($this->request->post['dotpay_URL']) ? $this->request->post['dotpay_URL'] : $this->config->get('dotpay_URL'));
         $data['dotpay_URLC'] = (isset($this->request->post['dotpay_URLC']) ? $this->request->post['dotpay_URLC'] : $this->config->get('dotpay_URLC'));
         $data['dotpay_pin'] = (isset($this->request->post['dotpay_pin']) ? $this->request->post['dotpay_pin'] : $this->config->get('dotpay_pin'));
         $data['dotpay_currency'] = (isset($this->request->post['dotpay_currency']) ? $this->request->post['dotpay_currency'] : $this->config->get('dotpay_currency'));

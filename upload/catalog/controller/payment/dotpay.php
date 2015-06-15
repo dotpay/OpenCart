@@ -21,8 +21,7 @@ class ControllerPaymentDotpay extends Controller {
         $this->load->language('payment/dotpay');
         
         
-        $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);  
-                
+        $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);   
         $data['text_button_confirm'] = $this->language->get('text_button_confirm');        
         
         $data['order_id'] = $order['order_id'];        
@@ -44,7 +43,7 @@ class ControllerPaymentDotpay extends Controller {
        
         $this->load->model('setting/setting');
         $data['id']=$this->config->get('dotpay_id');               
-        $data['currency']=$this->config->get('dotpay_currency');                
+        $data['currency']=$order['currency_code'];                
         $data['p_info'] = $this->config->get('config_name');
         $data['p_email'] = $this->config->get('config_email');               
         $data['api_version'] = $this->config->get('dotpay_api_version');
@@ -136,7 +135,7 @@ class ControllerPaymentDotpay extends Controller {
         
         if ($this->request->post['operation_type'] == self::OPERATION_TYPE_PAYMENT)
         {
-            if ($this->isValid($this->request->post)){                         
+            if ($this->isValid($this->request->post, $order)){                         
                 $this->paymentOperation($order, $result);                   
                 echo 'OK';
             } 
@@ -179,11 +178,12 @@ class ControllerPaymentDotpay extends Controller {
         
         if (!in_array($order['order_status_id'], array($this->config->get('dotpay_status_completed'), $this->config->get('dotpay_status_rejected')) ) )
         {            
-            if ($this->request->post['operation_status'] == self::OPERATION_STATUS_COMPLETED){
+            $operation_status = $this->request->post['operation_status'];
+            if ($operation_status == self::OPERATION_STATUS_COMPLETED){
                 $result['message_order'] = 'Info: ' .$this->language->get('text_dotpay_success');
 //                $result['message_transaction'] = $this->language->get('text_dotpay_success');                        
                 $result['order_status'] = $this->config->get('dotpay_status_completed');
-            }else if( $this->request->post['operation_status'] == self::OPERATION_STATUS_REJECTED ) {
+            }else if($operation_status == self::OPERATION_STATUS_REJECTED ) {
                 $result['message_order'] = 'Info: ' .$this->language->get('text_dotpay_failure');
                 $result['order_status'] = $this->config->get('dotpay_status_rejected');                                  
             }else {
@@ -216,18 +216,22 @@ class ControllerPaymentDotpay extends Controller {
         
     }
     
-    private function isValid($params){
+    private function isValid($params, $order=null){
                 
-        if (!$this->calculateSign($params)){
-            $this->error['error_signature'] = 'error_signature';
-        }       
+        if (!$this->calculateSign($params))
+            $this->error['error_signature'] = 'error_signature';   
        
-        if ($_SERVER["REMOTE_ADDR"] != $this->config->get('dotpay_ip') ){
-            if (!isset($_SERVER["HTTP_X_REAL_IP"]) || (isset($_SERVER["HTTP_X_REAL_IP"]) && $_SERVER["HTTP_X_REAL_IP"]!=$this->config->get('dotpay_ip'))){
-                $this->error['error_address_ip'] = 'error_address_ip';
-            }                
+        if ($_SERVER["REMOTE_ADDR"] != $this->config->get('dotpay_ip') )
+            if (!isset($_SERVER["HTTP_X_REAL_IP"]) || (isset($_SERVER["HTTP_X_REAL_IP"]) && $_SERVER["HTTP_X_REAL_IP"]!=$this->config->get('dotpay_ip')))
+                $this->error['error_address_ip'] = 'error_address_ip';                
+
+        if ($order != null and number_format($order['total'], 2, '.', '') != $this->request->post['operation_original_amount']) {
+            $this->error['error_signature'] = 'error_amount';   
+            echo 'opencart - Wrong amount: ' . number_format($order['total'], 2, '.', '') . ' != ' . $this->request->post['operation_original_amount'];
         }
             
+        
+          
         return (!$this->error ? true : false);
         
     }

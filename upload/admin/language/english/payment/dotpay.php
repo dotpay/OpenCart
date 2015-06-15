@@ -14,6 +14,7 @@ $_['text_active_status'] = 'Payment status';
 $_['text_dotpay_id'] = 'Shop ID ';
 $_['text_dotpay_ip'] = 'Dotpay IP address';
 $_['text_dotpay_request_url'] = 'Dotpay URL address';
+$_['text_dotpay_URL'] = 'Return URL address';
 $_['text_dotpay_URLC'] = 'Notification URLC address';
 $_['text_dotpay_pin'] = 'PIN';
 $_['text_dotpay_pin_help'] = 'You can get the PIN code from your dotpay account';
