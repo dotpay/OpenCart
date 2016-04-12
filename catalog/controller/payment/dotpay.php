@@ -1,9 +1,9 @@
 <?php
 /**
  * @package Dotpay Payment Plugin module for OpenCart v2.0
- * @version $1.2 : dotpay.php 2015-10-16
+ * @version $1.3 : dotpay.php 2016-04-08
  * @author Dotpay SA  < tech@dotpay.pl >
- * @copyright (C) 2015 - Dotpay SA
+ * @copyright (C) 2016 - Dotpay SA
  * @license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
 **/
 
@@ -36,15 +36,21 @@ class ControllerPaymentDotpay extends Controller {
         $data['dotpay'] = $this->geParams($order);
        
         $data['action'] = $this->config->get('dotpay_request_url');
-        $data['method'] = $this->config->get('dotpay_request_method');
-               
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/dotpay.tpl')) {
-            return $this->load->view($this->config->get('config_template') . '/template/payment/dotpay.tpl', $data);
-        } else {
-            return $this->load->view('default/template/payment/dotpay.tpl', $data);
-        }
+        $data['method'] = $this->config->get('dotpay_request_method');            
+
+		if (version_compare(VERSION, '2.2.0.0', '<')) {	   
+			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/dotpay.tpl')) {
+				return $this->load->view($this->config->get('config_template') . '/template/payment/dotpay.tpl', $data);
+			} else {
+				return $this->load->view('default/template/payment/dotpay.tpl', $data);
+			}
+		}else{
+			return $this->load->view('payment/dotpay', $data);
+		}
     }
     
+	
+	
     private function geParams($order){
         
         $data = array();        
@@ -110,11 +116,17 @@ class ControllerPaymentDotpay extends Controller {
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
        
-        if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/dotpay_callback.tpl')) {
-			$this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/payment/dotpay_callback.tpl', $data));
-		} else {
-			$this->response->setOutput($this->load->view('default/template/payment/dotpay_callback.tpl', $data));
-		}
+	   
+	   	if (version_compare(VERSION, '2.2.0.0', '<')) {	 
+			if (file_exists(DIR_TEMPLATE . $this->config->get('config_template') . '/template/payment/dotpay_callback.tpl')) {
+				$this->response->setOutput($this->load->view($this->config->get('config_template') . '/template/payment/dotpay_callback.tpl', $data));
+			} else {
+				$this->response->setOutput($this->load->view('default/template/payment/dotpay_callback.tpl', $data));
+			}
+		}else{
+			return $this->load->view('payment/dotpay_callback', $data);
+		}	
+			
     }
 
     public function confirmation() {
