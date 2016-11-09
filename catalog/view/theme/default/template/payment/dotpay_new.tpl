@@ -1,0 +1,196 @@
+<style>
+.btn-dotpay {            
+   cursor: pointer;
+   display: block;
+   border: 1px solid #7d1416;
+}
+
+.btn-dotpay[disabled=disabled] {
+    opacity: 0.5;
+}
+.btn-dotpay > button {
+    color: white;   
+    border-radius: 0;
+    background-color: #7d1416;
+    background-image: linear-gradient(to bottom, #7d1416, #7d1416);
+    border-color: #7d1416 #7d1416 #7d1416;
+    height: 25px;
+    padding: 0;
+    font-size: 11px;        
+}    
+.btn-dotpay > button:hover {
+   color: white;   
+}
+
+.dotpay-one-channel {
+    margin-bottom: 10px;
+}
+
+.dotpay-channel-head {
+    color: #333;
+    background-color: #f5f5f5;
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 16px;
+    color: inherit;
+    border: 1px solid #ddd;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    cursor: pointer;
+}
+
+.dotpay-channel-head label {
+    width: 100%;
+    margin-bottom: 0px;
+    cursor: pointer;
+    padding: 10px 15px;
+    font-size: 18px;
+}
+
+.dotpay-channel-body {
+    display: none;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-top: none;
+}
+
+.dotpay-channel-body label {
+    display: block;
+}
+</style>
+
+<form action="<?php echo $action; ?>" method="POST" class="dotpay-payment">  
+    <div class="dotpay-shop-channels">
+        <?php echo $channels; ?>
+    </div>
+</form>
+<div class="buttons pull-right">
+    <table>
+        <tr>              
+            <td align="right">      
+                <input value="<?=$text_button_confirm; ?>" id="dotpay-payment-execute" data-loading-text="Loading..." class="btn btn-primary" disabled="disabled" type="button">
+            </td>
+        </tr>
+    </table>
+</div>
+
+<script>
+    function sendForm() {
+        if(validatePayment()) {
+            $('.dotpay-one-channel').not('.active').find('.dotpay-channel-body').remove();
+            $('.dotpay-channel-switch:checked').parents('form.dotpay-payment').submit();
+        }
+    }
+    
+    function expandRightChannel() {
+        var active = $('.dotpay-channel-switch:checked').parents('.dotpay-one-channel');
+        if(!active.hasClass('active')) {
+            $('.dotpay-one-channel.active').removeClass('active').find('.dotpay-channel-body').slideToggle(300);
+            active.addClass('active').find('.dotpay-channel-body').slideToggle(300);
+        }
+        switch($('.dotpay-channel-switch:checked').val()) {
+            case 'oc':
+                setOcInterface();
+                break;
+        }
+    }
+    
+    function setOcInterface() {
+        if($('select[name=card_id] option').length == 0) {
+            $('#dotpay-oc-savedcard-area').css('display', 'none');
+            $('input[name=oc_type]:last').click();
+        } else {
+            $('dotpay-oc-savedcard-area').css('display', '');
+            $('input[name=oc_type]:first').click();
+        }
+    }
+    
+    function validateOc(name) {
+        if($('input[name=oc_type]:checked').val()==undefined)
+            return false;
+        return validateAgreements(name);
+    }
+    
+    function validatePv(name) {
+        return validateAgreements(name);
+    }
+    
+    function validateCc(name) {
+        return validateAgreements(name);
+    }
+    
+    function validateMp(name) {
+        return validateAgreements(name);
+    }
+    
+    function validateBlik(name) {
+        var value = $('input[name="blik_code"]').val();
+        if(value.length != 6 || isNaN(parseInt(value)) || parseInt(value) != value)
+            return false;
+        return validateAgreements(name);
+    }
+    
+    function validateDotpay(name) {
+        if($('input.channel-input').length>0 && $('input.channel-input:checked').val()==undefined)
+            return false;
+        return validateAgreements(name);
+    }
+    
+    function validateAgreements(name) {
+        if(!$('.dotpay-channel-dotpay .dotpay-agreements').length)
+            return true;
+        var channel = $('input.dotpay-channel-switch:checked').parents('.dotpay-one-channel');
+        var bylaw = channel.find('input[name=bylaw]').prop('checked');
+        var personal_data = channel.find('input[name=personal_data]').prop('checked');
+        return bylaw && personal_data;
+    }
+    
+    function validatePayment() {
+        var result = true;
+        switch($('.dotpay-channel-switch:checked').val()) {
+            case 'oc':
+                result = validateOc('oc');
+                break;
+            case 'pv':
+                result = validatePv('pv');
+                break;
+            case 'cc':
+                result = validateCc('cc');
+                break;
+            case 'mp':
+                result = validateMp('mp');
+                break;
+            case 'blik':
+                result = validateBlik('blik');
+                break;
+            default:
+                result = validateDotpay('dotpay');
+        }
+        if(!result)
+            $('#dotpay-payment-execute').attr('disabled', 'disabled');
+        else
+            $('#dotpay-payment-execute').removeAttr('disabled');
+        return result;
+    }
+    
+    function executePayment() {
+        if(validatePayment())
+            $('.dotpay-payment').submit();
+    }
+    
+    $(document).ready(function(){
+        expandRightChannel();
+        $('.dotpay-channel-switch').change(expandRightChannel);
+        $('.dotpay-shop-channels input,.dotpay-shop-channels switch').change(validatePayment);
+        $('.my-form-widget-container').click(validatePayment);
+        $('#dotpay-payment-execute').click(executePayment);
+        var oneChannel = $('.dotpay-one-channel');
+        if(oneChannel.length === 1) {
+            setTimeout(function(){
+                oneChannel.find('.dotpay-channel-switch').click();
+            }, 500);
+        }
+    });
+</script>
