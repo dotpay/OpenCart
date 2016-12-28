@@ -57,7 +57,7 @@ class ControllerExtensionPaymentDotpayNew extends Controller {
     /**
      * Version of payment plugin
      */
-    
+    const VERSION = '2.3.1';
     /**
      * @var array List of errors
      */
