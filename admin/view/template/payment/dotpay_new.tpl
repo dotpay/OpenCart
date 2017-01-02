@@ -44,7 +44,7 @@
                 </p>
                 <?php if (empty($dotpay_id)) { ?>
                     <p align="center">
-                        <a href="https://ssl.dotpay.pl/s2/login/registration/?affilate_id=opencart" target="_blank" class="btn btn-primary btn-lg" title="<?php echo $text_dotpay_register; ?>">
+                        <a href="https://ssl.dotpay.pl/s2/login/registration/?affilate_id=module_opencart" target="_blank" class="btn btn-primary btn-lg" title="<?php echo $text_dotpay_register; ?>">
                             <i class="fa fa-plus"></i>
                             <b><?php echo $text_dotpay_register; ?></b>
                         </a>
