@@ -42,6 +42,7 @@ $_['text_dotpay_pv_id'] = 'Shop ID for credit channel';
 $_['text_dotpay_pv_pin'] = 'PIN for credit channel';
 $_['text_dotpay_pv_curr'] = 'Currencies for special credit card channel';
 $_['text_dotpay_pv_curr_help'] = 'Please enter currency codes separated by commas, for example: EUR,USD';
+$_['text_dotpay_pv_curr_validate'] = 'for example: EUR,USD';
 $_['text_dotpay_cc'] = 'Credit card channel';
 $_['text_dotpay_mp'] = 'MasterPass channel';
 $_['text_dotpay_blik'] = 'BLIK channel';
