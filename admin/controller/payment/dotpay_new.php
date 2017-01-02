@@ -57,7 +57,7 @@ class ControllerPaymentDotpayNew extends Controller {
     /**
      * Version of payment plugin
      */
-    const VERSION = '2.0.0';
+    const VERSION = '2.0.1';
     
     /**
      * @var array List of errors
@@ -207,6 +207,7 @@ class ControllerPaymentDotpayNew extends Controller {
         $data['text_dotpay_pv_pin'] = $this->language->get('text_dotpay_pv_pin');
         $data['text_dotpay_pv_curr'] = $this->language->get('text_dotpay_pv_curr');
         $data['text_dotpay_pv_curr_help'] = $this->language->get('text_dotpay_pv_curr_help');
+	$data['text_dotpay_pv_curr_validate'] = $this->language->get('text_dotpay_pv_curr_validate');
         $data['text_dotpay_cc'] = $this->language->get('text_dotpay_cc');
         $data['text_dotpay_mp'] = $this->language->get('text_dotpay_mp');
         $data['text_dotpay_blik'] = $this->language->get('text_dotpay_blik');
