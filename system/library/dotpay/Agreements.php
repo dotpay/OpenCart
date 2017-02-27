@@ -199,7 +199,8 @@ class Agreements {
         $curlUrl .= "?currency={$this->currency}";
         $curlUrl .= "&id={$this->id}";
         $curlUrl .= "&amount={$this->amount}";
-        $curlUrl .= "&lang={$this->language->get('code')}";
+        //$curlUrl .= "&lang={$this->language->get('code')}";
+        $curlUrl .= "&lang=".strtolower(substr(trim($this->language->get('code')),0,2));
         
         try {
             $curl = new Curl();
