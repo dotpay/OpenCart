@@ -354,7 +354,8 @@ class Gateway {
         $data['p_info'] = $this->config->get('config_name');
         $data['p_email'] = $this->config->get('config_email');
         $data['api_version'] = $this->config->get(self::PLUGIN_NAME.'_api_version');
-        $data['lang'] = $this->language->get('code');
+        //$data['lang'] = $this->language->get('code');
+        $data['lang'] = strtolower(substr(trim($this->language->get('code')),0,2));
         $data['email'] = $this->order['email'];
         $data['lastname'] = $this->order['payment_lastname'];
         $data['firstname'] = $this->order['payment_firstname'];
