@@ -166,7 +166,8 @@ class ControllerExtensionPaymentDotpayNew extends Controller {
         
         $data['plugin_name'] = self::PLUGIN_NAME;
         $data['base_url'] = dirname(HTTPS_SERVER).'/';
-        $data['datatable_language'] = ($this->language->get('code')=='pl')?'Polish':'English';
+        //$data['datatable_language'] = ($this->language->get('code')=='pl')?'Polish':'English';
+	$data['datatable_language'] = (strtolower(substr(trim($this->language->get('code')),0,2))=='pl')?'Polish':'English';
         
         $data['action'] = HTTPS_SERVER . 'index.php?route='.$this->getExtensionName().'&token=' . $this->session->data['token'];
         $data['cancel'] = HTTPS_SERVER . 'index.php?route=extension/extension&type=payment&token=' . $this->session->data['token'];
