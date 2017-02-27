@@ -128,9 +128,9 @@ class Agreements {
      * @return string
      */
     public function getByLaw() {
-        $byLawAgreements = $this->getAgreements('bylaw');
+        $byLawAgreements = ' '.$this->getAgreements('bylaw');
         if(trim($byLawAgreements) == ''){
-            $byLawAgreements = 'I accept Dotpay S.A. <a title="regulations of payments" target="_blank" href="https://ssl.dotpay.pl/files/regulamin_dotpay_sa_dokonywania_wplat_w_serwisie_dotpay_en.pdf">Regulations of Payments</a>.';
+            $byLawAgreements = ' I accept Dotpay S.A. <a title="regulations of payments" target="_blank" href="https://ssl.dotpay.pl/files/regulamin_dotpay_sa_dokonywania_wplat_w_serwisie_dotpay_en.pdf">Regulations of Payments</a>.';
         }
         return $byLawAgreements;
     }
@@ -140,9 +140,9 @@ class Agreements {
      * @return string
      */
     public function getPersonalData() {
-        $personalDataAgreements = $this->getAgreements('personal_data');
+        $personalDataAgreements = ' '.$this->getAgreements('personal_data');
         if(trim($personalDataAgreements) == ''){
-            $personalDataAgreements = 'I agree to the use of my personal data by Dotpay S.A. 30-552 Kraków (Poland), Wielicka 72 for the purpose of	conducting a process of payments in accordance with applicable Polish laws (Act of 29.08.1997 for the protection of personal data, Dz. U. No 133, pos. 883, as amended). I have the right to inspect and correct my data.';
+            $personalDataAgreements = ' I agree to the use of my personal data by Dotpay S.A. 30-552 Kraków (Poland), Wielicka 72 for the purpose of	conducting a process of payments in accordance with applicable Polish laws (Act of 29.08.1997 for the protection of personal data, Dz. U. No 133, pos. 883, as amended). I have the right to inspect and correct my data.';
         }
         return $personalDataAgreements;
     }
