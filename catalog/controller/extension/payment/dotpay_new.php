@@ -81,7 +81,8 @@ class ControllerExtensionPaymentDotpayNew extends Controller {
             'id' => $this->config->get(self::PLUGIN_NAME.'_id'),
             'amount' => dotpay\Gateway::correctAmount($order,$this->currency),
             'currency' => $order['currency_code'],
-            'lang' => $this->session->data['language'],
+            //'lang' => $this->session->data['language'],
+            'lang' => strtolower(substr(trim($this->session->data['language']),0,2)),
             'disabled_channels' => $this->getDisabledChannels(),
             'host' => $this->config->get(self::PLUGIN_NAME.'_target_payment_url'),
         );
