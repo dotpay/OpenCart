@@ -13,6 +13,7 @@ _English version below_
 2. W panelu OpenCart przejdź do `Extension -> Extension Installer`, następnie naciśnij `Upload` by wybrać plik z modułem. Dokończ instalację wybierając `Continue`.
 3. Wybierz w menu `Extension -> Extension List`, następnie jako typ rozszerzenia wskaż `Payments` by odnaleźć moduł płatności Dotpay. Jeśli jeszcze nie jest zainstalowany - zainstaluj a następnie przejdź do jego konfiguracji.
 
+**Podczas aktualizacji wtyczki radzimy zlokalizować folder _storage/cache_ i opróżnić jego zawartość.**
 
 ---------------------------------------
 
@@ -24,3 +25,5 @@ _English version below_
 1. Download the plugin dotpay.ocmod.zip (https://github.com/dotpay/OpenCart/releases/download/v3.0.2/dotpay.ocmod.zip)
 2. In OpenCart panel go to: `Extension -> Extension Installer`, and click `Upload` and then `Continue` it.
 3. Go to: `Extension -> Extension List`, Choose the extension type `Payments`, and enable Dotpay payment gateway then edit configuration.
+
+**During the plugin update we advice you to find the catalog _storage/cache_ and clear all elements inside it.**
