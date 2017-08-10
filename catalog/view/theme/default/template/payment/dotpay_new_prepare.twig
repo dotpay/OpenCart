@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>{{ title }}</title>
+        <script type="text/javascript">
+            setTimeout(function(){document.getElementById('dotpay-form').submit();}, 1);
+        </script>
+    </head>
+    <body>
+        <form action="{{ action }}" method="POST" id="dotpay-form" style="display: none">  
+            {% for name,value in fields %}
+            <input type="hidden" name="{{ name }}" value="{{ value }}" />
+            {% endfor %}
+        </form>
+    </body>
+</html>

@@ -1,5 +1,5 @@
-<?php if($widget_visible): ?>
-<link href="<?php echo $dotpay_url; ?>widget/payment_widget.min.css" rel="stylesheet">
+{% if widget_visible %}
+<link href="{{ dotpay_url }}widget/payment_widget.min.css" rel="stylesheet">
 <style>
     .selected-channel-message {
         display: none;
@@ -25,15 +25,15 @@
 </style>
 <script type="text/javascript">
     var dotpayWidgetConfig = {
-        sellerAccountId: <?php echo $widget["id"]; ?>,
-        amount: <?php echo $widget["amount"]; ?>,
-        currency: '<?php echo $widget["currency"]; ?>',
-        lang: '<?php echo $widget["lang"]; ?>',
+        sellerAccountId: {{ widget.id }},
+        amount: {{ widget.amount }},
+        currency: '{{ widget.currency }}',
+        lang: '{{ widget.lang }}',
         widgetFormContainerClass: 'my-form-widget-container',
         offlineChannel: 'mark',
         offlineChannelTooltip: true,
-        disabledChannels: [<?php echo $widget["disabled_channels"]; ?>],
-        host: '<?php echo $dotpay_url; ?>payment_api/channels/'
+        disabledChannels: [{{ widget.disabled_channels }}],
+        host: '{{ dotpay_url }}payment_api/channels/'
     };
     
     (function($) {
@@ -66,8 +66,9 @@
             $('.channel-container').on('click', function(e) {
                 $('.channel-input', this).prop('checked', true);
                 var id = $(this).find('.channel-input').val();
-                if(id == undefined)
+                if(id == undefined) {
                     return false;
+                }
                 var container = copyChannelContainer(id);
                 $('.'+settings.selectedChannelContainerClass+' div').remove();
                 container.insertBefore($('.'+settings.selectedChannelContainerClass+' hr'));
@@ -109,8 +110,8 @@
         }, 1000);
     });
 </script>
-<script id="dotpay-payment-script" src="<?php echo HTTPS_SERVER; ?>catalog/view/javascript/dotpay/payment_widget.js"></script>
-<div class="selected-channel-message"><?php echo $label_selected_channel; ?>: <a href="#" class="channel-selected-change"><?php echo $label_change_channel; ?>&nbsp;&raquo;</a></div>
+<script id="dotpay-payment-script" src="{{ HTTPS_SERVER }}catalog/view/javascript/dotpay/payment_widget.js"></script>
+<div class="selected-channel-message">{{ label_selected_channel }}: <a href="#" class="channel-selected-change">{{ label_change_channel }}&nbsp;&raquo;</a></div>
 <div class="selectedChannelContainer channels-wrapper"><hr /></div>
-<div class="collapsibleWidgetTitle"><?php echo $label_available_channels; ?>:</div><p class="my-form-widget-container"></p>
-<?php endif; ?>
+<div class="collapsibleWidgetTitle">{{ label_available_channels }}:</div><p class="my-form-widget-container"></p>
+{% endif %}

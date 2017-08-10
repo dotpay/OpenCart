@@ -1,7 +1,7 @@
 <?php
 
 /**
- * English language pack for admin page in Dotpay payment plugin
+ * English language pack for admin page in Dotpay payment plugin.
  */
 $_['heading_title'] = 'Dotpay';
 $_['text_dotpay_new'] = '<a onclick="window.open(\'http://www.dotpay.pl/\');" style="cursor: pointer;"><img src="view/image/payment/dotpay_new.png" align="Dotpay" title="Dotpay" style="border: 1px solid #EEEEEE; width: 96px;" /></a>';
@@ -77,5 +77,3 @@ $_['error_permission'] = 'Warning: You do not have permission to access the API!
 $_['error_dotpay_id'] = 'Enter the ID of the seller!';
 $_['error_dotpay_pin'] = 'Enter the PIN!';
 $_['error_dotpay_unauthorized_manipulaed'] = 'Unauthorized manipulation of settings';
-
-?>

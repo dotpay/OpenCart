@@ -1,7 +1,7 @@
 <?php
 
 /**
- * English language pack for client page in Dotpay payment plugin
+ * English language pack for client page in Dotpay payment plugin.
  */
 $_['text_dotpay_title'] = 'Fast and secure Internet payment';
 $_['text_dotpay_button_confirm'] = 'Pay with Dotpay';
@@ -74,5 +74,3 @@ $_['info_logo'] = 'Payment channel logo';
 $_['info_warning'] = 'Not following the above procedure (e.g. changing the amount or payment title) will make your payment not handled automatically, and therefore lengthen finalization time of the transaction.';
 $_['info_command_cash'] = 'Download blankiet';
 $_['info_command_transfer'] = 'Make a money transfer';
-
-?>

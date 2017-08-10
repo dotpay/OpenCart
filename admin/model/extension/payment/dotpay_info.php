@@ -1,21 +1,24 @@
 <?php
 
 /**
- * Model of information about ending of cash of transfer payments
+ * Model of information about ending of cash of transfer payments.
  */
 class ModelExtensionPaymentDotpayInfo extends Model
 {
     /**
-     * Name of table in database
+     * Name of table in database.
      */
     const TABLE = 'dotpay_instructions';
-    
+
     /**
-     * Installs model and modifies database structure
+     * Installs model and modifies database structure.
+     *
      * @param type $db Database driver from OpencCart
+     *
      * @return type
      */
-    public static function install($db) {
+    public static function install($db)
+    {
         return $db->query('
             CREATE TABLE IF NOT EXISTS `'.DB_PREFIX.self::TABLE.'` (
                 `instruction_id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -31,17 +34,18 @@ class ModelExtensionPaymentDotpayInfo extends Model
             ) DEFAULT CHARSET=utf8;'
         );
     }
-    
+
     /**
-     * Uninstalls model and clears database structure
+     * Uninstalls model and clears database structure.
+     *
      * @param type $db Database driver from OpencCart
+     *
      * @return type
      */
-    public static function uninstall($db) {
+    public static function uninstall($db)
+    {
         return $db->query(
-            'DROP TABLE IF EXISTS `'.DB_PREFIX.self::TABLE.';'
+            'DROP TABLE IF EXISTS `'.DB_PREFIX.self::TABLE.'`;'
         );
     }
 }
-
-?>

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Polish language pack for client page in Dotpay payment plugin
+ * Polish language pack for client page in Dotpay payment plugin.
  */
 $_['text_dotpay_title'] = 'Szybkie i bezpieczne płatności internetowe';
 $_['text_dotpay_button_confirm'] = 'Płać z Dotpay';
@@ -74,5 +74,3 @@ $_['info_logo'] = 'Logo kanału płatności';
 $_['info_warning'] = 'Nie zastosowanie się do powyższej procedury (podanie innej kwoty niż podana, innego tytułu płatności, nie wybrania przycisku potwierdzenia) spowoduje, że Państwa płatnośc nie zostanie obsłużona automatycznie, a tym samym wydłuży się czas realizacji transakcji.';
 $_['info_command_cash'] = 'Pobierz blankiet';
 $_['info_command_transfer'] = 'Zrób przelew bankowy';
-
-?>

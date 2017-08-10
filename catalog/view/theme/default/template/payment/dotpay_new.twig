@@ -61,16 +61,16 @@
 }
 </style>
 
-<form action="<?php echo $action; ?>" method="POST" class="dotpay-payment">  
+<form action="{{ action }}" method="POST" class="dotpay-payment">  
     <div class="dotpay-shop-channels">
-        <?php echo $channels; ?>
+        {{ channels }}
     </div>
 </form>
 <div class="buttons pull-right">
     <table>
         <tr>              
             <td align="right">      
-                <input value="<?=$text_button_confirm; ?>" id="dotpay-payment-execute" data-loading-text="Loading..." class="btn btn-primary" disabled="disabled" type="button">
+                <input value="{{ text_button_confirm }}" id="dotpay-payment-execute" data-loading-text="Loading..." class="btn btn-primary" disabled="disabled" type="button">
             </td>
         </tr>
     </table>
@@ -98,7 +98,7 @@
     }
     
     function setOcInterface() {
-        if($('select[name=card_id] option').length == 0) {
+        if($('select[name=card_id] option').length === 0) {
             $('#dotpay-oc-savedcard-area').css('display', 'none');
             $('input[name=oc_type]:last').click();
         } else {
@@ -127,8 +127,9 @@
     
     function validateBlik(name) {
         var value = $('input[name="blik_code"]').val();
-        if(value.length != 6 || isNaN(parseInt(value)) || parseInt(value) != value)
+        if(value.length !== 6 || isNaN(parseInt(value)) || parseInt(value) != value) {
             return false;
+        }
         return validateAgreements(name);
     }
     
@@ -139,8 +140,9 @@
     }
     
     function validateAgreements(name) {
-        if(!$('.dotpay-channel-dotpay .dotpay-agreements').length)
+        if(!$('.dotpay-channel-dotpay .dotpay-agreements').length) {
             return true;
+        }
         var channel = $('input.dotpay-channel-switch:checked').parents('.dotpay-one-channel');
         var bylaw = channel.find('input[name=bylaw]').prop('checked');
         var personal_data = channel.find('input[name=personal_data]').prop('checked');
@@ -176,8 +178,9 @@
     }
     
     function executePayment() {
-        if(validatePayment())
+        if(validatePayment()) {
             $('.dotpay-payment').submit();
+        }
     }
     
     $(document).ready(function(){

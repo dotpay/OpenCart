@@ -1,0 +1,31 @@
+<style>
+    .dotpay-oc select[name=card_id] {
+        margin-left: 20px;
+        margin-bottom: 10px;
+    }
+    
+    .dotpay-oc label {
+        line-height: 15px;
+        margin-bottom: 8px;
+        min-width: 250px;
+    }
+</style>
+<div class="dotpay-oc">
+    <div id="dotpay-oc-savedcard-area">
+        <label>
+            <input type="radio" name="oc_type" value="saved" />{{ label_select_oc_card }}
+            &nbsp;(<a href="{{ url_see_cards }}" target="_blank">{{ text_see_cards }}</a>)
+        </label>
+        <select name="card_id">
+            {% for card in oc_cards %}
+            <option value="{{ card.cc_id }}">{{ card.mask }}&nbsp;({{ card.brand }})</option>
+            {% endfor %}
+        </select>
+    </div>
+    <label>
+        <input type="radio" name="oc_type" value="new" />{{ label_register_oc_card }}
+    </label>
+    <label>
+        <input type="checkbox" name="oneclick_agreements" required="required" value="1" checked="true">{{ register_card_agreement }}
+    </label>
+</div>

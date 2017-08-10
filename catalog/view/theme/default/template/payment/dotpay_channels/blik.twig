@@ -9,5 +9,5 @@
     }
 </style>
 <label>
-    <?php echo $blik_code_label; ?><input type="text" maxlength="6" name="blik_code" value="" required="required" placeholder="" pattern="[0-9]{6}" title="<?php echo $blik_validate; ?>" />
+    {{ blik_code_label }}<input type="text" maxlength="6" name="blik_code" value="" required="required" placeholder="" pattern="[0-9]{6}" title="{{ blik_validate }}" />
 </label>

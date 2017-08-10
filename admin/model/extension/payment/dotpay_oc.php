@@ -1,21 +1,24 @@
 <?php
 
 /**
- * Model of credit cards, saved in shop for One Click cards payment
+ * Model of credit cards, saved in shop for One Click cards payment.
  */
 class ModelExtensionPaymentDotpayOc extends Model
 {
     /**
-     * Name of table in database
+     * Name of table in database.
      */
     const TABLE = 'dotpay_on_cards';
-    
+
     /**
-     * Installs model and modifies database structure
+     * Installs model and modifies database structure.
+     *
      * @param type $db Database driver from OpencCart
+     *
      * @return type
      */
-    public static function install($db) {
+    public static function install($db)
+    {
         return $db->query(
             'CREATE TABLE IF NOT EXISTS `'.DB_PREFIX.self::TABLE.'` (
                 `cc_id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -34,24 +37,30 @@ class ModelExtensionPaymentDotpayOc extends Model
             ) DEFAULT CHARSET=utf8;'
         );
     }
-    
+
     /**
-     * Uninstalls model and clears database structure
+     * Uninstalls model and clears database structure.
+     *
      * @param type $db Database driver from OpencCart
+     *
      * @return type
      */
-    public static function uninstall($db) {
+    public static function uninstall($db)
+    {
         return $db->query(
-            'DROP TABLE IF EXISTS `'.DB_PREFIX.self::TABLE.';'
+            'DROP TABLE IF EXISTS `'.DB_PREFIX.self::TABLE.'`;'
         );
     }
-    
+
     /**
-     * Gets all cards
-     * @param boolean $empty
+     * Gets all cards.
+     *
+     * @param bool $empty
+     *
      * @return array
      */
-    public function getAllCards($empty = false) {
+    public function getAllCards($empty = false)
+    {
         $not = ($empty) ? '' : 'NOT';
         $cards = $this->db->query('
             SELECT oc.*, us.firstname, us.lastname, us.email
@@ -60,22 +69,25 @@ class ModelExtensionPaymentDotpayOc extends Model
             WHERE
                 card_id IS '.$not.' NULL
         ');
+
         return $cards->rows;
     }
-    
+
     /**
-     * Deletes card for id
+     * Deletes card for id.
+     *
      * @param int $cardId
-     * @return boolean
+     *
+     * @return bool
      */
-    public function deleteCardForId($cardId) {
+    public function deleteCardForId($cardId)
+    {
         $result = $this->db->query('
             DELETE
             FROM `'.DB_PREFIX.self::TABLE.'` 
-            WHERE `cc_id` = '.(int)$cardId
+            WHERE `cc_id` = '.(int) $cardId
         );
+
         return $result;
     }
 }
-
-?>

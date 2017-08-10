@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Polish language pack for admin page in Dotpay payment plugin
+ * Polish language pack for admin page in Dotpay payment plugin.
  */
 $_['code'] = 'pl';
 $_['heading_title'] = 'Dotpay';
@@ -78,5 +78,3 @@ $_['error_permission'] = 'Uwaga: nie masz uprawnień modyfikacji ustawień.';
 $_['error_dotpay_id'] = 'Wprowadź ID sprzedawcy!';
 $_['error_dotpay_pin'] = 'Wprowadź PIN!';
 $_['error_dotpay_unauthorized_manipulaed'] = 'Nieautoryzowana zmiana danych';
-
-?>

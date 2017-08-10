@@ -1,6 +1,5 @@
-<?php echo $header; ?>
-
-<?php echo $column_left; ?>
+{{ header }}
+{{ column_left }}
 <style type="text/css">
     #statusMessageContainer {
         text-align: center;
@@ -56,27 +55,27 @@
 </style>
 <div class="container">
     <div id="statusMessageContainer">
-        <?php if($message != NULL): ?>
-            <p class="alert alert-danger"><?php echo $message; ?></p>
+        {% if message is not null %}
+            <p class="alert alert-danger">{{ message }}</p>
             <script type="text/javascript">
-                setTimeout(function(){location.href="<?php echo $back_redirect_url; ?>";}, 4000);
+                setTimeout(function(){location.href="{{ back_redirect_url }}";}, 4000);
             </script>
-        <?php endif; ?>
+        {% endif %}
     </div>
     <div class="buttons clearfix">
-        <div class="pull-left"><a href="<?php echo $back_redirect_url; ?>" class="btn btn-default"><?php echo $back_text_back; ?></a></div>
+        <div class="pull-left"><a href="{{ back_redirect_url }}" class="btn btn-default">{{ back_text_back }}</a></div>
     </div>
 </div>
 
-<?php if($message == NULL): ?>
+{% if message is null %}
 <script type="text/javascript">
     window.checkStatusConfig = {
-        "url": "<?php echo $check_status_url; ?>",
-        "waitingMessage": "<?php echo $back_waiting_message; ?>",
-        "successMessage": "<?php echo $back_success_message; ?>",
-        "errorMessage": "<?php echo $back_error_message; ?>",
-        "timeoutMessage": "<?php echo $back_timeout_message; ?>",
-        "redirectUrl": "<?php echo $back_redirect_url; ?>"
+        "url": "{{ check_status_url }}",
+        "waitingMessage": "{{ back_waiting_message }}",
+        "successMessage": "{{ back_success_message }}",
+        "errorMessage": "{{ back_error_message }}",
+        "timeoutMessage": "{{ back_timeout_message }}",
+        "redirectUrl": "{{ back_redirect_url }}"
     };
 
     $(document).ready(function(){
@@ -110,7 +109,7 @@
                     setErrorMessage(window.checkStatusConfig.errorMessage);
                     clearInterval(checkInt);
             }
-            if(e == 'NO' || e == '-1') {
+            if(e === 'NO' || parseInt(e) === -1) {
                 hideLoader();
                 setErrorMessage(window.checkStatusConfig.errorMessage);
             }
@@ -149,6 +148,6 @@ function hideLoader() {
 }
 
 </script>
-<?php endif; ?>
+{% endif %}
 
-<?php echo $footer; ?>
+{{ footer }}

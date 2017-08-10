@@ -1,7 +1,5 @@
-<?php echo $header; ?>
-
-<?php echo $column_left; ?>
-
+{{ header }}
+{{ column_left }}
 <div class="container">
     <style>
     #instruction {
@@ -82,7 +80,6 @@
         display: block;
         margin: 10px;
     }
-}
     </style>
     <script type="text/javascript">
         jQuery(document).ready(function(){
@@ -93,47 +90,47 @@
             });
         });
     </script>
-    <?php if($info_order_not_found!==NULL): ?>
+    {% if info_order_not_found is not null %}
     <div class="col-xs-12">
-        <p id="instruction-content" class="alert alert-danger"><?php echo $info_order_not_found; ?></p>
+        <p id="instruction-content" class="alert alert-danger">{{ info_order_not_found }}</p>
     </div>
-    <?php else: ?>
+    {% else %}
     <section id="instruction">
         <div class="row">
             <div class="col-xs-12">
-                <p id="instruction-content" class="alert alert-info"><?php echo $info_info; ?></p>
+                <p id="instruction-content" class="alert alert-info">{{ info_info }}</p>
             </div>
             <div class="col-md-6">
-                <?php if($bank_account!=NULL): ?>
+                {% if bank_account is not null %}
                 <label clas="row">
-                    <?php echo $info_account; ?>
-                    <input type="text" class="important form-control" id="iban" value="<?php echo $bank_account; ?>" />
+                    {{ info_account }}
+                    <input type="text" class="important form-control" id="iban" value="{{ bank_account }}" />
                 </label>
-                <?php endif; ?>
+                {% endif %}
                 <label clas="row">
-                    <?php echo $info_amount; ?>
+                    {{ info_amount }}
                     <div class="input-group">
-                        <input type="text" class="important col-md-10 form-control" id="amount" value="<?php echo $amount; ?>" aria-describedby="transfer-currency">
-                        <span class="input-group-addon col-md-2" id="transfer-currency"><?php echo $currency; ?></span>
+                        <input type="text" class="important col-md-10 form-control" id="amount" value="{{ amount }}" aria-describedby="transfer-currency">
+                        <span class="input-group-addon col-md-2" id="transfer-currency">{{ currency }}</span>
                     </div>
                 </label>
                 <label clas="row">
-                    <?php echo $info_title; ?>
-                    <input type="text" class="important form-control" id="payment-title" value="<?php echo $title; ?>" />
+                    {{ info_title }}
+                    <input type="text" class="important form-control" id="payment-title" value="{{ title }}" />
                 </label>
             </div>
             <div class="col-md-6">
                 <label clas="row">
-                    <?php echo $info_name; ?>
-                    <input type="text" class="important form-control" id="recipient" value="<?php echo $name; ?>" />
+                    {{ info_name }}
+                    <input type="text" class="important form-control" id="recipient" value="{{ name }}" />
                 </label>
                 <label clas="row">
-                    <?php echo $info_street; ?>
-                    <input type="text" class="important form-control" id="street" value="<?php echo $street; ?>" />
+                    {{ info_street }}
+                    <input type="text" class="important form-control" id="street" value="{{ street }}" />
                 </label>
                 <label clas="row">
-                    <?php echo $info_postcode; ?>
-                    <input type="text" class="important form-control" id="post-code-city" value="<?php echo $postcode; ?>" />
+                    {% info_postcode %}
+                    <input type="text" class="important form-control" id="post-code-city" value="{% postcode %}" />
                 </label>
             </div>
         </div>
@@ -141,21 +138,20 @@
             <section id="payment-form" class="col-xs-12">
                 <div id="blankiet-download-form">
                     <div id="channel_container_confirm">
-                        <a href="<?php echo $address; ?>" target="_blank" title="<?php echo $command; ?>">
+                        <a href="{{ address }}" target="_blank" title="{{ command }}">
                             <div>
-                                <img src="<?php echo $logo; ?>" alt="<?php echo $info_logo; ?>" />
-                                <span><?php echo $command; ?></span>
+                                <img src="{{ logo }}" alt="{{ info_logo }}" />
+                                <span>{{ command }}</span>
                             </div>
                         </a>
                     </div>
                 </div>
             </section>
             <div class="col-xs-12">
-                <p class="alert alert-warning"><?php echo $info_warning; ?></p>
+                <p class="alert alert-warning">{{ info_warning }}</p>
             </div>
         </div>
     </section>
-    <?php endif; ?>
+    {% endif %}
 </div>
-
-<?php echo $footer; ?>
+{{ footer }}

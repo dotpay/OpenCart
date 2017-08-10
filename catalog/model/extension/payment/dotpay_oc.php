@@ -3,85 +3,105 @@
 class ModelExtensionPaymentDotpayOc extends Model
 {
     const TABLE = 'dotpay_on_cards';
-    
+
     /**
-     * Gets all cards for customer
-     * @param int $userId
-     * @param boolean $empty
+     * Gets all cards for customer.
+     *
+     * @param int  $userId
+     * @param bool $empty
+     *
      * @return array
      */
-    public function getAllCardsForCustomer($userId, $empty = false) {
+    public function getAllCardsForCustomer($userId, $empty = false)
+    {
         $not = ($empty) ? '' : 'NOT';
         $cards = $this->db->query('
             SELECT *
             FROM `'.DB_PREFIX.self::TABLE.'` 
-            WHERE customer_id = '.(int)$userId.' 
+            WHERE customer_id = '.(int) $userId.' 
             AND 
             card_id IS '.$not.' NULL
         ');
+
         return $cards->rows;
     }
-    
+
     /**
-     * Returns credit card for selected order
+     * Returns credit card for selected order.
+     *
      * @param type $order Order Id
+     *
      * @return array|null
      */
-    public function getCreditCardByOrder($order) {
+    public function getCreditCardByOrder($order)
+    {
         $card = $this->db->query('
             SELECT *
             FROM `'.DB_PREFIX.self::TABLE.'` 
-            WHERE order_id = '.(int)$order
+            WHERE order_id = '.(int) $order
         );
-        if(!count($card->rows))
-            return NULL;
+        if (!count($card->rows)) {
+            return null;
+        }
+
         return $card->rows[0];
     }
-    
+
     /**
-     * Returns card data fot the given card id
+     * Returns card data fot the given card id.
+     *
      * @param int $id card id
+     *
      * @return type
      */
-    public function getCardById($id) {
+    public function getCardById($id)
+    {
         $card = $this->db->query('
             SELECT * 
             FROM `'.DB_PREFIX.self::TABLE.'` 
-            WHERE cc_id = '.(int)$id
+            WHERE cc_id = '.(int) $id
         );
-        if(!count($card->rows))
-            return NULL;
+        if (!count($card->rows)) {
+            return null;
+        }
+
         return $card->rows[0];
     }
-    
+
     /**
-     * Adds card to database and return card hash
+     * Adds card to database and return card hash.
+     *
      * @param int $customerId customer id
-     * @param int $orderId order id
+     * @param int $orderId    order id
+     *
      * @return string
      */
-    public function addCard($customerId, $orderId) {
-        $existedCard = $this->db->query( 'SELECT * FROM `'.DB_PREFIX.self::TABLE.'` WHERE customer_id = '.(int)$customerId.' AND order_id = '.(int)$orderId);
-        if(empty($existedCard->rows[0])) {
+    public function addCard($customerId, $orderId)
+    {
+        $existedCard = $this->db->query('SELECT * FROM `'.DB_PREFIX.self::TABLE.'` WHERE customer_id = '.(int) $customerId.' AND order_id = '.(int) $orderId);
+        if (empty($existedCard->rows[0])) {
             $hash = $this->generateCardHash();
-            $this->db->query( 
-                'INSERT INTO `'.DB_PREFIX.self::TABLE.'`(customer_id, order_id, hash) VALUES('.(int)$customerId.','.(int)$orderId.',\''.$hash.'\')'
+            $this->db->query(
+                'INSERT INTO `'.DB_PREFIX.self::TABLE.'`(customer_id, order_id, hash) VALUES('.(int) $customerId.','.(int) $orderId.',\''.$hash.'\')'
             );
         } else {
             $hash = $existedCard->rows[0]['hash'];
         }
+
         return $hash;
     }
-    
+
     /**
-     * Adds additional info to saved card
-     * @param int $id card id
+     * Adds additional info to saved card.
+     *
+     * @param int    $id     card id
      * @param string $cardId card identifier from Dotpay
-     * @param string $mask card mask name
-     * @param string $brand card brand
+     * @param string $mask   card mask name
+     * @param string $brand  card brand
      */
-    public function updateCard($id, $cardId, $mask, $brand) {
-        $this->db->query( 
+    public function updateCard($id, $cardId, $mask, $brand)
+    {
+        $this->db->query(
             'UPDATE`'.DB_PREFIX.self::TABLE.'`
                 SET 
                     card_id = \''.$cardId.'\',
@@ -89,43 +109,53 @@ class ModelExtensionPaymentDotpayOc extends Model
                     brand = \''.$brand.'\',
                     register_date = \''.date('Y-m-d').'\'
                 WHERE 
-                    cc_id = '.(int)$id
+                    cc_id = '.(int) $id
         );
     }
-    
+
     /**
-     * Deletes all cards for customer
+     * Deletes all cards for customer.
+     *
      * @param int $userId
-     * @return boolean
+     *
+     * @return bool
      */
-    public function deleteAllCardsForCustomer($userId) {
+    public function deleteAllCardsForCustomer($userId)
+    {
         $result = $this->db->query('
             DELETE
             FROM `'.DB_PREFIX.self::TABLE.'` 
-            WHERE `customer_id` = '.(int)$userId
+            WHERE `customer_id` = '.(int) $userId
         );
+
         return $result;
     }
-    
+
     /**
-     * Deletes card for id
+     * Deletes card for id.
+     *
      * @param int $cardId
-     * @return boolean
+     *
+     * @return bool
      */
-    public function deleteCardForId($cardId) {
+    public function deleteCardForId($cardId)
+    {
         $result = $this->db->query('
             DELETE
             FROM `'.DB_PREFIX.self::TABLE.'` 
-            WHERE `cc_id` = '.(int)$cardId
+            WHERE `cc_id` = '.(int) $cardId
         );
+
         return $result;
     }
-    
+
     /**
-     * Deletes all cards for non existing customers
-     * @return boolean
+     * Deletes all cards for non existing customers.
+     *
+     * @return bool
      */
-    public function deleteAllCardsForNonExistingCustomers() {
+    public function deleteAllCardsForNonExistingCustomers()
+    {
         return $this->db->query('
             DELETE 
             FROM `'.DB_PREFIX.self::TABLE.'` 
@@ -135,13 +165,15 @@ class ModelExtensionPaymentDotpayOc extends Model
             )
         ');
     }
-    
+
     /**
-     * Generates card hash for OneClick
+     * Generates card hash for OneClick.
+     *
      * @return string
      */
-    private function generateCardHash() {
-        $microtime = '' . microtime(true);
+    private function generateCardHash()
+    {
+        $microtime = ''.microtime(true);
         $md5 = md5($microtime);
 
         $mtRand = mt_rand(0, 11);
@@ -155,12 +187,14 @@ class ModelExtensionPaymentDotpayOc extends Model
 
         return "{$a}-{$b}-{$c}-{$d}";
     }
-    
+
     /**
-     * Checks, if generated card hash is unique
-     * @return string|boolean
+     * Checks, if generated card hash is unique.
+     *
+     * @return string|bool
      */
-    private function getUniqueCardHash() {
+    private function getUniqueCardHash()
+    {
         $count = 200;
         $result = false;
         do {
@@ -170,17 +204,15 @@ class ModelExtensionPaymentDotpayOc extends Model
                 FROM `'._DB_PREFIX_.self::$definition['table'].'` 
                 WHERE hash = \''.$cardHash.'\'
             ');
-            
+
             if ($test[0]['count'] == 0) {
                 $result = $cardHash;
                 break;
             }
 
-            $count--;
+            --$count;
         } while ($count);
-        
+
         return $result;
     }
 }
-
-?>

@@ -1,0 +1,22 @@
+<div class="dotpay-one-channel dotpay-channel-{{ name }}">
+    <div class="dotpay-channel-head">
+        <label>
+            <input type="radio" class="dotpay-channel-switch" name="dotpay-channel-type" value="{{ name }}" />
+            <img src="image/payment/dotpay/{{ name }}.png" alt="{{ title }}" title="{{ title }}" />
+            {{ title }}
+        </label>
+    </div>
+    <div class="dotpay-channel-body">
+        {{ content }}
+        {% if no_agreements is empty %}
+        <div class="dotpay-agreements">
+            <label>
+                <input type="checkbox" name="bylaw" required="required" value="1" checked="true">{{ bylaw }}
+            </label>
+            <label>
+                <input type="checkbox" name="personal_data" required="required" value="1" checked="true">{{ personal_data }}
+            </label>
+        </div>
+        {% endif %}
+    </div>
+</div>
