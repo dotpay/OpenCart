@@ -52,6 +52,7 @@ class ControllerExtensionPaymentDotpayNew extends Controller
 
         $this->load->library('dotpay/Gateway');
         $this->load->library('dotpay/Agreements');
+        $this->load->library('dotpay/TemplateLoader');
 
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
 
@@ -104,6 +105,7 @@ class ControllerExtensionPaymentDotpayNew extends Controller
         $this->load->library('dotpay/Agreements');
         $this->load->library('dotpay/SellerApi');
         $this->load->library('dotpay/RegisterOrder');
+        $this->load->library('dotpay/TemplateLoader');
         $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
         $this->Agreements->setInputVars(
             $this->config->get($this->getConfigKey('target_payment_url')),
@@ -171,6 +173,7 @@ class ControllerExtensionPaymentDotpayNew extends Controller
         $this->load->language($this->getExtensionName());
         $this->load->model('checkout/order');
         $this->load->library('dotpay/Gateway');
+        $this->load->library('dotpay/TemplateLoader');
         if (isset($this->session->data['order_id'])) {
             $orderId = $this->session->data['order_id'];
         } elseif (isset($this->session->data['last_order_id'])) {
@@ -283,6 +286,7 @@ class ControllerExtensionPaymentDotpayNew extends Controller
     {
         $this->load->language($this->getExtensionName());
         $this->load->model(dirname($this->getExtensionName()).'/dotpay_oc');
+        $this->load->library('dotpay/TemplateLoader');
         $this->document->setTitle($this->language->get('ocmanage_title'));
         if (!isset($this->session->data['customer_id'])) {
             die('You have to login into this page!');
@@ -337,6 +341,7 @@ class ControllerExtensionPaymentDotpayNew extends Controller
         $this->load->language($this->getExtensionName());
         $this->load->library('dotpay/Agreements');
         $this->load->library('dotpay/Gateway');
+        $this->load->library('dotpay/TemplateLoader');
         $this->load->model(dirname($this->getExtensionName()).'/dotpay_info');
         $this->load->model('checkout/order');
         $this->document->setTitle($this->language->get('info_title'));
@@ -532,13 +537,57 @@ class ControllerExtensionPaymentDotpayNew extends Controller
     {
         if (version_compare(VERSION, '2.2.0.0', '<')) {
             if (file_exists(DIR_TEMPLATE.$this->config->get('config_template').'/template/payment/'.$name)) {
-                return $this->load->view($this->config->get('config_template').'/template/payment/'.$name, $data);
+                return $this->TemplateLoader->view($this->config->get('config_template').'/template/payment/'.$name, $data);
             } else {
-                return $this->load->view('default/template/payment/'.$name, $data);
+                return $this->TemplateLoader->view('default/template/payment/'.$name, $data);
             }
         } else {
-            return $this->load->view('payment/'.$name, $data);
+            return $this->TemplateLoader->view('payment/'.$name, $data);
         }
+    }
+    
+    /**
+     * This view loader allows to force disable template caching
+     *
+     * @param	string	$route
+     * @param	array	$data
+     *
+     * @return	string
+     */
+    public function view($route, $data = array()) {
+           // Sanitize the call
+           $route = preg_replace('/[^a-zA-Z0-9_\/]/', '', (string)$route);
+
+           // Keep the original trigger
+           $trigger = $route;
+
+           // Template contents. Not the output!
+           $template = '';
+
+           // Trigger the pre events
+           $result = $this->registry->get('event')->trigger('view/' . $trigger . '/before', array(&$route, &$data, &$template));
+
+           // Make sure its only the last event that returns an output if required.
+           if ($result && !$result instanceof Exception) {
+                   $output = $result;
+           } else {
+                   $template = new Template($this->registry->get('config')->get('template_engine'));
+
+                   foreach ($data as $key => $value) {
+                           $template->set($key, $value);
+                   }
+
+                   $output = $template->render($this->registry->get('config')->get('template_directory') . $route, $this->registry->get('config')->get('template_cache'));		
+           }
+
+           // Trigger the post events
+           $result = $this->registry->get('event')->trigger('view/' . $trigger . '/after', array(&$route, &$data, &$output));
+
+           if ($result && !$result instanceof Exception) {
+                   $output = $result;
+           }
+
+           return $output;
     }
 
     /**
