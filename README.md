@@ -4,7 +4,7 @@ You can find module for older version OpenCart ( 2.0 - 2.2 ): https://github.com
 
 _English version below_
 
-####Wtyczka dla OpenCart dodająca bramkę płatności Dotpay####
+#### Wtyczka dla OpenCart dodająca bramkę płatności Dotpay ####
 
 **Uwaga! Ta wtyczka nie działa z wersją mniejszą niż 3.0!**
 
@@ -28,7 +28,7 @@ _English version below_
 ---------------------------------------
 
 
-####OpenCart plugin adding Dotpay payment gateway####
+#### OpenCart plugin adding Dotpay payment gateway ####
 
 **Warning! This plugin doesn't work with version lower than 3.0!**
 
