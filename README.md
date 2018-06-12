@@ -2,7 +2,7 @@
 
 OpenCart Dotpay payment module for Opencart 2.0.x - 2.2.x
 =====================
-You can find module for latest version OpenCart 2.3.x : https://github.com/dotpay/OpenCart/releases/latest
+You can find module for latest version OpenCart 2.3.x : https://github.com/dotpay/OpenCart/releases/tag/v2.3.3
 
 *English version below*
 
