@@ -129,8 +129,8 @@
                     <input type="text" class="important form-control" id="street" value="{{ street }}" />
                 </label>
                 <label clas="row">
-                    {% info_postcode %}
-                    <input type="text" class="important form-control" id="post-code-city" value="{% postcode %}" />
+                    {{ info_postcode }}
+                    <input type="text" class="important form-control" id="post-code-city" value="{{ postcode }}" />
                 </label>
             </div>
         </div>

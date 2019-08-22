@@ -13,12 +13,12 @@ class ModelExtensionPaymentDotpayInfo extends Model
     /**
      * Name of recipient of payment.
      */
-    const DOTPAY_NAME = 'DOTPAY SA';
+    const DOTPAY_NAME = 'Dotpay sp. z o.o.';
 
     /**
      * Street of recipient.
      */
-    const DOTPAY_STREET = 'Wielicka 72';
+    const DOTPAY_STREET = 'Wielicka 28B';
 
     /**
      * Postcode adn city of recipient.

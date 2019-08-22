@@ -9,6 +9,13 @@
         text-align: left;
     }
 
+    #dp_icon-info {
+        float: left; 
+        padding-right: 5px;
+        font-size: 24px !important;
+        margin-right: 15px;
+    }
+
     /* Loader */
     .loading {
         position: relative;
@@ -56,9 +63,9 @@
 <div class="container">
     <div id="statusMessageContainer">
         {% if message is not null %}
-            <p class="alert alert-danger">{{ message }}</p>
+            <p class="alert alert-danger"><i class="fa fa-refresh" id="dp_icon-info"></i>{{ message }}</p>
             <script type="text/javascript">
-                setTimeout(function(){location.href="{{ back_redirect_url }}";}, 4000);
+                setTimeout(function(){location.href="{{ back_redirect_url }}";}, 6000);
             </script>
         {% endif %}
     </div>
@@ -86,6 +93,7 @@
     var lastRequest = false;
     setInfoMessage(window.checkStatusConfig.waitingMessage);
     addLoader();
+
     var checkInt = setInterval(function(){
         if(counter<counterLimit)
             ++counter;
@@ -102,7 +110,7 @@
                     hideLoader();
                     setSuccessMessage(window.checkStatusConfig.successMessage);
                     clearInterval(checkInt);
-                    setTimeout(function(){location.href=window.checkStatusConfig.redirectUrl;}, 5000);
+                    setTimeout(function(){location.href=window.checkStatusConfig.redirectUrl;}, 6000);
                     break;
                 default:
                     hideLoader();
@@ -117,24 +125,30 @@
     }, interval*1000);
 });
 
-function setMessage(message, className) {
+function setMessage(message, className, icon) {
     $('#statusMessageContainer p').remove();
     var element = document.createElement('p');
     element.className = 'alert '+className;
-    element.innerHTML = message;
+    element.innerHTML = '<i class="fa fa-refresh" id="dp_icon-info"></i><span style="overflow:hidden; padding: 10px;">' + message +'</span>';
     $('#statusMessageContainer').append(element);
+    if ( (icon !== null) || (icon !== '')) {
+        $('i#dp_icon-info').attr('class', icon);
+    }   else {
+        $('i#dp_icon-info').attr('class','fa fa-bell-o');
+    }
+   
 }
 
 function setErrorMessage(message) {
-    setMessage(message, 'alert-danger');
+    setMessage(message, 'alert-danger', 'fa fa-exclamation-triangle');
 }
 
 function setSuccessMessage(message) {
-    setMessage(message, 'alert-success');
+    setMessage(message, 'alert-success','fa fa-check-circle');
 }
 
 function setInfoMessage(message) {
-    setMessage(message, 'alert-info');
+    setMessage(message, 'alert-info','fa fa-info-circle');
 }
 
 function addLoader() {

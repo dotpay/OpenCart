@@ -78,7 +78,7 @@ class RegisterOrder
      */
     public function create($orderDetails)
     {
-        $data = str_replace('\\/', '/', json_encode($this->prepareData($orderDetails)));
+        $data = str_replace('\\/', '/', json_encode($this->prepareData($orderDetails),JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
         if (!$this->checkIfCompletedControlExist($orderDetails['control'], $orderDetails['channel'])) {
             return $this->createRequest($data);
         }
@@ -107,7 +107,9 @@ class RegisterOrder
                  ->addOption(CURLOPT_POSTFIELDS, $data)
                  ->addOption(CURLOPT_HTTPHEADER, array(
                     'Accept: application/json; indent=4',
-                    'content-type: application/json', ));
+                    'content-type: application/json',
+                    'User-Agent: DotpayOpenCart'
+                 ));
             $resultJson = $curl->exec();
             $resultStatus = $curl->getInfo();
         } catch (Exception $exc) {
@@ -139,7 +141,10 @@ class RegisterOrder
         $payments = $this->SellerApi->getPaymentByOrderId($this->config->get('payment_'.self::PLUGIN_NAME.'_username'), $this->config->get('payment_'.self::PLUGIN_NAME.'_password'), $control);
         foreach ($payments as $payment) {
             $onePayment = $this->SellerApi->getPaymentByNumber($this->config->get('payment_'.self::PLUGIN_NAME.'_username'), $this->config->get('payment_'.self::PLUGIN_NAME.'_password'), $payment->number);
-            if ($onePayment->control == $control && $onePayment->payment_method->channel_id == $channel && $payment->status == 'completed') {
+            
+            $OnePcontrol = explode('|', (int)$onePayment->control );
+            $control2 = explode('|', (int)$control );
+            if ($OnePcontrol[0] == $control && $onePayment->payment_method->channel_id == $channel && $payment->status == 'completed') {
                 return true;
             }
         }
@@ -156,6 +161,13 @@ class RegisterOrder
      */
     private function prepareData($orderDetails)
     {
+        if(!empty($orderDetails['street_n1'])){
+            $building_number = $orderDetails['street_n1'];
+        }else {
+            $building_number = 0;
+        }
+        
+
         return array(
             'order' => array(
                 'amount' => $orderDetails['amount'],
@@ -166,8 +178,8 @@ class RegisterOrder
 
             'seller' => array(
                 'account_id' => $orderDetails['id'],
-                'url' => $orderDetails['URL'],
-                'urlc' => $orderDetails['URLC'],
+                'url' => $orderDetails['url'],
+                'urlc' => $orderDetails['urlc'],
             ),
 
             'payer' => array(
@@ -176,7 +188,7 @@ class RegisterOrder
                 'email' => $orderDetails['email'],
                 'address' => array(
                     'street' => $orderDetails['street'],
-                    'building_number' => $orderDetails['street_n1'],
+                    'building_number' => $building_number,
                     'postcode' => $orderDetails['postcode'],
                     'city' => $orderDetails['city'],
                     'country' => $orderDetails['country'],

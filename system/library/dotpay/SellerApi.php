@@ -129,7 +129,7 @@ class SellerApi
              ->addOption(CURLOPT_USERPWD, $username.':'.$password);
         $this->setCurlOption($curl);
         $response = json_decode($curl->exec());
-var_dump($response);
+      //  var_dump($response);
         return $response;
     }
 
@@ -144,7 +144,11 @@ var_dump($response);
      */
     public function getPaymentByOrderId($username, $password, $orderId)
     {
-        $url = $this->config->get('payment_'.self::PLUGIN_NAME.'_target_seller_url').$this->getDotPaymentApi().'payments/?control='.$orderId;
+        $control = explode('|', (int)$orderId );
+        $yesterday = date("Y-m-d", strtotime("- 1 day"));
+        $this->load->model('checkout/order');
+        //$url = $this->config->get('payment_'.self::PLUGIN_NAME.'_target_seller_url').$this->getDotPaymentApi().'payments/?control='.$orderId;
+        $url = $this->config->get('payment_'.self::PLUGIN_NAME.'_target_seller_url').$this->getDotPaymentApi().'payments/?description='.$control[0].'&type=payment&creation_date_from='.$yesterday.'&account_id='.$this->Gateway->getHiddenFields()['id'];
         $curl = new Curl();
         $curl->addOption(CURLOPT_URL, $url)
              ->addOption(CURLOPT_USERPWD, $username.':'.$password);

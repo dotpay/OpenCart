@@ -25,10 +25,18 @@ class ControllerExtensionPaymentDotpayNew extends Controller
      */
     const CASH_GROUP = 'cash';
 
+
+
     /**
      * Name of transfers group.
      */
     const TRANSFER_GROUP = 'transfers';
+
+    /**
+     * Is enable payment on site for method payment cash and transfer groups
+     */
+    const RO_ENABLED = false;
+
 
     /**
      * Returns full path of Dotpay payment extension.
@@ -117,7 +125,8 @@ class ControllerExtensionPaymentDotpayNew extends Controller
         $this->Gateway->setVars($this->config, $order, $this->language, $this->currency, $this->load, $this->session, $this->request, $this->customer);
         $hiddenFields = $this->Gateway->getHiddenFields();
         if (isset($this->request->post['channel']) &&
-           $this->isFullConfigOk() &&
+            self::RO_ENABLED == true &&
+            $this->isFullConfigOk() &&
            $this->Agreements->isChannelInGroup($this->request->post['channel'], array(self::CASH_GROUP, self::TRANSFER_GROUP))
         ) {
             $payment = $this->RegisterOrder->create($hiddenFields);
@@ -140,9 +149,18 @@ class ControllerExtensionPaymentDotpayNew extends Controller
             } else {
                 return $this->generateRequestForm($hiddenFields, $order);
             }
-            $orderId = $this->session->data['order_id'];
+           // $orderId = $this->session->data['order_id'];
+            if (isset($this->session->data['order_id'])) {
+                $orderId = $this->session->data['order_id'];
+            } elseif (isset($this->session->data['last_order_id'])) {
+                $orderId = $this->session->data['last_order_id'];
+            } else {
+                $orderId = null;
+            }
+
             $this->load->controller('checkout/success', array());
-            $this->response->redirect($this->url->link(dirname($this->getExtensionName()).'/info', 'order='.$orderId, 'SSL'));
+            //$this->response->redirect($this->url->link(dirname($this->getExtensionName()).'/info', 'order='.$orderId, 'SSL'));
+            $this->response->redirect($this->url->link($this->getExtensionName().'/info', 'order='.$orderId, 'SSL'));
             die();
         }
         $this->generateRequestForm($hiddenFields, $order);
@@ -272,9 +290,9 @@ class ControllerExtensionPaymentDotpayNew extends Controller
         if (!isset($this->request->post['control'])) {
             $control = null;
         } else {
-            $control = $this->request->post['control'];
+            $control = explode('|', (string)$this->request->post['control']);
         }
-        $order = $this->model_checkout_order->getOrder($control);
+        $order = $this->model_checkout_order->getOrder($control[0]);
         $this->Gateway->setVars($this->config, $order, $this->language, $this->currency, $this->load, $this->session, $this->request, $this->customer);
         $this->Gateway->confirm();
     }

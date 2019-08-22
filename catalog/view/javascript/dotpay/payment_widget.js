@@ -31,7 +31,7 @@
 
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
-//     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+//     (c) 2009-2018 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 //     Underscore may be freely distributed under the MIT license.
 
 (function () {/**
@@ -65,7 +65,7 @@ var requirejs, require, define;
      * @param {String} name the relative name
      * @param {String} baseName a real name that the name arg is relative
      * to.
-     * @returns {String} normalized name 
+     * @returns {String} normalized name
      */
     function normalize(name, baseName) {
         var nameParts, nameSegment, mapValue, foundMap, lastIndex,
@@ -107,9 +107,9 @@ var requirejs, require, define;
                             //correctly to disk. Otherwise, there is likely
                             //no path mapping for a path starting with '..'.
                             //This can still fail, but catches the most reasonable
-                            //uses of .. 
+                            //uses of ..
 
-// 
+//
 
                             break;
                         } else if (i > 0) {
@@ -756,7 +756,7 @@ jQuery.extend({
 	isPlainObject: function( obj ) {
 		var key;
 
-		// Must be an Object.
+		// Must be an ObjectNode.
 		// Because of IE, we also have to check the presence of the constructor property.
 		// Make sure that DOM nodes and window objects don't pass through, as well
 		if ( !obj || jQuery.type(obj) !== "object" || obj.nodeType || jQuery.isWindow( obj ) ) {
@@ -764,7 +764,7 @@ jQuery.extend({
 		}
 
 		try {
-			// Not own constructor property must be Object
+			// Not own constructor property must be ObjectNode
 			if ( obj.constructor &&
 				!hasOwn.call(obj, "constructor") &&
 				!hasOwn.call(obj.constructor.prototype, "isPrototypeOf") ) {
@@ -1036,7 +1036,7 @@ jQuery.extend({
 });
 
 // Populate the class2type map
-jQuery.each("Boolean Number String Function Array Date RegExp Object Error".split(" "), function(i, name) {
+jQuery.each("Boolean Number String Function Array Date RegExp ObjectNode Error".split(" "), function(i, name) {
 	class2type[ "[object " + name + "]" ] = name.toLowerCase();
 });
 
@@ -1362,7 +1362,7 @@ function Sizzle( selector, context, results, seed ) {
 
 /**
  * Create key-value caches of limited size
- * @returns {Function(string, Object)} Returns the Object data after storing it on itself with
+ * @returns {Function(string, ObjectNode)} Returns the ObjectNode data after storing it on itself with
  *	property name the (space-suffixed) string and (if the cache is larger than Expr.cacheLength)
  *	deleting the oldest entry
  */
@@ -1945,7 +1945,7 @@ Sizzle.attr = function( elem, name ) {
 	}
 
 	var fn = Expr.attrHandle[ name.toLowerCase() ],
-		// Don't get fooled by Object.prototype properties (jQuery #13807)
+		// Don't get fooled by ObjectNode.prototype properties (jQuery #13807)
 		val = fn && hasOwn.call( Expr.attrHandle, name.toLowerCase() ) ?
 			fn( elem, name, !documentIsHTML ) :
 			undefined;
@@ -3545,10 +3545,10 @@ var rnotwhite = (/\S+/g);
 
 
 
-// String to Object options format cache
+// String to ObjectNode options format cache
 var optionsCache = {};
 
-// Convert String-formatted options into Object-formatted ones and store in cache
+// Convert String-formatted options into ObjectNode-formatted ones and store in cache
 function createOptions( options ) {
 	var object = optionsCache[ options ] = {};
 	jQuery.each( options.match( rnotwhite ) || [], function( _, flag ) {
@@ -3581,7 +3581,7 @@ function createOptions( options ) {
  */
 jQuery.Callbacks = function( options ) {
 
-	// Convert options from String-formatted to Object-formatted if needed
+	// Convert options from String-formatted to ObjectNode-formatted if needed
 	// (we check in cache first)
 	options = typeof options === "string" ?
 		( optionsCache[ options ] || createOptions( options ) ) :
@@ -4356,7 +4356,7 @@ function internalRemoveData( elem, name, pvt ) {
 jQuery.extend({
 	cache: {},
 
-	// The following elements (space-suffixed to avoid Object.prototype collisions)
+	// The following elements (space-suffixed to avoid ObjectNode.prototype collisions)
 	// throw uncatchable exceptions if you attempt to set expando properties
 	noData: {
 		"applet ": true,
@@ -4984,7 +4984,7 @@ jQuery.event = {
 		}
 		ontype = type.indexOf(":") < 0 && "on" + type;
 
-		// Caller can pass in a jQuery.Event object, Object, or just an event type string
+		// Caller can pass in a jQuery.Event object, ObjectNode, or just an event type string
 		event = event[ jQuery.expando ] ?
 			event :
 			new jQuery.Event( type, typeof event === "object" && event );
@@ -5176,7 +5176,7 @@ jQuery.event = {
 					for ( i = 0; i < delegateCount; i++ ) {
 						handleObj = handlers[ i ];
 
-						// Don't conflict with Object.prototype properties (#13203)
+						// Don't conflict with ObjectNode.prototype properties (#13203)
 						sel = handleObj.selector + " ";
 
 						if ( matches[ sel ] === undefined ) {
@@ -5668,9 +5668,9 @@ jQuery.fn.extend({
 
 		// Types can be a map of types/handlers
 		if ( typeof types === "object" ) {
-			// ( types-Object, selector, data )
+			// ( types-ObjectNode, selector, data )
 			if ( typeof selector !== "string" ) {
-				// ( types-Object, data )
+				// ( types-ObjectNode, data )
 				data = data || selector;
 				selector = undefined;
 			}
@@ -10847,7 +10847,7 @@ define('config',[],function(){
   function defaultConfig(config) {
 
     config.request.host = typeof config.request.host !== 'undefined' ? config.request.host : 'https://ssl.dotpay.pl/test_payment/payment_api/v1/channels/';
-    config.request.amount = typeof config.request.amount !== 'undefined' ? config.request.amount : '1000.00';
+    config.request.amount = typeof config.request.amount !== 'undefined' ? config.request.amount : '333.00';
     config.request.currency = typeof config.request.currency !== 'undefined' ? config.request.currency : 'PLN';
     config.request.lang = typeof config.request.lang !== 'undefined' ? config.request.lang : 'pl';
     config.request.format = typeof config.request.format !== 'undefined' ? config.request.format : 'json';
@@ -10975,7 +10975,11 @@ define('widgetsCommon',['jquery', 'xhr', 'config'], function ($, xhr, config) {
                 switch(widget) {
                     case 'FormWidget':
                         var tooltipMessage = this.setTooltip(value.not_online_message);
-                        return "<div class='channel-container " + channelNotOnlineClass + "'>" + tooltipMessage + "<div class='image-container'><img src='" + value.logo + "'/></div><div class='input-container'><input type='radio' id='" + value.id + "' value='" + value.id + "' name='channel'  class='channel-input'/></div><div class='label-container'><label for='" + value.id + "'>" + value.name + "</label></div></div>";
+                        var withName = "<div class='channel-container " + channelNotOnlineClass + "'>" + tooltipMessage + "<div class='image-container'><img src='" + value.logo + "' ></div><div class='input-container'><input type='radio' id='" + value.id + "' value='" + value.id + "' name='channel'  class='channel-input' /></div><div class='label-container'><label for='" + value.id + "'>" + value.name + "(" + value.group + ")</label></div></div>";
+						
+						var withoutName = "<div class='channel-container " + channelNotOnlineClass + "'>" + tooltipMessage + "<div class='image-container' id='dp_imgnoname'><img src='" + value.logo + "' title='" + value.name + " ("+ value.group_name +")' alt='" + value.name + " ("+ value.group_name +")' /></div><div class='input-container'><input type='radio' id='" + value.id + "' value='" + value.id + "' name='channel'  class='channel-input' /></div>";
+                        //view title or not channel like description in box container
+                        return withoutName;
                     break;
                     case 'selectWidget':
                         return "<option class='" + channelNotOnlineClass + "' value='" + value.id + "'>" + value.name + "</option>";
@@ -11044,14 +11048,20 @@ define('widgetsCommon',['jquery', 'xhr', 'config'], function ($, xhr, config) {
                     case 'R':
                         convertedGroupsNames.push('installment');
                     break;
-                    case 'I':
+                    case 'M':
                         convertedGroupsNames.push('mobile_transfers');
                     break;
                     case 'W':
                         convertedGroupsNames.push('purses');
                     break;
-                    case 'R':
+                    case 'P':
                         convertedGroupsNames.push('transfers');
+					break;
+					case 'O':
+                        convertedGroupsNames.push('posponed_payments');
+					break;
+					case 'I':
+                        convertedGroupsNames.push('other');
                     break;
                     default:
                         convertedGroupsNames = channelGroups;
@@ -11140,6 +11150,7 @@ define('formWidget',['jquery', 'xhr', 'config', 'widgetsCommon', 'errorHandler']
         formWidget: function (data) {
             errorHandler.apiResponseErrorHandler(data);
 
+			//pokaz liste kanalow
             $_dp('<div>', {
                 'class': config.widget.widgetClass,
                 html: widgetsCommon.prepareChannelsList(data, 'FormWidget')
@@ -11157,12 +11168,12 @@ define('formWidget',['jquery', 'xhr', 'config', 'widgetsCommon', 'errorHandler']
                     'channel':$_dp('.channel-input', this).val()
                 });
             });
-            
+
             $_dp('.'+config.widget.widgetClass).click(function(e){
                 e.preventDefault();
             });
             $_dp('.channel-input').click(function(e){
-                $(this).parents('.channel-container').click();
+                $_dp(this).parents('.channel-container').click();
                 e.stopPropagation();
             });
             /* ------- koniec obszaru zmienianego ------- */
@@ -11196,7 +11207,7 @@ define('selectWidget',['jquery', 'xhr', 'config', 'widgetsCommon', 'errorHandler
 
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
-//     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+//     (c) 2009-2018 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 //     Underscore may be freely distributed under the MIT license.
 
 (function() {
@@ -12094,7 +12105,7 @@ define('selectWidget',['jquery', 'xhr', 'config', 'widgetsCommon', 'errorHandler
   // often you call it. Useful for lazy initialization.
   _.once = _.partial(_.before, 2);
 
-  // Object Functions
+  // ObjectNode Functions
   // ----------------
 
   // Keys in IE < 9 that won't be iterated by `for key in ...` and thus missed.
@@ -12120,7 +12131,7 @@ define('selectWidget',['jquery', 'xhr', 'config', 'widgetsCommon', 'errorHandler
   }
 
   // Retrieve the names of an object's own properties.
-  // Delegates to **ECMAScript 5**'s native `Object.keys`
+  // Delegates to **ECMAScript 5**'s native `ObjectNode.keys`
   _.keys = function(obj) {
     if (!_.isObject(obj)) return [];
     if (nativeKeys) return nativeKeys(obj);
@@ -12310,7 +12321,7 @@ define('selectWidget',['jquery', 'xhr', 'config', 'widgetsCommon', 'errorHandler
         return '' + a === '' + b;
       case '[object Number]':
         // `NaN`s are equivalent, but non-reflexive.
-        // Object(NaN) is equivalent to NaN
+        // ObjectNode(NaN) is equivalent to NaN
         if (+a !== +a) return +b !== +b;
         // An `egal` comparison is performed for other numeric values.
         return +a === 0 ? 1 / +a === 1 / b : +a === +b;
@@ -12326,7 +12337,7 @@ define('selectWidget',['jquery', 'xhr', 'config', 'widgetsCommon', 'errorHandler
     if (!areArrays) {
       if (typeof a != 'object' || typeof b != 'object') return false;
 
-      // Objects with different constructors are not equivalent, but `Object`s or `Array`s
+      // Objects with different constructors are not equivalent, but `ObjectNode`s or `Array`s
       // from different frames are.
       var aCtor = a.constructor, bCtor = b.constructor;
       if (aCtor !== bCtor && !(_.isFunction(aCtor) && aCtor instanceof aCtor &&
