@@ -225,6 +225,8 @@ class Gateway
         } else {
             $ipaddress = $_SERVER['REMOTE_ADDR'];
         }
+
+
         if (isset($list_ip) && $list_ip != null) {
             if (array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {
                 return  $_SERVER["HTTP_X_FORWARDED_FOR"];
@@ -413,7 +415,10 @@ class Gateway
         $this->load->language($this->getExtensionName());
         $this->load->model(dirname(dirname($this->getExtensionName())).'/dotpay_oc');
         $this->load->model(dirname(dirname($this->getExtensionName())).'/dotpay_new');
-        if (($this->getClientIp() == $this->config->get($this->getConfigKey('office_ip')) ) && $_SERVER['REQUEST_METHOD'] == 'GET') {
+        
+        if (($_SERVER["REMOTE_ADDR"] == $this->config->get($this->getConfigKey('office_ip')) || $this->getClientIp() == $this->config->get($this->getConfigKey('office_ip'))) 
+             && $_SERVER['REQUEST_METHOD'] == 'GET') 
+        {
             die('OpenCart - M.Ver: '.$this->config->get($this->getConfigKey('plugin_version')).
                 '<br />OC.Ver: '.VERSION.
                 '<br />ID: '.$this->config->get($this->getConfigKey('id')).
@@ -426,8 +431,9 @@ class Gateway
             );
         }
 
-        if ($_SERVER['REMOTE_ADDR'] != $this->config->get($this->getConfigKey('ip'))) {
-            die('OpenCart - ERROR REMOTE ADDRESS: '.$this->getClientIp(1).' <> '.$this->config->get($this->getConfigKey('ip')));
+        if ($_SERVER['REMOTE_ADDR'] != $this->config->get($this->getConfigKey('ip')) && $this->getClientIp() != $this->config->get($this->getConfigKey('ip')) )     
+        {
+            die("OpenCart - ERROR (REMOTE ADDRESS: ".$this->getClientIp(true)."/".$_SERVER["REMOTE_ADDR"]."  <> ".$this->config->get($this->getConfigKey('ip')) );
         }
 
         if ($_SERVER['REQUEST_METHOD'] != 'POST') {
