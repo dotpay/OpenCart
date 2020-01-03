@@ -150,8 +150,9 @@
         }
         var channel = $('input.dotpay-channel-switch:checked').parents('.dotpay-one-channel');
         var bylaw = channel.find('input[name=bylaw]').prop('checked');
-        var personal_data = channel.find('input[name=personal_data]').prop('checked');
-        return bylaw && personal_data;
+        //var personal_data = channel.find('input[name=personal_data]').prop('checked');
+        //return bylaw && personal_data;
+        return bylaw;
     }
     
     function validatePayment() {
@@ -200,5 +201,6 @@
                 oneChannel.find('.dotpay-channel-switch').click();
             }, 100);
         }
+        $('#id_blik_code').keyup(validatePayment);
     });
 </script>

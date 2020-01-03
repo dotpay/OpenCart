@@ -11,10 +11,10 @@
         {% if no_agreements is empty %}
         <div class="dotpay-agreements">
             <label>
-                <input type="checkbox" name="bylaw" required="required" value="1" checked="true">{{ bylaw }}
+                <input type="checkbox" name="bylaw" required="required" value="1" checked="true">&nbsp; {{ bylaw }}
             </label>
             <label class="dotpay_agreements">
-                <input type="checkbox" name="personal_data" required="required" value="1" checked="true" style="display:none" >{{ personal_data }}
+                * {{ personal_data }}
             </label>
         </div>
         {% endif %}

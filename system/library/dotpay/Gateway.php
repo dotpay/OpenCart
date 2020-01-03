@@ -578,7 +578,6 @@ class Gateway
         $data['postcode'] = $this->NewPostcode($this->session->data['payment_address']['postcode']);
         $data['country'] = $this->session->data['payment_address']['country'];
         $data['phone'] = $this->NewPhone($telephone);
-        //$data['control'] = $this->order['order_id'];
         $data['control'] = $this->order['order_id'].'|OpenCart v:'.VERSION.'|DP module: '.$this->config->get($this->getConfigKey('plugin_version'));
         $data['description'] = $this->language->get('text_order_id').' '.$this->order['order_id'];
         $data['amount'] = self::correctAmount($this->order, $this->currency);
