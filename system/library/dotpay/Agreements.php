@@ -150,6 +150,7 @@ class Agreements
         return $byLawAgreements;
     }
 
+    
     /**
      * Returns personal data agreements.
      *
@@ -225,9 +226,8 @@ class Agreements
     {
         $curlUrl = "{$this->url}payment_api/channels/";
         $curlUrl .= "?id={$this->id}";
-        $curlUrl .= "&currency={$this->currency}";
+        $curlUrl .= "&currency=".strtoupper($this->currency);
         $curlUrl .= "&amount={$this->amount}";
-        //$curlUrl .= "&lang={$this->language->get('code')}";
         $curlUrl .= '&lang='.strtolower(substr(trim($this->language->get('code')), 0, 2));
 
         try {

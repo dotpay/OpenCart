@@ -1,11 +1,13 @@
 {% if widget_visible %}
-<link href="{{ dotpay_url }}widget/payment_widget.min.css" rel="stylesheet">
+<link href="{{ HTTPS_SERVER }}catalog/view/css/dotpay/payment_widget.min.css" rel="stylesheet">
+
 <style>
     .selected-channel-message {
         display: none;
         font-size: 17px;
         text-decoration: none;
         margin-bottom: 5px;
+        text-align: center;
     }
 
     .selected-channel-message a {
@@ -17,25 +19,63 @@
         cursor: default;
         display: none;
         margin-bottom: 15px !important;
+        text-align: center;
     }
 
     .selectedChannelContainer hr {
         display: block;
     }
+        div.image-container.only-dotpay-logo > img {
+        height: auto;
+        max-width: 100%;
+    }
+
+    div.dotpay-channel-head > label {
+        color: #337ab7;
+        font-size: 0.92em;
+    }
+
+    div.dotpay-channel-head > label > img {
+        max-height: 28px;
+        margin-right: 8px;
+    }
+
+div.collapsibleWidgetTitle {
+    font-size: 1.3em;
+    text-decoration: underline;
+    font-style: italic;
+    color: #3c763d;
+}
 </style>
 <script type="text/javascript">
+
+function isSupportedApplePay() {
+    return window.ApplePaySession && ApplePaySession.canMakePayments()
+}
+
+if (!isSupportedApplePay()) {
+ // APPLE PAY NOT SUPPORTED
+ var channel_apple = 262; //number of channel apple pay in Dotpay
+ console.log('%cYour browser NOT supported apple pay.','background: #cfcfcf; color: brown;'); 
+
+} else {
+var channel_apple = '';
+}
+
     var dotpayWidgetConfig = {
         sellerAccountId: {{ widget.id }},
         amount: {{ widget.amount }},
         currency: '{{ widget.currency }}',
         lang: '{{ widget.lang }}',
-        widgetFormContainerClass: 'my-form-widget-container',
+        widgetFormContainerClass: 'dotpay-form-widget-container',
         offlineChannel: 'mark',
         offlineChannelTooltip: true,
         disabledChannels: [{{ widget.disabled_channels }}],
         host: '{{ dotpay_url }}payment_api/channels/'
     };
     
+    dotpayWidgetConfig.disabledChannels.push(channel_apple);
+
     (function($) {
         var defaults = {
             channelsContainerClass: "dotpay-channels-selection",
@@ -43,7 +83,7 @@
             selectedChannelContainerClass: "selectedChannelContainer",
             messageContainerClass: "selected-channel-message",
             collapsibleWidgetTitleClass: "collapsibleWidgetTitle",
-            widgetContainerClass: "my-form-widget-container"
+            widgetContainerClass: "dotpay-form-widget-container"
         };
 
         var settings = {};
@@ -58,23 +98,32 @@
                     e.preventDefault();
                     return false;
                 });
+                $('.channel-selected-change2').click(onChangeSelectedChannel);
                 $('.'+settings.channelChangeClass).click(onChangeSelectedChannel);
             }
             return this;
         }
         function connectEventToWidget() {
+           setTimeout(function(){ 
             $('.channel-container').on('click', function(e) {
-                $('.channel-input', this).prop('checked', true);
-                var id = $(this).find('.channel-input').val();
+                $('.dp_channel-input', this).prop('checked', true);
+                var id = $(this).find('.dp_channel-input').val();
                 if(id == undefined) {
                     return false;
                 }
                 var container = copyChannelContainer(id);
                 $('.'+settings.selectedChannelContainerClass+' div').remove();
                 container.insertBefore($('.'+settings.selectedChannelContainerClass+' hr'));
+                $('div.cf.channels-wrapper.dotpay-channels').not(':first').remove();
                 toggleWidgetView();
                 e.preventDefault();
+                if ($('.channelSelectTXT').length == 1){
+                    $('.channelSelectTXT').text($('div.channel-container.selected> div.image-container > img').attr("title"));
+                    $('div.channel-container.selected > div.image-container.only-dotpay-logo img').addClass('channel-selected-change2');
+                  }
+                  $('.channel-selected-change2').click(onChangeSelectedChannel);
             });
+          }, 1200);   
         }
 
         function copyChannelContainer(id) {
@@ -89,6 +138,10 @@
             toggleWidgetView();
             e.stopPropagation();
             e.preventDefault();
+            if ($('.channelSelectTXT').length == 1){
+                $('.channelSelectTXT').text($('div.channel-container.selected> div.image-container > img').attr("title"));
+                $('div.channel-container.selected > div.image-container.only-dotpay-logo img').addClass('channel-selected-change2');
+              }
             return false;
         }
 
@@ -102,16 +155,23 @@
                 }
             );
             $('.'+settings.messageContainerClass+',.'+settings.selectedChannelContainerClass).show();
+            $('.channelSelectTXT').show();
         }
     })(jQuery);
     $(document).ready(function(){
         setTimeout(function(){
             $.dpCollapsibleWidget();
-        }, 1000);
+        }, 900);
+        $('div.cf.channels-wrapper.dotpay-channels').not(':first').remove();   
+        $('div.channel-container.selected > div.image-container.only-dotpay-logo img').on('click', function(){
+            onChangeSelectedChannel();
+           });
     });
 </script>
 <script id="dotpay-payment-script" src="{{ HTTPS_SERVER }}catalog/view/javascript/dotpay/payment_widget.js"></script>
-<div class="selected-channel-message">{{ label_selected_channel }}: <a href="#" class="channel-selected-change">{{ label_change_channel }}&nbsp;&raquo;</a></div>
+<div class="selected-channel-message">{{ label_selected_channel }}: <strong class="channelSelectTXT" style="display:none;"></strong>
+<br><br> <a href="#" class="channel-selected-change">{{ label_change_channel }}&nbsp;&raquo;</a>
+</div>
 <div class="selectedChannelContainer channels-wrapper"><hr /></div>
-<div class="collapsibleWidgetTitle">{{ label_available_channels }}:</div><p class="my-form-widget-container"></p>
+<div class="collapsibleWidgetTitle">{{ label_available_channels }}:</div><p class="dotpay-form-widget-container"></p>
 {% endif %}

@@ -193,7 +193,7 @@
         expandRightChannel();
         $('.dotpay-channel-switch').change(expandRightChannel);
         $('.dotpay-shop-channels input,.dotpay-shop-channels switch').change(validatePayment);
-        $('.my-form-widget-container').click(validatePayment);
+        $('.dotpay-form-widget-container').click(validatePayment);
         $('#dotpay-payment-execute').click(executePayment);
         var oneChannel = $('.dotpay-one-channel');
         if(oneChannel.length === 1) {

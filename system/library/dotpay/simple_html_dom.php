@@ -18,7 +18,7 @@
  *   Vadim Voituk
  *   Antcs
  *
- * Version Rev. 1.9 (290)
+ * Version Rev. 1.9.1 (291)
  */
 
 define('HDOM_TYPE_ELEMENT', 1);
@@ -45,19 +45,11 @@ defined('DEFAULT_SPAN_TEXT') || define('DEFAULT_SPAN_TEXT', ' ');
 defined('MAX_FILE_SIZE') || define('MAX_FILE_SIZE', 600000);
 define('HDOM_SMARTY_AS_TEXT', 1);
 
-// 2018-06-15 Dotpay fix  
-//(bug: https://sourceforge.net/p/simplehtmldom/bugs/161/):
- if ( version_compare(phpversion(), '7.1.0', '>=') ) {
-	 define('OFFSET_PHP_FIX', 0); 
-	 } else { 
-	 define('OFFSET_PHP_FIX', -1);  
-	 }
-
 function file_get_html(
 	$url,
 	$use_include_path = false,
 	$context = null,
-	$offset = OFFSET_PHP_FIX,
+	$offset = 0,
 	$maxLen = -1,
 	$lowercase = true,
 	$forceTagsClosed = true,
@@ -615,6 +607,13 @@ class simple_html_dom_node
 			// Skip root nodes
 			if(!$node->parent) {
 				$pass = false;
+			}
+
+			// Handle 'text' selector
+			if($pass && $tag === 'text' && $node->tag === 'text') {
+				$ret[array_search($node, $this->dom->nodes, true)] = 1;
+				unset($node);
+				continue;
 			}
 
 			// Skip if node isn't a child node (i.e. text nodes)

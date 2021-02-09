@@ -3,14 +3,14 @@
 /**
  * Polish language pack for client page in Dotpay payment plugin.
  */
-$_['text_dotpay_title'] = 'Szybkie i bezpieczne płatności internetowe';
+$_['text_dotpay_title'] = 'Dotpay: Szybkie i bezpieczne płatności';
 $_['text_dotpay_button_confirm'] = 'Płać z Dotpay';
 
-$_['oc_channel_title'] = 'Płatności One Click dzięki Dotpay.pl';
+$_['oc_channel_title'] = 'Płatność kartą One Click';
 $_['label_select_oc_card'] = 'Wybierz z zapisanych kart';
 $_['label_register_oc_card'] = 'Zarejestruj nową kartę';
 $_['register_card_agreement'] = 'I agree to repeated loading bill my credit card for the payment One-Click by way of purchase of goods or services offered by the store.';
-$_['pv_channel_title'] = 'Karty płatnicze (dzięki Dotpay.pl)';
+$_['pv_channel_title'] = 'Karty płatnicze';
 $_['cc_channel_title'] = 'Karty płatnicze';
 $_['mp_channel_title'] = 'MasterPass';
 $_['blik_channel_title'] = 'BLIK';
@@ -28,13 +28,17 @@ $_['error_return'] = 'Nie istnieje zwrot o podanym ID';
 $_['login_required'] = 'Musisz się zalogować, aby uzyskac dostęp!';
 $_['back_waiting_message1'] = 'Oczekiwanie na potwierdzenie twojej płatności...';
 $_['back_waiting_message2'] = 'Może to potrwać do dwóch minut';
-$_['back_success_message'] = 'Dziękujemy! Proces płatności zakończył się poprawnie. Za moment będzie mozna sprawdzić status zamówienia.';
+$_['back_success_message'] = 'Dziękujemy! Proces płatności zakończył się poprawnie. Za moment będzie można sprawdzić status zamówienia.';
 $_['back_error_message'] = 'Płatność została odrzucona.';
 $_['back_timeout_message'] = 'Upłynął czas oczekiwania na potwierdzenie płatności. Kiedy zostanie potwierdzona, wówczas na Twój adres e-mail wyślemy wiadomość z potwierdzeniem. Jeżeli płatność nie zostanie potwierdzona, skontaktuj się ze sprzedawcą, podając mu numer zamówienia:';
 $_['back_text_back'] = 'Zignoruj oczekiwanie i kontynuuj...';
 
 $_['back_title'] = 'Oczekiwanie na potwierdzenie płatności...';
 $_['preparing_title'] = 'Dotpay przygotowuje twoją płatność...';
+$_['preparing_noorder_txt1'] = 'Uwaga!';
+$_['preparing_noorder_txt2'] = 'Niepoprawne przekierowanie - brak informacji o zamówieniu.';
+$_['preparing_noorder_txt3'] = 'Za chwilę zostaniesz przekierowany z powrotem do sklepu. <br>Złóż ponownie zamówienie.';
+$_['preparing_noorder_txt4'] = 'Powrót do sklepu';
 
 $_['error_payment_expired'] = 'Błąd! Przekroczona data ważności wygenerowanego linku płatności.';
 $_['error_unknown_channel'] = 'Błąd! Wybrany kanał płatności jest nieznany.';
@@ -60,7 +64,7 @@ $_['ocmanage_on_done_message'] = 'Karta została wyrejestrowana ze sklepu';
 $_['ocmanage_on_failure_message'] = 'Wystapił błąd podczas wyrejestrowania karty';
 
 $_['info_title'] = 'Dokończ swoją płatność';
-$_['info_order_not_found'] = 'Podane zamówienie nie istnieje';
+$_['dp_info_order_not_found'] = 'Podane zamówienie nie istnieje';
 $_['info_info_not_found'] = 'Nie istnieje informacja o podanym zamówieniu';
 $_['info_info_bank'] = 'Aby zapłacić, powinieneś zalogować się do Twojego banku i wykonać przelew, podając poniższe dane:';
 $_['info_info_cash'] = 'Aby zapłacić, powinieneś pobrac i wydrukować blankiet:';

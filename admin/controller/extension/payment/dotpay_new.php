@@ -57,9 +57,9 @@ class ControllerExtensionPaymentDotpayNew extends Controller
     const API_VERSION = 'dev';
 
     /**
-     * Version of payment plugin.
+     * Version of this payment plugin.
      */
-    const VERSION = '3.0.5';
+    const VERSION = '3.0.6';
     /**
      * @var array List of errors
      */

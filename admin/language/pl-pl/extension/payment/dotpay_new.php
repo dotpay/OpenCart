@@ -31,7 +31,7 @@ $_['text_dotpay_pin'] = 'PIN';
 $_['text_dotpay_pin_help'] = 'Możesz znaleźć swój PIN w ustawieniach konta w panelu klienta Dotpay';
 $_['text_dotpay_pin_validate'] = 'PIN powinien zawierać od 16 do 32 znaków';
 $_['text_dotpay_test'] = 'Środowisko testowe';
-$_['text_dotpay_test_info'] = 'Wymagane osobne konto testowe. <a href="https://ssl.dotpay.pl/test_seller/test/registration/?affilate_id=module_opencart" target="_blank" title="Uzyskaj konto testowe w Dotpay">Utwórz konto testowe</a>';
+$_['text_dotpay_test_info'] = 'Wymagane osobne konto testowe. <a href="https://www.dotpay.pl/developer/sandbox/pl/?affilate_id=module_opencart3" target="_blank" title="Uzyskaj konto testowe w Dotpay">Utwórz konto testowe</a>';
 $_['text_sort_order'] = 'Pozycja bramki na liście płatności';
 $_['text_dotpay_api_info'] = '<h3>Dane API (opcjonalnie) </h3>Wymagane dla poprawnego działania One Click oraz wyświetlenia na stronie sklepu instrukcji płatniczych dla kanałów nietransferowych.';
 $_['text_dotpay_username'] = 'Nazwa użytkownika API <br><em>(Login do panelu sprzedawcy Dotpay)</em>';

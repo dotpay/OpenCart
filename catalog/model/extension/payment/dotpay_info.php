@@ -43,7 +43,7 @@ class ModelExtensionPaymentDotpayInfo extends Model
             return null;
         }
 
-        return $result->rows[count($result) - 1];
+        return $result->rows[count($result->rows) - 1];
     }
 
     /**

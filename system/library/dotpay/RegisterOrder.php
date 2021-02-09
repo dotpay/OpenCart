@@ -108,7 +108,7 @@ class RegisterOrder
                  ->addOption(CURLOPT_HTTPHEADER, array(
                     'Accept: application/json; indent=4',
                     'content-type: application/json',
-                    'User-Agent: DotpayOpenCart'
+                    'User-Agent: DotpayOpenCart module v3.0.6'
                  ));
             $resultJson = $curl->exec();
             $resultStatus = $curl->getInfo();
@@ -144,7 +144,30 @@ class RegisterOrder
             
             $OnePcontrol = explode('|', (int)$onePayment->control );
             $control2 = explode('|', (int)$control );
-            if ($OnePcontrol[0] == $control && $onePayment->payment_method->channel_id == $channel && $payment->status == 'completed') {
+
+            $control_org = $onePayment->control;
+            $reg_control = '/id:#(\d+)\|domain:/m';
+            preg_match_all($reg_control, (string)$control_org, $matches_control, PREG_SET_ORDER, 0);
+    
+            if(count($matches_control) == 1 && (isset($matches_control[0][1]) && (int)$matches_control[0][1] >0)){
+        
+                $controlNr =  (int)$matches_control[0][1];
+            }else {
+    
+                $controlNr1 = explode('|', (string)$control_org);
+                $controlNr2 = explode('id:#', (string)$controlNr1[0]);
+                if(count($controlNr2) >1) {
+                    $controlNr = $controlNr2[1];
+                }else{
+                    $controlNr = $controlNr2[0];
+                }
+                
+            }
+
+
+
+            if ($controlNr == $control && $onePayment->payment_method->channel_id == $channel && $payment->status == 'completed') {
+             // if($onePayment->control == $control && $onePayment->payment_method->channel_id == $channel && $payment->status == 'completed'){
                 return true;
             }
         }

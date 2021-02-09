@@ -3,15 +3,71 @@
     <head>
         <meta charset="utf-8" />
         <title>{{ title }}</title>
+        <style>
+            .alert-noorder{
+                font-family: Verdana,sans-serif;
+                font-size: 0.9em;
+                line-height: 1.5;
+                box-sizing: inherit;
+                border: 1px solid #ccc !important;
+                color: #000 !important;
+                background-color: #fdcbcb5e !important;
+                max-width: 500px;
+                max-height: 400px;
+                padding: 15px;
+                margin: auto;
+                margin-top: 20px;
+            }
+            .noOrderBack {
+                box-shadow:inset 0px 1px 0px 0px #f7c5c0;
+                background:linear-gradient(to bottom, #fc8d83 5%, #e4685d 100%);
+                background-color:#fc8d83;
+                border-radius:6px;
+                border:1px solid #d83526;
+                display:inline-block;
+                cursor:pointer;
+                color:#ffffff;
+                font-family:Arial;
+                font-size:15px;
+                font-weight:bold;
+                padding:6px 24px;
+                text-decoration:none;
+                text-shadow:0px 1px 0px #b23e35;
+            }
+            .noOrderBack:hover {
+                background:linear-gradient(to bottom, #e4685d 5%, #fc8d83 100%);
+                background-color:#e4685d;
+            }
+            .noOrderBack:active {
+                position:relative;
+                top:1px;
+            }
+        </style>
+    </head>
+    <body>
+    {% if orderNR is empty %}
+        <div class="alert-noorder"> 
+            <strong>{{ text_info1 }}</strong> <br><br>
+            {{ text_info2 }} <br><br>
+            {{ text_info3 }} <br><br>
+
+            <div style="text-align:center;"><a href="{{ noOrder_back_link }}" class="noOrderBack">{{ noOrder_back_txt }}</a></div>
+        </div>
+      <script>
+         setTimeout(function(){
+            window.location.href = '{{ noOrder_back_link }}';
+         }, 8000);
+      </script>
+
+    {% else %}
         <script type="text/javascript">
             setTimeout(function(){document.getElementById('dotpay-form').submit();}, 1);
         </script>
-    </head>
-    <body>
         <form action="{{ action }}" method="POST" id="dotpay-form" style="display: none">  
             {% for name,value in fields %}
             <input type="hidden" name="{{ name }}" value="{{ value }}" />
             {% endfor %}
         </form>
+    {% endif %}   
     </body>
 </html>

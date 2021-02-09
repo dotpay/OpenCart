@@ -35,7 +35,7 @@ class ControllerExtensionPaymentDotpayNew extends Controller
     /**
      * Is enable payment on site for method payment cash and transfer groups
      */
-    const RO_ENABLED = false;
+    const RO_ENABLED = true;
 
 
     /**
@@ -114,19 +114,29 @@ class ControllerExtensionPaymentDotpayNew extends Controller
         $this->load->library('dotpay/SellerApi');
         $this->load->library('dotpay/RegisterOrder');
         $this->load->library('dotpay/TemplateLoader');
-        $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+        if (isset($this->session->data['order_id'])) {
+             $order = $this->model_checkout_order->getOrder($this->session->data['order_id']);
+             $get_currency = $this->currency;
+             $correctAmount = dotpay\Gateway::correctAmount($order, $get_currency);
+        }else{
+            $order = null; 
+            $get_currency = null;
+            $correctAmount = null;
+            //return null;
+        }
         $this->Agreements->setInputVars(
             $this->config->get($this->getConfigKey('target_payment_url')),
             $this->config->get($this->getConfigKey('id')),
-            dotpay\Gateway::correctAmount($order, $this->currency),
+            $correctAmount,
             $order['currency_code'],
             $this->session->data['language']
         );
-        $this->Gateway->setVars($this->config, $order, $this->language, $this->currency, $this->load, $this->session, $this->request, $this->customer);
+        $this->Gateway->setVars($this->config, $order, $this->language, $get_currency, $this->load, $this->session, $this->request, $this->customer);
         $hiddenFields = $this->Gateway->getHiddenFields();
         if (isset($this->request->post['channel']) &&
             self::RO_ENABLED == true &&
             $this->isFullConfigOk() &&
+            $order != null &&
            $this->Agreements->isChannelInGroup($this->request->post['channel'], array(self::CASH_GROUP, self::TRANSFER_GROUP))
         ) {
             $payment = $this->RegisterOrder->create($hiddenFields);
@@ -175,8 +185,19 @@ class ControllerExtensionPaymentDotpayNew extends Controller
     private function generateRequestForm($hiddenFields, $order)
     {
         $this->Gateway->setVars($this->config, $order, $this->language, $this->currency, $this->load, $this->session, $this->request, $this->customer);
+        if ($this->customer->isLogged()) {
+            $noOrderback = HTTPS_SERVER.'index.php?route=account/order';
+        } else {
+            $noOrderback = HTTPS_SERVER.'index.php?route=common/home';
+        }
         $this->response->setOutput($this->templateLoader(self::PLUGIN_NAME.'_prepare', array(
             'fields' => $hiddenFields,
+            'orderNR' => $order,
+            'text_info1' => $this->language->get('preparing_noorder_txt1'),
+            'text_info2' => $this->language->get('preparing_noorder_txt2'),
+            'text_info3' => $this->language->get('preparing_noorder_txt3'),
+            'noOrder_back_link' => $noOrderback,
+            'noOrder_back_txt' => $this->language->get('preparing_noorder_txt4'),
             'action' => $this->config->get($this->getConfigKey('target_payment_url')),
             'title' => $this->language->get('preparing_title'),
         )));
@@ -287,12 +308,31 @@ class ControllerExtensionPaymentDotpayNew extends Controller
     {
         $this->load->model('checkout/order');
         $this->load->library('dotpay/Gateway');
-        if (!isset($this->request->post['control'])) {
-            $control = null;
-        } else {
-            $control = explode('|', (string)$this->request->post['control']);
+        if(!isset($this->request->post['control']))
+        {
+            $control_org = NULL;
+        } else{
+            $control_org = $this->request->post['control'];
         }
-        $order = $this->model_checkout_order->getOrder($control[0]);
+
+        $reg_control = '/id:#(\d+)\|domain:/m';
+        preg_match_all($reg_control, (string)$control_org, $matches_control, PREG_SET_ORDER, 0);
+
+        if(count($matches_control) == 1 && (isset($matches_control[0][1]) && (int)$matches_control[0][1] >0)){
+    
+            $controlNr =  (int)$matches_control[0][1];
+        }else {
+
+            $controlNr1 = explode('|', (string)$control_org);
+            $controlNr2 = explode('id:#', (string)$controlNr1[0]);
+            if(count($controlNr2) >1) {
+                $controlNr = $controlNr2[1];
+            }else{
+                $controlNr = $controlNr2[0];
+            }
+            
+        }
+        $order = $this->model_checkout_order->getOrder($controlNr);
         $this->Gateway->setVars($this->config, $order, $this->language, $this->currency, $this->load, $this->session, $this->request, $this->customer);
         $this->Gateway->confirm();
     }
@@ -364,9 +404,13 @@ class ControllerExtensionPaymentDotpayNew extends Controller
         $this->load->model('checkout/order');
         $this->document->setTitle($this->language->get('info_title'));
         $data = array();
-        if (!isset($this->session->data['customer_id'])) {
-            $data['info_order_not_found'] = $this->language->get('login_required');
-        } elseif (isset($this->request->get['order']) && !empty($this->request->get['order'])) {
+            /*
+                if (!isset($this->session->data['customer_id'])) {
+                    $data['dp_info_order_not_found'] = $this->language->get('login_required');
+                } elseif (isset($this->request->get['order']) && !empty($this->request->get['order'])) {
+            */    
+         if (isset($this->request->get['order']) && !empty($this->request->get['order'])) {  
+
             $order = $this->model_checkout_order->getOrder($this->request->get['order']);
             $this->Agreements->setInputVars(
                 $this->config->get($this->getConfigKey('target_payment_url')),
@@ -376,14 +420,15 @@ class ControllerExtensionPaymentDotpayNew extends Controller
                 $this->session->data['language']
             );
             $instruction = $this->model_extension_payment_dotpay_info->getByOrderId($this->request->get['order']);
-            if ($instruction != null) {
+            if ($instruction != NULL) {
+
                 $chData = $this->Agreements->getChannelData($instruction['channel']);
                 if ($instruction['is_cash']) {
                     $data['info_info'] = $this->language->get('info_info_cash');
                 } else {
                     $data['info_info'] = $this->language->get('info_info_bank');
                 }
-                $data['info_order_not_found'] = null;
+                $data['dp_info_order_not_found'] = NULL;
                 $data['info_account'] = $this->language->get('info_account');
                 $data['info_amount'] = $this->language->get('info_amount');
                 $data['info_title'] = $this->language->get('info_title');
@@ -395,7 +440,8 @@ class ControllerExtensionPaymentDotpayNew extends Controller
                 $data['bank_account'] = $instruction['bank_account'];
                 $data['amount'] = $instruction['amount'];
                 $data['currency'] = $instruction['currency'];
-                $data['title'] = $instruction['number'];
+               // $data['title'] = $instruction['number'];
+                $data['title'] = $instruction['number']." ".$this->language->get('text_order_id')." ".$this->request->get['order'];
                 $data['name'] = ModelExtensionPaymentDotpayInfo::DOTPAY_NAME;
                 $data['street'] = ModelExtensionPaymentDotpayInfo::DOTPAY_STREET;
                 $data['postcode'] = ModelExtensionPaymentDotpayInfo::DOTPAY_CITY;
@@ -416,10 +462,10 @@ class ControllerExtensionPaymentDotpayNew extends Controller
                 }
                 $data['logo'] = $chData['logo'];
             } else {
-                $data['info_order_not_found'] = $this->language->get('info_info_not_found');
+                $data['dp_info_order_not_found'] = $this->language->get('info_info_not_found');
             }
         } else {
-            $data['info_order_not_found'] = $this->language->get('info_order_not_found');
+            $data['dp_info_order_not_found'] = $this->language->get('dp_info_order_not_found');
         }
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');

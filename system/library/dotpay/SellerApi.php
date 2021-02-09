@@ -148,7 +148,10 @@ class SellerApi
         $yesterday = date("Y-m-d", strtotime("- 1 day"));
         $this->load->model('checkout/order');
         //$url = $this->config->get('payment_'.self::PLUGIN_NAME.'_target_seller_url').$this->getDotPaymentApi().'payments/?control='.$orderId;
-        $url = $this->config->get('payment_'.self::PLUGIN_NAME.'_target_seller_url').$this->getDotPaymentApi().'payments/?description='.$control[0].'&type=payment&creation_date_from='.$yesterday.'&account_id='.$this->Gateway->getHiddenFields()['id'];
+        $url = $this->config->get('payment_'.self::PLUGIN_NAME.'_target_seller_url').$this->getDotPaymentApi().'payments/?account_id='.$this->Gateway->getHiddenFields()['id'].'&description='.$control[0].'&creation_date_from='.$yesterday;
+        
+        //$url = $this->config->get('payment_'.self::PLUGIN_NAME.'_target_seller_url').$this->getDotPaymentApi().'payments/?description='.$control[0].'&type=payment&creation_date_from='.$yesterday.'&account_id='.$this->Gateway->getHiddenFields()['id'];
+
         $curl = new Curl();
         $curl->addOption(CURLOPT_URL, $url)
              ->addOption(CURLOPT_USERPWD, $username.':'.$password);

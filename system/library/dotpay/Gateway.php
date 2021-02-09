@@ -419,8 +419,8 @@ class Gateway
         if (($_SERVER["REMOTE_ADDR"] == $this->config->get($this->getConfigKey('office_ip')) || $this->getClientIp() == $this->config->get($this->getConfigKey('office_ip'))) 
              && $_SERVER['REQUEST_METHOD'] == 'GET') 
         {
-            die('OpenCart - M.Ver: '.$this->config->get($this->getConfigKey('plugin_version')).
-                '<br />OC.Ver: '.VERSION.
+            die('Dotpay module ver: '.$this->config->get($this->getConfigKey('plugin_version')).
+                '<br />OpenCart ver: '.VERSION.
                 '<br />ID: '.$this->config->get($this->getConfigKey('id')).
                 '<br />Active: '.(int) $this->config->get($this->getConfigKey('status')).
                 '<br />Test: '.(int) $this->config->get($this->getConfigKey('test')).
@@ -547,6 +547,68 @@ class Gateway
         }
     }
 
+	/**
+     * Returns correct SERVER NAME or HOSTNAME
+     * @return string
+     */
+    public function getHost()
+    {
+
+		$possibleHostSources = array('HTTP_X_FORWARDED_HOST', 'HTTP_HOST', 'SERVER_NAME', 'SERVER_ADDR');
+		$sourceTransformations = array(
+			"HTTP_X_FORWARDED_HOST" => function($value) {
+				$elements = explode(',', $value);
+				return trim(end($elements));
+			}
+		);
+		$host = '';
+		foreach ($possibleHostSources as $source)
+		{
+			if (!empty($host)) break;
+			if (empty($_SERVER[$source])) continue;
+			$host = $_SERVER[$source];
+			if (array_key_exists($source, $sourceTransformations))
+			{
+				$host = $sourceTransformations[$source]($host);
+			}
+		}
+
+		// Remove port number from host
+		$host = preg_replace('/:\d+$/', '', $host);
+
+		return trim($host);
+
+    }
+
+	 /**
+	 * The validator checks if the given URL address is correct.
+	 */
+	public function validateHostname($value)
+    {
+        return (bool) preg_match('/^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,10}$/', $value);
+    }
+
+
+     /**
+     * Return real HOSTNAME this server
+     * @return string
+     */   
+    public function realHostName() 
+    {
+        $server_name = '';
+
+        if ($this->validateHostname($this->getHost()))
+        {
+            $server_name = $this->getHost();
+        } else {
+            $server_name = "HOSTNAME";
+        }
+
+        return $server_name;
+
+    }
+
+
     /**
      * Returns basic data of fields of order.
      *
@@ -554,41 +616,62 @@ class Gateway
      */
     private function getHiddenFieldsDefault()
     {
-        $street = $this->getStreetAndStreetN1();
+        if($this->order['order_id'] !=null ){
 
-        if ($this->session->data['account'] == 'register'){
-            $telephone = $this->customer->getTelephone();
-        }else{
-            $telephone = $this->session->data['guest']['telephone'];
-        }
+                $street = $this->getStreetAndStreetN1();
 
-        $data = array();
-        $data['id'] = $this->config->get($this->getConfigKey('id'));
-        $data['currency'] = $this->order['currency_code'];
-        $data['p_info'] = $this->NewpInfo($this->config->get('config_name'));
-        $data['p_email'] = $this->config->get('config_email');
-        $data['api_version'] = $this->config->get($this->getConfigKey('api_version'));
-        $data['lang'] = strtolower(substr(trim($this->language->get('code')), 0, 2));
-        $data['email'] = $this->order['email'];
-        $data['lastname'] = $this->NewPersonName($this->order['payment_lastname']);
-        $data['firstname'] = $this->NewPersonName($this->order['payment_firstname']);
-        $data['street'] = $this->NewStreet($street['street']);
-        $data['street_n1'] = $this->NewStreet_n1($street['street_n1']);
-        $data['city'] = $this->NewCity($this->session->data['payment_address']['city']);
-        $data['postcode'] = $this->NewPostcode($this->session->data['payment_address']['postcode']);
-        $data['country'] = $this->session->data['payment_address']['country'];
-        $data['phone'] = $this->NewPhone($telephone);
-        $data['control'] = $this->order['order_id'].'|OpenCart v:'.VERSION.'|DP module: '.$this->config->get($this->getConfigKey('plugin_version'));
-        $data['description'] = $this->language->get('text_order_id').' '.$this->order['order_id'];
-        $data['amount'] = self::correctAmount($this->order, $this->currency);
-        $data['url'] = HTTPS_SERVER.$this->config->get($this->getConfigKey('URL'));
-        $data['urlc'] = HTTPS_SERVER.$this->config->get($this->getConfigKey('URLC'));
-        $data['type'] = '4';
-        $data['ch_lock'] = '0';
-        $data['bylaw'] = '1';
-        $data['personal_data'] = '1';
+                if ($this->customer->isLogged()) {
+                //if ($this->session->data['account'] == 'register'){
+                    if(null !== $this->customer->getTelephone()){
+                        $telephone = $this->customer->getTelephone();
+                    }else{
+                        $telephone = "";
+                    }
 
-        return $data;
+
+                }else{
+                    if(null !== $this->session->data['guest'] ){
+                        $telephone = $this->session->data['guest']['telephone'];
+                    }else{
+                        $telephone = "";
+                    }
+
+                }
+
+                $control_new =  $this->order['order_id'] . '|domain:' . $this->realHostName() . '|OpenCart v'.VERSION.', DP module:' . $this->config->get($this->getConfigKey('plugin_version'));
+
+
+                $data = array();
+                $data['id'] = $this->config->get($this->getConfigKey('id'));
+                $data['currency'] = $this->order['currency_code'];
+                $data['p_info'] = $this->NewpInfo($this->config->get('config_name'));
+                $data['p_email'] = $this->config->get('config_email');
+                $data['api_version'] = $this->config->get($this->getConfigKey('api_version'));
+                $data['lang'] = strtolower(substr(trim($this->language->get('code')), 0, 2));
+                $data['email'] = $this->order['email'];
+                $data['lastname'] = $this->NewPersonName($this->order['payment_lastname']);
+                $data['firstname'] = $this->NewPersonName($this->order['payment_firstname']);
+                $data['street'] = $this->NewStreet($street['street']);
+                $data['street_n1'] = $this->NewStreet_n1($street['street_n1']);
+                $data['city'] = $this->NewCity($this->session->data['payment_address']['city']);
+                $data['postcode'] = $this->NewPostcode($this->session->data['payment_address']['postcode']);
+                $data['country'] = $this->session->data['payment_address']['country'];
+                $data['phone'] = $this->NewPhone($telephone);
+                $data['control'] = $control_new;
+                $data['description'] = $this->language->get('text_order_id').' '.$this->order['order_id'];
+                $data['amount'] = self::correctAmount($this->order, $this->currency);
+                $data['url'] = HTTPS_SERVER.$this->config->get($this->getConfigKey('URL'));
+                $data['urlc'] = HTTPS_SERVER.$this->config->get($this->getConfigKey('URLC'));
+                $data['type'] = '4';
+                $data['ch_lock'] = '0';
+                $data['bylaw'] = '1';
+                $data['personal_data'] = '1';
+                $data['ignore_last_payment_channel'] = '1';
+
+                return $data;
+            }else{
+                return false;
+            }
     }
 
     /**
@@ -627,20 +710,24 @@ class Gateway
     {
         $this->load->model(dirname(dirname($this->getExtensionName())).'/dotpay_oc');
         $data = $this->getHiddenFieldsDefault();
-        $data['channel'] = self::OC;
-        if ($this->request->post['oc_type'] == 'new') {
-            $data['credit_card_store'] = 1;
-            $data['credit_card_customer_id'] = $this->model_extension_payment_dotpay_oc->addCard($this->session->data['customer_id'], $this->order['order_id']);
-        } else {
-            $card = $this->model_extension_payment_dotpay_oc->getCardById($this->request->post['card_id']);
-            if ($card == null) {
-                return $data;
-            }
-            $data['credit_card_id'] = $card['card_id'];
-            $data['credit_card_customer_id'] = $card['hash'];
-        }
+        if($data != null) {
+                $data['channel'] = self::OC;
+                if ($this->request->post['oc_type'] == 'new') {
+                    $data['credit_card_store'] = 1;
+                    $data['credit_card_customer_id'] = $this->model_extension_payment_dotpay_oc->addCard($this->session->data['customer_id'], $this->order['order_id']);
+                } else {
+                    $card = $this->model_extension_payment_dotpay_oc->getCardById($this->request->post['card_id']);
+                    if ($card == null) {
+                        return $data;
+                    }
+                    $data['credit_card_id'] = $card['card_id'];
+                    $data['credit_card_customer_id'] = $card['hash'];
+                }
 
-        return $data;
+                return $data;
+            }else{
+                return false;
+            }
     }
 
     /**
@@ -651,10 +738,14 @@ class Gateway
     private function getHiddenFieldsPv()
     {
         $data = $this->getHiddenFieldsDefault();
-        $data['id'] = $this->config->get($this->getConfigKey('pv_id'));
-        $data['channel'] = self::PV;
+        if($data != null) {
+            $data['id'] = $this->config->get($this->getConfigKey('pv_id'));
+            $data['channel'] = self::PV;
 
-        return $data;
+            return $data;
+        }else{
+            return false;
+        }
     }
 
     /**
@@ -665,9 +756,13 @@ class Gateway
     private function getHiddenFieldsCc()
     {
         $data = $this->getHiddenFieldsDefault();
-        $data['channel'] = self::CC;
+        if($data != null) {
+            $data['channel'] = self::CC;
 
-        return $data;
+            return $data;
+        }else{
+            return false;
+        }
     }
 
     /**
@@ -678,13 +773,17 @@ class Gateway
     private function getHiddenFieldsMp()
     {
         $data = $this->getHiddenFieldsDefault();
-        if ($this->config->get($this->getConfigKey('test'))) {
-            $data['channel'] = 246;
-        } else {
-            $data['channel'] = self::MP;
-        }
+        if($data != null) {
+            if ($this->config->get($this->getConfigKey('test'))) {
+                $data['channel'] = 246;
+            } else {
+                $data['channel'] = self::MP;
+            }
 
-        return $data;
+            return $data;
+        }else{
+            return false;
+        }
     }
 
     /**
@@ -695,12 +794,17 @@ class Gateway
     private function getHiddenFieldsBlik()
     {
         $data = $this->getHiddenFieldsDefault();
-        $data['channel'] = self::BLIK;
-        if (!$this->config->get($this->getConfigKey('test'))) {
-            $data['blik_code'] = $this->request->post['blik_code'];
-        }
 
-        return $data;
+        if($data != null) {
+            $data['channel'] = self::BLIK;
+            if (!$this->config->get($this->getConfigKey('test'))) {
+                $data['blik_code'] = $this->request->post['blik_code'];
+            }
+
+            return $data;
+        }else{
+            return false;
+        }
     }
 
     /**
@@ -709,16 +813,22 @@ class Gateway
      * @return array
      */
     private function getHiddenFieldsDotpay()
-    {
+    {   
         $data = $this->getHiddenFieldsDefault();
-        if ($this->config->get($this->getConfigKey('widget'))) {
-            $data['channel'] = $this->request->post['channel'];
-        } else {
-            $data['type'] = 0;
-            $data['ch_lock'] = 0;
+
+        if($data != null) {
+            if ($this->config->get($this->getConfigKey('widget'))) {
+                $data['channel'] = $this->request->post['channel'];
+            } else {
+                $data['type'] = 0;
+                $data['ch_lock'] = 0;
+            }
+    
+            return $data;
+        }else{
+            return false;
         }
 
-        return $data;
     }
 
     /**
@@ -762,6 +872,12 @@ class Gateway
 		$this->getDataFromRequest('channel').
         $this->getDataFromRequest('channel_country').
         $this->getDataFromRequest('geoip_country');
+        $this->getDataFromRequest('payer_bank_account_name').
+        $this->getDataFromRequest('payer_bank_account').
+        $this->getDataFromRequest('payer_transfer_title').
+        $this->getDataFromRequest('blik_voucher_pin').
+        $this->getDataFromRequest('blik_voucher_amount').
+        $this->getDataFromRequest('blik_voucher_amount_used');
 
         return $this->request->post['signature'] === hash('sha256', $signature);
     }
@@ -802,15 +918,17 @@ class Gateway
     {
         $street1 = $this->NewStreet($this->session->data['payment_address']['address_1']);
         $street2 = $this->NewStreet_n1($this->session->data['payment_address']['address_2']);
-      
+        
+        $street = $street1.' '.$street2;
+
         if(trim($street2) == ''){
 
-            preg_match("/\s[\p{L}0-9\s\-_\/]{1,15}$/u", $street1.' '.$street2, $matches);
+            preg_match("/\s[\p{L}0-9\s\-_\/]{1,15}$/u", $street, $matches);
             if (count($matches) > 0) {
                 $street_n1 = trim($matches[0]);
                 $street = str_replace($matches[0], '', $street);
             } else {
-                $street_n1 = '';
+                $street_n1 = '0';
             }
 
         } else {

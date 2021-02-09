@@ -3,14 +3,14 @@
 /**
  * English language pack for client page in Dotpay payment plugin.
  */
-$_['text_dotpay_title'] = 'Fast and secure Internet payment';
+$_['text_dotpay_title'] = 'Dotpay: Fast and secure payment';
 $_['text_dotpay_button_confirm'] = 'Pay with Dotpay';
 
-$_['oc_channel_title'] = 'One Click payments via Dotpay.pl';
+$_['oc_channel_title'] = 'Credit Card One Click payments';
 $_['label_select_oc_card'] = 'Select your saved card';
 $_['label_register_oc_card'] = 'Register a new card';
 $_['register_card_agreement'] = 'I agree to repeated loading bill my credit card for the payment One-Click by way of purchase of goods or services offered by the store.';
-$_['pv_channel_title'] = 'Credit cards (via Dotpay.pl)';
+$_['pv_channel_title'] = 'Credit cards';
 $_['cc_channel_title'] = 'Credit cards';
 $_['mp_channel_title'] = 'MasterPass';
 $_['blik_channel_title'] = 'BLIK';
@@ -35,6 +35,10 @@ $_['back_text_back'] = 'Ignore waiting and continue...';
 
 $_['back_title'] = 'Waiting for confirming payment...';
 $_['preparing_title'] = 'Dotpay is preparing your payment...';
+$_['preparing_noorder_txt1'] = 'Caution!';
+$_['preparing_noorder_txt2'] = 'Incorrect redirection - no information about the order.';
+$_['preparing_noorder_txt3'] = 'You will be redirected back to the store in a moment. <br>Please place your order again.';
+$_['preparing_noorder_txt4'] = 'Return to the shop';
 
 $_['error_payment_expired'] = 'Exceeded expiration date of the generated payment link.';
 $_['error_unknown_channel'] = 'Selected payment channel is unknown.';
@@ -60,7 +64,7 @@ $_['ocmanage_on_done_message'] = 'The card was deregistered from shop';
 $_['ocmanage_on_failure_message'] = 'An error occurred while deregistering the card';
 
 $_['info_title'] = 'Complete your payment';
-$_['info_order_not_found'] = 'Given order doesn\'t exist';
+$_['dp_info_order_not_found'] = 'Given order doesn\'t exist';
 $_['info_info_not_found'] = 'Information about this order doesn\'t exist';
 $_['info_info_bank'] = 'To pay by money transfer you need login to your bank system and make a money transfer, entering the following data:';
 $_['info_info_cash'] = 'To pay by cash you need to download and print the blankiet:';
