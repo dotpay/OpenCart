@@ -1,6 +1,7 @@
 OpenCart Dotpay payment module for Opencart 3.x
 =====================
 
+[![](https://img.shields.io/github/release/dotpay/OpenCart.svg?style=for-the-badge)](https://github.com/dotpay/OpenCart/releases/latest "Download")
 
 _English version below_
 
