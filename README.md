@@ -37,3 +37,16 @@ Starsze wersje OpenCart:
 - You can find module for older version OpenCart:
 - plugin available for OpenCart 2.3 : https://github.com/dotpay/OpenCart/tree/v2.3.5
 - plugin available for OpenCart 2.0 - 2.2 : https://github.com/dotpay/OpenCart/tree/Opencart-2.2
+
+
+
+---------------------------------------
+>***last changes:***
+
+>- [v3.1.0](https://github.com/dotpay/OpenCart/releases/tag/v3.1.0):
+> - **important: added new addresses to whitelist for notifications!**
+> - **security change: added a new version of the API in the context of calculating the checksum ('chk')**
+> - an additional setting has been added in the configuration: whether the server uses a proxy. The setting determines how the ip address of notifications received from dotpay will be checked. Disable the options only if you have a problem with receiving notifications.
+> - small changes
+
+
