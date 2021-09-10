@@ -18,7 +18,7 @@
  * needs please refer to http://www.dotpay.pl for more information.
  *
  *  @author    Dotpay Team <tech@dotpay.pl>
- *  @copyright Dotpay
+ *  @copyright PayPro S.A.
  *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -32,7 +32,7 @@ class Gateway
     /**
      * Name of plugin.
      */
-    const PLUGIN_NAME = 'dotpay_new';
+    const PLUGIN_NAME = 'dotpay_next';
     
 
     /**
@@ -376,7 +376,7 @@ class Gateway
             default:
                 $data = $this->getHiddenFieldsDotpay();
         }
-        $data['chk'] = self::generateCHK($id, $pin, $data);
+        $data['chk'] = (string)self::generateCHK($pin, $data);
 
         return $data;
     }
@@ -407,6 +407,26 @@ class Gateway
         );
     }
 
+
+    /**
+     * Returns if the given ip is on the given whitelist.
+    *
+    * @param string $ip        The ip to check.
+    * @param array  $whitelist The ip whitelist. An array of strings.
+    *
+    * @return bool
+    */
+    public function isAllowedIp($ip, array $whitelist)
+    {
+        $ip = (string)$ip;
+        if (in_array($ip, $whitelist, true)) {
+            return true;
+        }
+
+        return false;
+    }
+
+
     /**
      * Confirms a payment through URLC request, using POST data.
      */
@@ -414,31 +434,46 @@ class Gateway
     {
         $this->load->language($this->getExtensionName());
         $this->load->model(dirname(dirname($this->getExtensionName())).'/dotpay_oc');
-        $this->load->model(dirname(dirname($this->getExtensionName())).'/dotpay_new');
+        $this->load->model(dirname(dirname($this->getExtensionName())).'/dotpay_next');
         
-        if (($_SERVER["REMOTE_ADDR"] == $this->config->get($this->getConfigKey('office_ip')) || $this->getClientIp() == $this->config->get($this->getConfigKey('office_ip'))) 
-             && $_SERVER['REQUEST_METHOD'] == 'GET') 
-        {
-            die('Dotpay module ver: '.$this->config->get($this->getConfigKey('plugin_version')).
-                '<br />OpenCart ver: '.VERSION.
-                '<br />ID: '.$this->config->get($this->getConfigKey('id')).
-                '<br />Active: '.(int) $this->config->get($this->getConfigKey('status')).
-                '<br />Test: '.(int) $this->config->get($this->getConfigKey('test')).
-                '<br />Api: '.$this->config->get($this->getConfigKey('api_version')).
-                '<br />pvID: '.$this->config->get($this->getConfigKey('pv_id')).
-                '<br />pvCurr: '.$this->config->get($this->getConfigKey('pv_curr')).
-                '<br />PHP: '.PHP_VERSION
-            );
+
+        if( ((int) $this->config->get($this->getConfigKey('nonproxy'))) == 1) {
+            $CHECK_IP = $_SERVER['REMOTE_ADDR'];
+            $proxy_desc = 'FALSE';
+        }else{
+            $CHECK_IP = $this->getClientIp();
+            $proxy_desc = 'TRUE';
         }
 
-        if ($_SERVER['REMOTE_ADDR'] != $this->config->get($this->getConfigKey('ip')) && $this->getClientIp() != $this->config->get($this->getConfigKey('ip')) )     
-        {
-            die("OpenCart - ERROR (REMOTE ADDRESS: ".$this->getClientIp(true)."/".$_SERVER["REMOTE_ADDR"]."  <> ".$this->config->get($this->getConfigKey('ip')) );
+
+        if ( strtoupper($_SERVER['REQUEST_METHOD']) == 'GET') {
+            if ( $CHECK_IP == $this->config->get($this->getConfigKey('office_ip')) ) 
+            {
+                die('Dotpay module ver: '.$this->config->get($this->getConfigKey('plugin_version')).
+                    '<br />OpenCart ver: '.VERSION.
+                    '<br />ID: '.$this->config->get($this->getConfigKey('id')).
+                    '<br />Active: '.(int) $this->config->get($this->getConfigKey('status')).
+                    '<br />Test: '.(int) $this->config->get($this->getConfigKey('test')).
+                    '<br />Server does not use a proxy: '.(int) $this->config->get($this->getConfigKey('nonproxy')).
+                    '<br /> REMOTE ADDRESS: '.$_SERVER['REMOTE_ADDR'].
+                    '<br />Api: '.$this->config->get($this->getConfigKey('api_version')).
+                    '<br />pvID: '.$this->config->get($this->getConfigKey('pv_id')).
+                    '<br />pvCurr: '.$this->config->get($this->getConfigKey('pv_curr')).
+                    '<br />PHP: '.PHP_VERSION
+                );
+            }else {
+                die('Access denied! IP: '.$this->getClientIp('checkip').'/'.$_SERVER['REMOTE_ADDR'].', PROXY: '.$proxy_desc.', METHOD: '.$_SERVER['REQUEST_METHOD']);
+            }
         }
 
-        if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-            die('OpenCart - ERROR (METHOD <> POST)');
-        }
+
+
+        if (!( ($this->isAllowedIp($CHECK_IP,$this->config->get($this->getConfigKey('ip')))) && (strtoupper($_SERVER['REQUEST_METHOD']) == 'POST') ))
+         {
+            die('OpenCart - ERROR (REMOTE ADDRESS: '.$this->getClientIp(true).'/'.$_SERVER["REMOTE_ADDR"].', PROXY: '.$proxy_desc.', METHOD: '.$_SERVER['REQUEST_METHOD'].')');
+         }
+
+
         
         if (!isset($this->request->post['control'])) {
             die('OpenCart - LACK OF OID');
@@ -453,8 +488,6 @@ class Gateway
                 }
 
         }
-
-       
 
 
         if (!$this->checkConfirm()) {
@@ -494,15 +527,18 @@ class Gateway
                     $ccInfo = $this->SellerApi->getCreditCardInfo(
                         $this->config->get($this->getConfigKey('username')),
                         $this->config->get($this->getConfigKey('password')),
-                        $this->getDataFromRequest('operation_number')
+                        'ID transaction in dotpay: '.$this->getDataFromRequest('operation_number').', payment channel number: "'.$this->getDataFromRequest('channel').'", date this status: '.$this->getDataFromRequest('operation_datetime')
                     );
                     $this->model_extension_payment_dotpay_oc->updateCard($cc['cc_id'], $ccInfo->id, $ccInfo->masked_number, $ccInfo->brand->name);
                 }
             }
             $this->load->model('checkout/order');
-            $this->model_checkout_order->addOrderHistory($this->order['order_id'], $newOrderState, $this->getDataFromRequest('operation_number'), true);
+            $this->model_checkout_order->addOrderHistory($this->order['order_id'], 
+                                                         $newOrderState,
+                                                         'ID transaction in dotpay: '.$this->getDataFromRequest('operation_number').', payment channel number: "'.$this->getDataFromRequest('channel').'", date this status: '.$this->getDataFromRequest('operation_datetime'), 
+                                                         true);
         } elseif ($this->getDataFromRequest('operation_type') == self::OPERATION_TYPE_REFUND) {
-            $return = $this->model_extension_payment_dotpay_new->getReturnByOrderId($this->order['order_id']);
+            $return = $this->model_extension_payment_dotpay_next->getReturnByOrderId($this->order['order_id']);
             if (!$return) {
                 die('Error: '.$this->language->get('error_return'));
             }
@@ -542,7 +578,7 @@ class Gateway
                     'notify' => 0,
                 );
 
-                $this->model_extension_payment_dotpay_new->addReturnHistory($return['return_id'], $data);
+                $this->model_extension_payment_dotpay_next->addReturnHistory($return['return_id'], $data);
             }
         }
     }
@@ -642,31 +678,53 @@ class Gateway
 
 
                 $data = array();
-                $data['id'] = $this->config->get($this->getConfigKey('id'));
-                $data['currency'] = $this->order['currency_code'];
-                $data['p_info'] = $this->NewpInfo($this->config->get('config_name'));
-                $data['p_email'] = $this->config->get('config_email');
-                $data['api_version'] = $this->config->get($this->getConfigKey('api_version'));
-                $data['lang'] = strtolower(substr(trim($this->language->get('code')), 0, 2));
-                $data['email'] = $this->order['email'];
-                $data['lastname'] = $this->NewPersonName($this->order['payment_lastname']);
-                $data['firstname'] = $this->NewPersonName($this->order['payment_firstname']);
-                $data['street'] = $this->NewStreet($street['street']);
-                $data['street_n1'] = $this->NewStreet_n1($street['street_n1']);
-                $data['city'] = $this->NewCity($this->session->data['payment_address']['city']);
-                $data['postcode'] = $this->NewPostcode($this->session->data['payment_address']['postcode']);
-                $data['country'] = $this->session->data['payment_address']['country'];
-                $data['phone'] = $this->NewPhone($telephone);
-                $data['control'] = $control_new;
-                $data['description'] = $this->language->get('text_order_id').' '.$this->order['order_id'];
+                $data['id'] = (string) $this->config->get($this->getConfigKey('id'));
+                $data['currency'] = (string) $this->order['currency_code'];
+                $data['api_version'] = (string) $this->config->get($this->getConfigKey('api_version'));
+                $data['email'] = (string) $this->order['email'];
+                $data['lastname'] = (string) $this->NewPersonName($this->order['payment_lastname']);
+                $data['firstname'] = (string) $this->NewPersonName($this->order['payment_firstname']);
+                $data['control'] = (string) $control_new;
+                $data['description'] = (string) $this->language->get('text_order_id').' '.$this->order['order_id'];
                 $data['amount'] = self::correctAmount($this->order, $this->currency);
-                $data['url'] = HTTPS_SERVER.$this->config->get($this->getConfigKey('URL'));
-                $data['urlc'] = HTTPS_SERVER.$this->config->get($this->getConfigKey('URLC'));
+
+                $data['p_info'] = (string) $this->NewpInfo($this->config->get('config_name'));
+                $data['p_email'] = (string) $this->config->get('config_email');
+                $data['lang'] = (string) strtolower(substr(trim($this->language->get('code')), 0, 2));
+                $data['url'] = (string) HTTPS_SERVER.$this->config->get($this->getConfigKey('URL'));
+                $data['urlc'] = (string) HTTPS_SERVER.$this->config->get($this->getConfigKey('URLC'));
                 $data['type'] = '4';
                 $data['ch_lock'] = '0';
                 $data['bylaw'] = '1';
                 $data['personal_data'] = '1';
                 $data['ignore_last_payment_channel'] = '1';
+
+
+                if( null != trim($this->NewPhone($telephone)))
+                {
+                    $data["phone"] = (string) $this->NewPhone($telephone);
+                }
+                if( null != trim($this->NewCity($this->session->data['payment_address']['city'])) )
+                {
+                    $data["city"] = (string) $this->NewCity($this->session->data['payment_address']['city']);
+                }
+                if( null != trim($this->NewStreet($street['street'])) )
+                {
+                    $data["street"] = (string) $this->NewStreet($street['street']);
+                }
+                if( null != trim($this->NewStreet_n1($street['street_n1'])) )
+                {
+                    $data["street_n1"] = (string) $this->NewStreet_n1($street['street_n1']);
+                }
+                if( null != trim($this->NewPostcode($this->session->data['payment_address']['postcode'])) )
+                {
+                    $data["postcode"] = (string) $this->NewPostcode($this->session->data['payment_address']['postcode']);
+                }
+                if( null != trim($this->session->data['payment_address']['country']) )
+                {
+                    $data["country"] = (string) $this->session->data['payment_address']['country'];
+                }
+
 
                 return $data;
             }else{
@@ -711,17 +769,17 @@ class Gateway
         $this->load->model(dirname(dirname($this->getExtensionName())).'/dotpay_oc');
         $data = $this->getHiddenFieldsDefault();
         if($data != null) {
-                $data['channel'] = self::OC;
+                $data['channel'] = (string)self::OC;
                 if ($this->request->post['oc_type'] == 'new') {
-                    $data['credit_card_store'] = 1;
-                    $data['credit_card_customer_id'] = $this->model_extension_payment_dotpay_oc->addCard($this->session->data['customer_id'], $this->order['order_id']);
+                    $data['credit_card_store'] = '1';
+                    $data['credit_card_customer_id'] = (string)$this->model_extension_payment_dotpay_oc->addCard($this->session->data['customer_id'], $this->order['order_id']);
                 } else {
                     $card = $this->model_extension_payment_dotpay_oc->getCardById($this->request->post['card_id']);
                     if ($card == null) {
                         return $data;
                     }
-                    $data['credit_card_id'] = $card['card_id'];
-                    $data['credit_card_customer_id'] = $card['hash'];
+                    $data['credit_card_id'] = (string)$card['card_id'];
+                    $data['credit_card_customer_id'] = (string)$card['hash'];
                 }
 
                 return $data;
@@ -739,8 +797,8 @@ class Gateway
     {
         $data = $this->getHiddenFieldsDefault();
         if($data != null) {
-            $data['id'] = $this->config->get($this->getConfigKey('pv_id'));
-            $data['channel'] = self::PV;
+            $data['id'] = (string)$this->config->get($this->getConfigKey('pv_id'));
+            $data['channel'] = (string)self::PV;
 
             return $data;
         }else{
@@ -757,7 +815,7 @@ class Gateway
     {
         $data = $this->getHiddenFieldsDefault();
         if($data != null) {
-            $data['channel'] = self::CC;
+            $data['channel'] = (string)self::CC;
 
             return $data;
         }else{
@@ -775,9 +833,9 @@ class Gateway
         $data = $this->getHiddenFieldsDefault();
         if($data != null) {
             if ($this->config->get($this->getConfigKey('test'))) {
-                $data['channel'] = 246;
+                $data['channel'] = '246';
             } else {
-                $data['channel'] = self::MP;
+                $data['channel'] = (string)self::MP;
             }
 
             return $data;
@@ -796,10 +854,10 @@ class Gateway
         $data = $this->getHiddenFieldsDefault();
 
         if($data != null) {
-            $data['channel'] = self::BLIK;
-            if (!$this->config->get($this->getConfigKey('test'))) {
-                $data['blik_code'] = $this->request->post['blik_code'];
-            }
+            $data['channel'] = (string) self::BLIK;
+           // if (!$this->config->get($this->getConfigKey('test'))) {
+                $data['blik_code'] = (string) $this->request->post['blik_code'];
+           // }
 
             return $data;
         }else{
@@ -818,10 +876,10 @@ class Gateway
 
         if($data != null) {
             if ($this->config->get($this->getConfigKey('widget'))) {
-                $data['channel'] = $this->request->post['channel'];
+                $data['channel'] = (string)$this->request->post['channel'];
             } else {
-                $data['type'] = 0;
-                $data['ch_lock'] = 0;
+                $data['type'] = '0';
+                $data['ch_lock'] = '0';
             }
     
             return $data;
@@ -980,98 +1038,44 @@ class Gateway
         return $result;
     }
 
+
     /**
-     * Returns CHK for request params.
-     *
-     * @param string $DotpayId        Dotpay shop ID
-     * @param string $DotpayPin       Dotpay PIN
-     * @param array  $ParametersArray Parameters from request
-     *
+     * Generate CHK for seller and payment data
+     * @param type $DotpayPin Dotpay seller PIN
+     * @param array $ParametersArray parameters of payment
      * @return string
      */
-    public static function generateCHK($DotpayId, $DotpayPin, $ParametersArray)
-    {
-        $ParametersArray['id'] = $DotpayId;
-        $ChkParametersChain =
-        $DotpayPin.
-        (isset($ParametersArray['api_version']) ? $ParametersArray['api_version'] : null).
-        (isset($ParametersArray['lang']) ? $ParametersArray['lang'] : null).
-        (isset($ParametersArray['id']) ? $ParametersArray['id'] : null).
-        (isset($ParametersArray['pid']) ? $ParametersArray['pid'] : null).
-        (isset($ParametersArray['amount']) ? $ParametersArray['amount'] : null).
-        (isset($ParametersArray['currency']) ? $ParametersArray['currency'] : null).
-        (isset($ParametersArray['description']) ? $ParametersArray['description'] : null).
-        (isset($ParametersArray['control']) ? $ParametersArray['control'] : null).
-        (isset($ParametersArray['channel']) ? $ParametersArray['channel'] : null).
-        (isset($ParametersArray['credit_card_brand']) ? $ParametersArray['credit_card_brand'] : null).
-        (isset($ParametersArray['ch_lock']) ? $ParametersArray['ch_lock'] : null).
-        (isset($ParametersArray['channel_groups']) ? $ParametersArray['channel_groups'] : null).
-        (isset($ParametersArray['onlinetransfer']) ? $ParametersArray['onlinetransfer'] : null).
-        (isset($ParametersArray['url']) ? $ParametersArray['url'] : null).
-        (isset($ParametersArray['type']) ? $ParametersArray['type'] : null).
-        (isset($ParametersArray['buttontext']) ? $ParametersArray['buttontext'] : null).
-        (isset($ParametersArray['urlc']) ? $ParametersArray['urlc'] : null).
-        (isset($ParametersArray['firstname']) ? $ParametersArray['firstname'] : null).
-        (isset($ParametersArray['lastname']) ? $ParametersArray['lastname'] : null).
-        (isset($ParametersArray['email']) ? $ParametersArray['email'] : null).
-        (isset($ParametersArray['street']) ? $ParametersArray['street'] : null).
-        (isset($ParametersArray['street_n1']) ? $ParametersArray['street_n1'] : null).
-        (isset($ParametersArray['street_n2']) ? $ParametersArray['street_n2'] : null).
-        (isset($ParametersArray['state']) ? $ParametersArray['state'] : null).
-        (isset($ParametersArray['addr3']) ? $ParametersArray['addr3'] : null).
-        (isset($ParametersArray['city']) ? $ParametersArray['city'] : null).
-        (isset($ParametersArray['postcode']) ? $ParametersArray['postcode'] : null).
-        (isset($ParametersArray['phone']) ? $ParametersArray['phone'] : null).
-        (isset($ParametersArray['country']) ? $ParametersArray['country'] : null).
-        (isset($ParametersArray['code']) ? $ParametersArray['code'] : null).
-        (isset($ParametersArray['p_info']) ? $ParametersArray['p_info'] : null).
-        (isset($ParametersArray['p_email']) ? $ParametersArray['p_email'] : null).
-        (isset($ParametersArray['n_email']) ? $ParametersArray['n_email'] : null).
-        (isset($ParametersArray['expiration_date']) ? $ParametersArray['expiration_date'] : null).
-        (isset($ParametersArray['deladdr']) ? $ParametersArray['deladdr'] : null).
-        (isset($ParametersArray['recipient_account_number']) ? $ParametersArray['recipient_account_number'] : null).
-        (isset($ParametersArray['recipient_company']) ? $ParametersArray['recipient_company'] : null).
-        (isset($ParametersArray['recipient_first_name']) ? $ParametersArray['recipient_first_name'] : null).
-        (isset($ParametersArray['recipient_last_name']) ? $ParametersArray['recipient_last_name'] : null).
-        (isset($ParametersArray['recipient_address_street']) ? $ParametersArray['recipient_address_street'] : null).
-        (isset($ParametersArray['recipient_address_building']) ? $ParametersArray['recipient_address_building'] : null).
-        (isset($ParametersArray['recipient_address_apartment']) ? $ParametersArray['recipient_address_apartment'] : null).
-        (isset($ParametersArray['recipient_address_postcode']) ? $ParametersArray['recipient_address_postcode'] : null).
-        (isset($ParametersArray['recipient_address_city']) ? $ParametersArray['recipient_address_city'] : null).
-        (isset($ParametersArray['application']) ? $ParametersArray['application'] : null).
-        (isset($ParametersArray['application_version']) ? $ParametersArray['application_version'] : null).
-        (isset($ParametersArray['warranty']) ? $ParametersArray['warranty'] : null).
-        (isset($ParametersArray['bylaw']) ? $ParametersArray['bylaw'] : null).
-        (isset($ParametersArray['personal_data']) ? $ParametersArray['personal_data'] : null).
-        (isset($ParametersArray['credit_card_number']) ? $ParametersArray['credit_card_number'] : null).
-        (isset($ParametersArray['credit_card_expiration_date_year']) ? $ParametersArray['credit_card_expiration_date_year'] : null).
-        (isset($ParametersArray['credit_card_expiration_date_month']) ? $ParametersArray['credit_card_expiration_date_month'] : null).
-        (isset($ParametersArray['credit_card_security_code']) ? $ParametersArray['credit_card_security_code'] : null).
-        (isset($ParametersArray['credit_card_store']) ? $ParametersArray['credit_card_store'] : null).
-        (isset($ParametersArray['credit_card_store_security_code']) ? $ParametersArray['credit_card_store_security_code'] : null).
-        (isset($ParametersArray['credit_card_customer_id']) ? $ParametersArray['credit_card_customer_id'] : null).
-        (isset($ParametersArray['credit_card_id']) ? $ParametersArray['credit_card_id'] : null).
-        (isset($ParametersArray['blik_code']) ? $ParametersArray['blik_code'] : null).
-        (isset($ParametersArray['credit_card_registration']) ? $ParametersArray['credit_card_registration'] : null).
-        (isset($ParametersArray['ignore_last_payment_channel']) ? $ParametersArray['ignore_last_payment_channel'] : null).
-        (isset($ParametersArray['vco_call_id']) ? $ParametersArray['vco_call_id'] : null).
-        (isset($ParametersArray['vco_update_order_info']) ? $ParametersArray['vco_update_order_info'] : null).
-        (isset($ParametersArray['vco_subtotal']) ? $ParametersArray['vco_subtotal'] : null).
-        (isset($ParametersArray['vco_shipping_handling']) ? $ParametersArray['vco_shipping_handling'] : null).
-        (isset($ParametersArray['vco_tax']) ? $ParametersArray['vco_tax'] : null).
-        (isset($ParametersArray['vco_discount']) ? $ParametersArray['vco_discount'] : null).
-        (isset($ParametersArray['vco_gift_wrap']) ? $ParametersArray['vco_gift_wrap'] : null).
-        (isset($ParametersArray['vco_misc']) ? $ParametersArray['vco_misc'] : null).
-        (isset($ParametersArray['vco_promo_code']) ? $ParametersArray['vco_promo_code'] : null).
-        (isset($ParametersArray['credit_card_security_code_required']) ? $ParametersArray['credit_card_security_code_required'] : null).
-        (isset($ParametersArray['credit_card_operation_type']) ? $ParametersArray['credit_card_operation_type'] : null).
-        (isset($ParametersArray['credit_card_avs']) ? $ParametersArray['credit_card_avs'] : null).
-        (isset($ParametersArray['credit_card_threeds']) ? $ParametersArray['credit_card_threeds'] : null).
-        (isset($ParametersArray['customer']) ? $ParametersArray['customer'] : null).
-        (isset($ParametersArray['gp_token']) ? $ParametersArray['gp_token'] : null);
+    
+    
+    ## function: counts the checksum from the defined array of all parameters
 
-        return hash('sha256', $ChkParametersChain);
+    public static function generateCHK($DotpayPin, $ParametersArray)
+    {
+        if(isset($ParametersArray['chk']))
+        {
+            unset($ParametersArray['chk']);
+        }
+
+            //sorting the parameter list
+            ksort($ParametersArray);
+            
+            // Display the semicolon separated list
+            $paramList = implode(';', array_keys($ParametersArray));
+            
+            //adding the parameter 'paramList' with sorted list of parameters to the array
+            $ParametersArray['paramsList'] = $paramList;
+            
+            //re-sorting the parameter list
+            ksort($ParametersArray);
+            
+            //json encoding  
+            $json = json_encode($ParametersArray, JSON_UNESCAPED_SLASHES);
+
+            return hash_hmac('sha256', $json, $DotpayPin, false);hash_hmac('sha256', $json, $DotpayPin, false);
+       
     }
+
+
     
     /**
      * Get full name of value used in configuration

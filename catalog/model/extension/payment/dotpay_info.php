@@ -13,17 +13,17 @@ class ModelExtensionPaymentDotpayInfo extends Model
     /**
      * Name of recipient of payment.
      */
-    const DOTPAY_NAME = 'Dotpay sp. z o.o.';
+    const DOTPAY_NAME = 'PayPro S.A.';
 
     /**
      * Street of recipient.
      */
-    const DOTPAY_STREET = 'Wielicka 28B';
+    const DOTPAY_STREET = 'ul. Kanclerska 15';
 
     /**
      * Postcode adn city of recipient.
      */
-    const DOTPAY_CITY = '30-552 Kraków';
+    const DOTPAY_CITY = '60-327 Poznań';
 
     /**
      * Returns information based on order id.
@@ -91,7 +91,7 @@ class ModelExtensionPaymentDotpayInfo extends Model
      */
     public function getPdfUrl($baseUrl, $number, $hash)
     {
-        return $baseUrl.'instruction/pdf/'.$number.'/'.$hash.'/';
+        return $baseUrl.'instruction/pdf/'.trim($number).'/'.trim($hash).'/';
     }
 
     /**
@@ -105,7 +105,7 @@ class ModelExtensionPaymentDotpayInfo extends Model
      */
     protected function buildInstructionUrl($baseUrl, $number, $hash)
     {
-        return $baseUrl.'instruction/'.$number.'/'.$hash.'/';
+        return $baseUrl.'instruction/'.trim($number).'/'.trim($hash).'/';
     }
 
     /**

@@ -3,12 +3,12 @@
 /**
  * User controller.
  */
-class ControllerExtensionPaymentDotpayNew extends Controller
+class ControllerExtensionPaymentDotpayNext extends Controller
 {
     /**
      * Name of plugin.
      */
-    const PLUGIN_NAME = 'dotpay_new';
+    const PLUGIN_NAME = 'dotpay_next';
 
     /**
      * Payment type of operation.
@@ -220,6 +220,7 @@ class ControllerExtensionPaymentDotpayNew extends Controller
         } else {
             $orderId = null;
         }
+
         $order = $this->model_checkout_order->getOrder($orderId);
         $this->Gateway->setVars($this->config, $order, $this->language, $this->currency, $this->load, $this->session, $this->request, $this->customer);
         $data = array();
@@ -263,6 +264,7 @@ class ControllerExtensionPaymentDotpayNew extends Controller
         } else {
             $data['back_redirect_url'] = HTTPS_SERVER.'index.php?route=common/home';
         }
+
         $data['check_status_url'] = $this->createUrl('status');
         $data['back_waiting_message'] = $this->language->get('back_waiting_message1').'<br />'.$this->language->get('back_waiting_message2');
         $data['back_success_message'] = $this->language->get('back_success_message');
@@ -335,6 +337,7 @@ class ControllerExtensionPaymentDotpayNew extends Controller
         $order = $this->model_checkout_order->getOrder($controlNr);
         $this->Gateway->setVars($this->config, $order, $this->language, $this->currency, $this->load, $this->session, $this->request, $this->customer);
         $this->Gateway->confirm();
+
     }
 
     /**

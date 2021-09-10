@@ -18,7 +18,7 @@
  * needs please refer to http://www.dotpay.pl for more information.
  *
  *  @author    Dotpay Team <tech@dotpay.pl>
- *  @copyright Dotpay
+ *  @copyright PayPro S.A.
  *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -144,7 +144,7 @@ class Agreements
     {
         $byLawAgreements = ' '.$this->getAgreements('bylaw');
         if (trim($byLawAgreements) == '') {
-            $byLawAgreements = 'I accept Dotpay sp. z o.o. <a title="regulations of payments" target="_blank" href="https://ssl.dotpay.pl/t2/cloudfs1/magellan_media/regulations_of_payments">Regulations of Payments</a>.';
+            $byLawAgreements = 'I accept PayPro S.A. <a title="regulations of payments" target="_blank" href="https://ssl.dotpay.pl/t2/cloudfs1/magellan_media/regulations_of_payments">Regulations of Payments</a>.';
         }
 
         return $byLawAgreements;
@@ -160,7 +160,7 @@ class Agreements
     {
         $personalDataAgreements = ' '.$this->getAgreements('personal_data');
         if (trim($personalDataAgreements) == '') {
-            $personalDataAgreements = 'I acknowledge that in order to implement the payment process the Administrator of mine personal data is Dotpay sp. z o.o. (KRS 0000700791), 30-552 Kraków (Poland), Wielicka 28B, +48126882600, <a href="mailto:bok@dotpay.pl">bok@dotpay.pl</a>, see <a title="regulations of payments" target="_blank" href="https://ssl.dotpay.pl/t2/cloudfs1/magellan_media/rodo_en">the full text of the information clause</a>.';
+            $personalDataAgreements = 'I acknowledge that in order to implement the payment process the Administrator of my personal data is PayPro S.A. (KRS 0000347935), 60-327 Poznań (Poland), Kanclerska 15, +48616006170, <a href="mailto:bok@dotpay.pl">bok@dotpay.pl</a>, see <a title="regulations of payments" target="_blank" href="https://ssl.dotpay.pl/t2/cloudfs1/magellan_media/rodo_en">the full text of the information clause</a>.';
         }
 
         return $personalDataAgreements;
@@ -224,9 +224,9 @@ class Agreements
      */
     protected function getChannels()
     {
-        $curlUrl = "{$this->url}payment_api/channels/";
-        $curlUrl .= "?id={$this->id}";
-        $curlUrl .= "&currency=".strtoupper($this->currency);
+        $curlUrl = "{$this->url}payment_api/v1/channels/";
+        $curlUrl .= "?currency=".strtoupper($this->currency);
+        $curlUrl .= "&id={$this->id}";
         $curlUrl .= "&amount={$this->amount}";
         $curlUrl .= '&lang='.strtolower(substr(trim($this->language->get('code')), 0, 2));
 

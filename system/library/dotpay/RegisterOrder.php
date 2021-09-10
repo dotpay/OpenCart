@@ -18,7 +18,7 @@
  * needs please refer to http://www.dotpay.pl for more information.
  *
  *  @author    Dotpay Team <tech@dotpay.pl>
- *  @copyright Dotpay
+ *  @copyright PayPro S.A.
  *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -29,7 +29,7 @@ class RegisterOrder
     /**
      * Name of plugin.
      */
-    const PLUGIN_NAME = 'dotpay_new';
+    const PLUGIN_NAME = 'dotpay_next';
 
     /**
      * Registry class with shop environment data.
@@ -108,7 +108,7 @@ class RegisterOrder
                  ->addOption(CURLOPT_HTTPHEADER, array(
                     'Accept: application/json; indent=4',
                     'content-type: application/json',
-                    'User-Agent: DotpayOpenCart module v3.0.6'
+                    'User-Agent: DotpayOpenCart module v3.1.0'
                  ));
             $resultJson = $curl->exec();
             $resultStatus = $curl->getInfo();

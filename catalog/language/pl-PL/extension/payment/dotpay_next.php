@@ -3,13 +3,13 @@
 /**
  * Polish language pack for client page in Dotpay payment plugin.
  */
-$_['text_dotpay_title'] = 'Dotpay: Szybkie i bezpieczne płatności';
+$_['text_dotpay_title'] = '<img src="'.dirname(HTTPS_SERVER).'/image/payment/dotpay/dotpay_mini.png" title="Dotpay" /> Dotpay: Szybkie i bezpieczne płatności';
 $_['text_dotpay_button_confirm'] = 'Płać z Dotpay';
 
 $_['oc_channel_title'] = 'Płatność kartą One Click';
 $_['label_select_oc_card'] = 'Wybierz z zapisanych kart';
 $_['label_register_oc_card'] = 'Zarejestruj nową kartę';
-$_['register_card_agreement'] = 'I agree to repeated loading bill my credit card for the payment One-Click by way of purchase of goods or services offered by the store.';
+$_['register_card_agreement'] = 'Wyrażam zgodę na powtarzające się obciążanie rachunku mojej karty płatniczej dla celów realizacji płatności One Click, tytułem zakupu towarów lub usług oferowanych przez Sklep.';
 $_['pv_channel_title'] = 'Karty płatnicze';
 $_['cc_channel_title'] = 'Karty płatnicze';
 $_['mp_channel_title'] = 'MasterPass';

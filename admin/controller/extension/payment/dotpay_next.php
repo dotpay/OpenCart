@@ -4,17 +4,17 @@
 /**
  * Admin controller.
  */
-class ControllerExtensionPaymentDotpayNew extends Controller
+class ControllerExtensionPaymentDotpayNext extends Controller
 {
     /**
      * Name of plugin.
      */
-    const PLUGIN_NAME = 'dotpay_new';
+    const PLUGIN_NAME = 'dotpay_next';
 
     /**
      * Test payment url for developers.
      */
-    const DEV_PAYMENT_URL = 'https://ssl.dotpay.pl/test_payment/';
+    const NEXT_PAYMENT_URL = 'https://ssl.dotpay.pl/test_payment/';
 
     /**
      * Production payment url for sellers.
@@ -24,7 +24,7 @@ class ControllerExtensionPaymentDotpayNew extends Controller
     /**
      * Test url of seller API for developers.
      */
-    const DEV_SELLER_URL = 'https://ssl.dotpay.pl/test_seller/';
+    const NEXT_SELLER_URL = 'https://ssl.dotpay.pl/test_seller/';
 
     /**
      * Production url of seller API for sellers.
@@ -34,17 +34,28 @@ class ControllerExtensionPaymentDotpayNew extends Controller
     /**
      * Url of shop site for return.
      */
-    const URL = 'index.php?route=extension/payment/dotpay_new/back';
+    const URL = 'index.php?route=extension/payment/dotpay_next/back';
 
     /**
      * Url of shop site for URLC confirmation.
      */
-    const URLC = 'index.php?route=extension/payment/dotpay_new/confirm';
+    const URLC = 'index.php?route=extension/payment/dotpay_next/confirm';
 
     /**
      * IP of Dotpay server confirmation.
      */
-    const DOTPAY_IP = '195.150.9.37';
+    
+     //  const DOTPAY_IP = '195.150.9.37';
+    
+    const DOTPAY_WHITE_LIST_IP = array(
+                                    '195.150.9.37',
+                                    '91.216.191.181',
+                                    '91.216.191.182',
+                                    '91.216.191.183',
+                                    '91.216.191.184',
+                                    '91.216.191.185',
+                                    '5.252.202.255',
+                                );
 
     /**
      * IP of Dotpay office.
@@ -54,12 +65,12 @@ class ControllerExtensionPaymentDotpayNew extends Controller
     /**
      * Version of API Dotpay.
      */
-    const API_VERSION = 'dev';
+    const API_VERSION = 'next';
 
     /**
      * Version of this payment plugin.
      */
-    const VERSION = '3.0.6';
+    const VERSION = '3.1.0';
     /**
      * @var array List of errors
      */
@@ -79,16 +90,16 @@ class ControllerExtensionPaymentDotpayNew extends Controller
     {
         parent::__construct($registry);
         $this->settings = [
-            $this->getConfigKey('dev_payment_url') => self::DEV_PAYMENT_URL,
+            $this->getConfigKey('next_payment_url') => self::NEXT_PAYMENT_URL,
             $this->getConfigKey('prod_payment_url') => self::PROD_PAYMENT_URL,
             $this->getConfigKey('target_payment_url') => self::PROD_PAYMENT_URL,
-            $this->getConfigKey('dev_seller_url') => self::DEV_SELLER_URL,
+            $this->getConfigKey('next_seller_url') => self::NEXT_SELLER_URL,
             $this->getConfigKey('prod_seller_url') => self::PROD_SELLER_URL,
             $this->getConfigKey('target_seller_url') => self::PROD_SELLER_URL,
             $this->getConfigKey('sort_order') => 1,
             $this->getConfigKey('api_version') => self::API_VERSION,
             $this->getConfigKey('plugin_version') => self::VERSION,
-            $this->getConfigKey('ip') => self::DOTPAY_IP,
+            $this->getConfigKey('ip') => self::DOTPAY_WHITE_LIST_IP,
             $this->getConfigKey('office_ip') => self::OFFICE_IP,
             $this->getConfigKey('URL') => self::URL,
             $this->getConfigKey('URLC') => self::URLC,
@@ -96,6 +107,7 @@ class ControllerExtensionPaymentDotpayNew extends Controller
             $this->getConfigKey('id') => '',
             $this->getConfigKey('pin') => '',
             $this->getConfigKey('test') => 0,
+            $this->getConfigKey('nonproxy') => 1,
             $this->getConfigKey('username') => '',
             $this->getConfigKey('password') => '',
             $this->getConfigKey('oc') => 0,
@@ -145,8 +157,8 @@ class ControllerExtensionPaymentDotpayNew extends Controller
                 }
             }
             if ($this->request->post[$this->getConfigKey('test')] == 1) {
-                $this->settings[$this->getConfigKey('target_payment_url')] = self::DEV_PAYMENT_URL;
-                $this->settings[$this->getConfigKey('target_seller_url')] = self::DEV_SELLER_URL;
+                $this->settings[$this->getConfigKey('target_payment_url')] = self::NEXT_PAYMENT_URL;
+                $this->settings[$this->getConfigKey('target_seller_url')] = self::NEXT_SELLER_URL;
             } else {
                 $this->settings[$this->getConfigKey('target_payment_url')] = self::PROD_PAYMENT_URL;
                 $this->settings[$this->getConfigKey('target_seller_url')] = self::PROD_SELLER_URL;
@@ -200,6 +212,7 @@ class ControllerExtensionPaymentDotpayNew extends Controller
         $data['text_dotpay_pin_help'] = $this->language->get('text_dotpay_pin_help');
         $data['text_dotpay_pin_validate'] = $this->language->get('text_dotpay_pin_validate');
         $data['text_dotpay_test'] = $this->language->get('text_dotpay_test');
+        $data['text_dotpay_nonproxy'] = $this->language->get('text_dotpay_nonproxy');
         $data['text_sort_order'] = $this->language->get('text_sort_order');
         $data['text_dotpay_username'] = $this->language->get('text_dotpay_username');
         $data['text_dotpay_password'] = $this->language->get('text_dotpay_password');
@@ -251,6 +264,7 @@ class ControllerExtensionPaymentDotpayNew extends Controller
         $data['dotpay_id'] = $this->config->get($this->getConfigKey('id'));
         $data['dotpay_pin'] = $this->config->get($this->getConfigKey('pin'));
         $data['dotpay_test'] = $this->config->get($this->getConfigKey('test'));
+        $data['dotpay_nonproxy'] = $this->config->get($this->getConfigKey('nonproxy'));
         $data['dotpay_sort_order'] = (isset($this->request->post[$this->getConfigKey('sort_order')]) ? $this->request->post[$this->getConfigKey('sort_order')] : $this->config->get($this->getConfigKey('sort_order')));
         $data['dotpay_username'] = $this->config->get($this->getConfigKey('username'));
         $data['dotpay_password'] = $this->config->get($this->getConfigKey('password'));

@@ -5,7 +5,7 @@
  */
 $_['code'] = 'pl';
 $_['heading_title'] = 'Dotpay';
-$_['text_dotpay_new'] = '<a onclick="window.open(\'http://www.dotpay.pl/\');" style="cursor: pointer;"><img src="view/image/payment/dotpay_new.png" align="Dotpay" title="Dotpay" style="border: 1px solid #EEEEEE; width: 96px;" /></a>';
+$_['text_dotpay_next'] = '<a onclick="window.open(\'http://www.dotpay.pl/\');" style="cursor: pointer;"><img src="view/image/payment/dotpay_next.png" title="Dotpay" style="border: 1px solid #EEEEEE; width: 96px;" /></a>';
 $_['text_home'] = 'Pulpit';
 $_['text_payment'] = 'Rozszerzenia';
 $_['button_save'] = 'Zapisz ustawienia';
@@ -32,6 +32,8 @@ $_['text_dotpay_pin_help'] = 'Możesz znaleźć swój PIN w ustawieniach konta w
 $_['text_dotpay_pin_validate'] = 'PIN powinien zawierać od 16 do 32 znaków';
 $_['text_dotpay_test'] = 'Środowisko testowe';
 $_['text_dotpay_test_info'] = 'Wymagane osobne konto testowe. <a href="https://www.dotpay.pl/developer/sandbox/pl/?affilate_id=module_opencart3" target="_blank" title="Uzyskaj konto testowe w Dotpay">Utwórz konto testowe</a>';
+$_['text_dotpay_nonproxy'] = 'Mój serwer nie korzysta z proxy';
+$_['text_dotpay_nonproxy_info'] = 'Domyślnie zalecamy ustawić włączone (bez proxy).<br/>Jeśli jesteś pewien że Twój serwer korzysta z proxy, lub masz problemy z odbiorem potwierdzeń o dokończonej płatności - wyłącz to.';
 $_['text_sort_order'] = 'Pozycja bramki na liście płatności';
 $_['text_dotpay_api_info'] = '<h3>Dane API (opcjonalnie) </h3>Wymagane dla poprawnego działania One Click oraz wyświetlenia na stronie sklepu instrukcji płatniczych dla kanałów nietransferowych.';
 $_['text_dotpay_username'] = 'Nazwa użytkownika API <br><em>(Login do panelu sprzedawcy Dotpay)</em>';

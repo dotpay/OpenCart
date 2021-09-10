@@ -3,7 +3,7 @@
 /**
  * English language pack for client page in Dotpay payment plugin.
  */
-$_['text_dotpay_title'] = 'Dotpay: Fast and secure payment';
+$_['text_dotpay_title'] = '<img src="image/payment/dotpay/dotpay_mini.png" title="Dotpay: Fast and secure payment" style="border: 0px; width: 51px; height: 16px" /> Dotpay: Fast and secure payment';
 $_['text_dotpay_button_confirm'] = 'Pay with Dotpay';
 
 $_['oc_channel_title'] = 'Credit Card One Click payments';

@@ -3,12 +3,12 @@
 /**
  * Model of basic operations.
  */
-class ModelExtensionPaymentDotpayNew extends Model
+class ModelExtensionPaymentDotpayNext extends Model
 {
     /**
      * Name of plugin.
      */
-    const PLUGIN_NAME = 'dotpay_new';
+    const PLUGIN_NAME = 'dotpay_next';
 
     /**
      * Returns details of Dotpay payment gateway, needed by OpenCart tools.
@@ -23,7 +23,7 @@ class ModelExtensionPaymentDotpayNew extends Model
 
         $method_data = array(
             'code' => self::PLUGIN_NAME,
-            'title' => $this->language->get('text_dotpay_title'),
+            'title' => ' <b>'.$this->language->get('text_dotpay_title').'</b>',
             'sort_order' => $this->config->get(self::PLUGIN_NAME.'_sort_order'),
             'terms' => '',
         );

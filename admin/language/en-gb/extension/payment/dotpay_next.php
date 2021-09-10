@@ -4,7 +4,7 @@
  * English language pack for admin page in Dotpay payment plugin.
  */
 $_['heading_title'] = 'Dotpay';
-$_['text_dotpay_new'] = '<a onclick="window.open(\'http://www.dotpay.pl/\');" style="cursor: pointer;"><img src="view/image/payment/dotpay_new.png" align="Dotpay" title="Dotpay" style="border: 1px solid #EEEEEE; width: 96px;" /></a>';
+$_['text_dotpay_next'] = '<a onclick="window.open(\'http://www.dotpay.pl/\');" style="cursor: pointer;"><img src="view/image/payment/dotpay_next.png" align="Dotpay" title="Dotpay" style="border: 1px solid #EEEEEE; width: 96px;" /></a>';
 $_['text_home'] = 'Dashboard';
 $_['text_payment'] = 'Extensions';
 $_['button_save'] = 'Save settings';
@@ -31,6 +31,8 @@ $_['text_dotpay_pin_help'] = 'You can get the PIN code from your Dotpay account'
 $_['text_dotpay_pin_validate'] = 'PIN shoud contain min 16 and max 32 characters';
 $_['text_dotpay_test'] = 'Testing environment';
 $_['text_dotpay_test_info'] = 'Required Dotpay test account: <a href="https://www.dotpay.pl/developer/sandbox/en/?affilate_id=module_opencart" target="_blank" title="Dotpay test account registration">registration</a>';
+$_['text_dotpay_nonproxy'] = 'My server does not use a proxy';
+$_['text_dotpay_nonproxy_info'] = 'By default, we recommend that you set it on (no proxy). <br/>If you are sure otherwise or you have problems receiving confirmations about the completed payment - set it to off.';
 $_['text_sort_order'] = 'Sort position of gateway on list in checkout';
 $_['text_dotpay_api_info'] = '<h3>API data (optional) </h3>Required for proper operation One Click and display instructions for Transfer channels (wire transfer data are not passed to the bank and a payer needs to copy or write the data manually).';
 $_['text_dotpay_username'] = 'Dotpay API username <br><em>(Your username for Dotpay seller panel)</em>';

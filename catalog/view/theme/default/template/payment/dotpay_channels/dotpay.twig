@@ -71,7 +71,7 @@ var channel_apple = '';
         offlineChannel: 'mark',
         offlineChannelTooltip: true,
         disabledChannels: [{{ widget.disabled_channels }}],
-        host: '{{ dotpay_url }}payment_api/channels/'
+        host: '{{ dotpay_url }}payment_api/v1/channels/'
     };
     
     dotpayWidgetConfig.disabledChannels.push(channel_apple);

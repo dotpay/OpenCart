@@ -18,7 +18,7 @@
  * needs please refer to http://www.dotpay.pl for more information.
  *
  *  @author    Dotpay Team <tech@dotpay.pl>
- *  @copyright Dotpay
+ *  @copyright PayPro S.A.
  *  @license   http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
  */
 
@@ -34,7 +34,7 @@ class SellerApi
     /**
      * Name of plugin.
      */
-    const PLUGIN_NAME = 'dotpay_new';
+    const PLUGIN_NAME = 'dotpay_next';
 
     /**
      * Registry class with shop environment data.
@@ -65,6 +65,25 @@ class SellerApi
         return $this->registry->get($key);
     }
 
+
+    /**
+     * Return dotpay number of transaction from database (comment).
+     *
+     */
+
+public function getNumberTransaction($text){
+
+        $re = '/(M\d{4,5}\-\d{4,5})/m';
+        preg_match_all($re, $text, $matches);
+
+        if(isset($matches[0][0])) {
+            return (trim($matches[0][0]));
+        }else{
+            return null;
+        }
+    }
+
+
     /**
      * Return infos about credit card.
      *
@@ -74,14 +93,21 @@ class SellerApi
      *
      * @return \stdClass
      */
-    public function getCreditCardInfo($username, $password, $number)
+    public function getCreditCardInfo($username, $password, $text)
     {
-        $payment = $this->getPaymentByNumber($username, $password, $number);
-        if ($payment->payment_method->channel_id != 248) {
+        $number = $this->getNumberTransaction($text);
+
+        if($number == null) {
             return null;
+        }else {
+            $payment = $this->getPaymentByNumber($username, $password, $number);
+            if ($payment->payment_method->channel_id != 248) {
+                return null;
+            }
+    
+            return $payment->payment_method->credit_card;
         }
 
-        return $payment->payment_method->credit_card;
     }
 
     /**
@@ -121,16 +147,26 @@ class SellerApi
      *
      * @return \stdClass
      */
-    public function getPaymentByNumber($username, $password, $number)
+    public function getPaymentByNumber($username, $password, $text)
     {
-        $url = $this->config->get('payment_'.self::PLUGIN_NAME.'_target_seller_url').$this->getDotPaymentApi()."payments/$number/";
-        $curl = new Curl();
-        $curl->addOption(CURLOPT_URL, $url)
-             ->addOption(CURLOPT_USERPWD, $username.':'.$password);
-        $this->setCurlOption($curl);
-        $response = json_decode($curl->exec());
-      //  var_dump($response);
-        return $response;
+
+
+        $number = $this->getNumberTransaction($text);
+
+        if($number == null) {
+            return null;
+        }else {
+            $url = $this->config->get('payment_'.self::PLUGIN_NAME.'_target_seller_url').$this->getDotPaymentApi()."payments/".$number."/";
+            $curl = new Curl();
+            $curl->addOption(CURLOPT_URL, $url)
+                 ->addOption(CURLOPT_USERPWD, $username.':'.$password);
+            $this->setCurlOption($curl);
+            $response = json_decode($curl->exec());
+          
+            return $response;
+
+        }
+
     }
 
     /**
@@ -168,7 +204,7 @@ class SellerApi
      */
     private function getDotPaymentApi()
     {
-        return 'api/';
+        return 'api/v1/';
     }
 
     /**

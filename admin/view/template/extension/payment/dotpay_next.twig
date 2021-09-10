@@ -111,6 +111,17 @@
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label class="col-sm-3 control-label" for="{{ plugin_field_name }}_nonproxy">{{ text_dotpay_nonproxy }}</label>
+                                <div class="col-sm-6">
+                                    <select name="{{ plugin_field_name }}_nonproxy" id="{{ plugin_field_name }}_nonproxy" class="form-control" style="width: auto !important;">
+                                        <option value="1"{% if dotpay_nonproxy == true %} selected="selected"{% endif %}>{{ text_enabled }}</option>
+                                        <option value="0"{% if dotpay_nonproxy == false %} selected="selected"{% endif %}>{{ text_disabled }}</option>
+                                    </select>
+                                    {{ text_dotpay_nonproxy_info }}
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
                                 <label class="col-sm-3 control-label">{{ text_sort_order }}</label>
                                 <div class="col-sm-6">
                                     <input class="form-control" type="number" name="{{ plugin_field_name }}_sort_order" value="{% if dotpay_sort_order is empty %}1{% else %}{{ dotpay_sort_order }}{% endif %}" style="width: auto !important;" />
